@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GradimSe — Platforma za podjetniške bloge in učenje</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g800: #085041;
+      --g600: #0e7a5e;
+      --g500: #1D9E75;
+      --g100: #eaf5ef;
+      --ink:  #111916;
+      --ink2: #3d4d45;
+      --ink3: #7a8a82;
+      --bg:   #ffffff;
+      --bg2:  #f6f8f6;
+      --line: #e6ebe7;
+      --r: cubic-bezier(0.16,1,0.3,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg); color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 15px; line-height: 1.6;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.3} }
+    @keyframes float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes dash   { to{stroke-dashoffset:-20} }
+    .a1{animation:fadeUp .5s var(--r) .05s both}
+    .a2{animation:fadeUp .5s var(--r) .15s both}
+    .a3{animation:fadeUp .5s var(--r) .25s both}
+    .a4{animation:fadeUp .5s var(--r) .35s both}
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      height: 56px; background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; padding: 0 40px;
+    }
+    .logo { font-size: 16px; font-weight: 800; color: var(--g800); letter-spacing: -.3px; text-decoration: none; margin-right: auto; }
+    .logo span { color: var(--g500); }
+    .nav-mid { display: flex; gap: 2px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-mid a { font-size: 14px; font-weight: 400; color: var(--ink3); text-decoration: none; padding: 6px 12px; border-radius: 7px; transition: color .15s, background .15s; }
+    .nav-mid a:hover { color: var(--ink); background: var(--bg2); }
+    .nav-right { display: flex; gap: 8px; }
+    .btn-ghost { font-size: 13px; font-weight: 500; color: var(--ink2); text-decoration: none; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); transition: border-color .15s; }
+    .btn-ghost:hover { border-color: var(--g500); }
+    .btn-primary { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: white; background: var(--g800); text-decoration: none; padding: 7px 16px; border-radius: 8px; transition: background .15s; }
+    .btn-primary:hover { background: var(--g600); }
+
+    /* HERO WRAP — dot grid background */
+    .hero-wrap {
+      border-bottom: 1px solid var(--line);
+      background-color: #fff;
+      background-image: radial-gradient(circle, rgba(8,80,65,.09) 1.5px, transparent 1.5px);
+      background-size: 26px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, #fff 0%, rgba(255,255,255,.7) 45%, rgba(255,255,255,.05) 100%),
+        linear-gradient(to bottom, #fff 0%, transparent 18%, transparent 82%, #fff 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HERO inner — split grid */
+    .hero {
+      padding: 72px 40px 64px;
+      max-width: 1160px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12px; font-weight: 500; color: var(--g500);
+      border: 1px solid #c4e6d4; background: var(--g100);
+      padding: 4px 12px; border-radius: 20px; margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 52px; font-weight: 800; color: var(--ink);
+      letter-spacing: -2px; line-height: 1.05; margin-bottom: 20px;
+      max-width: 580px;
+    }
+    .hero h1 em { font-style: normal; color: var(--g500); }
+    .hero-sub { font-size: 17px; color: var(--ink3); line-height: 1.65; max-width: 480px; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 10px; align-items: center; margin-bottom: 44px; flex-wrap: wrap; }
+    .btn-hero {
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; color: white;
+      background: var(--g800); text-decoration: none; padding: 13px 26px; border-radius: 9px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background .15s, transform .1s;
+    }
+    .btn-hero:hover { background: var(--g600); transform: translateY(-1px); }
+    .btn-hero-2 {
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink2);
+      background: white; border: 1px solid var(--line); text-decoration: none;
+      padding: 13px 24px; border-radius: 9px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-hero-2:hover { border-color: var(--g500); color: var(--g800); }
+
+    /* FIRM LOGOS STRIP */
+    .firms-strip {
+      display: flex; align-items: center;
+      padding-top: 32px; border-top: 1px solid var(--line);
+      flex-wrap: wrap; gap: 10px;
+    }
+    .fs-label { font-size: 12px; color: var(--ink3); margin-right: 4px; white-space: nowrap; }
+    .firm-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.9); border: 1px solid var(--line);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 13px; font-weight: 500; color: var(--ink2);
+      text-decoration: none; transition: border-color .15s, color .15s;
+    }
+    .firm-badge:hover { border-color: var(--g500); color: var(--g800); }
+    .firm-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* HERO VISUAL — right side illustration */
+    .hero-visual {
+      position: relative;
+      height: 390px;
+    }
+
+    /* Connection lines SVG */
+    .hv-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .hv-svg line {
+      animation: dash 3s linear infinite;
+    }
+
+    /* Central blog card */
+    .hv-post {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      width: 210px;
+      box-shadow: 0 12px 40px rgba(8,80,65,.10), 0 2px 8px rgba(8,80,65,.05);
+      z-index: 10;
+      animation: float 7s ease-in-out infinite;
+    }
+    .hv-post-top {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 10px;
+    }
+    .hv-dot-sm { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .hv-firm-name { font-size: 11px; font-weight: 700; color: var(--ink2); }
+    .hv-cat { font-size: 10px; font-weight: 600; color: #0C447C; margin-left: auto; text-transform: uppercase; letter-spacing: .3px; }
+    .hv-post-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 12px; }
+    .hv-lines { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .hv-line { height: 3px; background: var(--bg2); border-radius: 2px; }
+    .hv-post-meta { display: flex; align-items: center; gap: 7px; }
+    .hv-av { width: 20px; height: 20px; border-radius: 50%; font-size: 7px; font-weight: 700; color: white; display: inline-flex; align-items: center; justify-content: center; }
+
+    /* Reader avatars */
+    .hv-reader {
+      position: absolute;
+      z-index: 5;
+    }
+    .hv-av-lg {
+      width: 40px; height: 40px; border-radius: 50%;
+      font-size: 11px; font-weight: 700; color: white;
+      display: flex; align-items: center; justify-content: center;
+      border: 2.5px solid white;
+      box-shadow: 0 3px 12px rgba(0,0,0,.15);
+    }
+
+    /* Floating stat badges */
+    .hv-badge-views {
+      position: absolute;
+      top: 28px; right: 12px;
+      background: var(--g800);
+      border-radius: 10px;
+      padding: 8px 13px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.9);
+      box-shadow: 0 4px 16px rgba(8,80,65,.25);
+      z-index: 20;
+      animation: floatB 5s ease-in-out .8s infinite;
+    }
+    .hv-badge-growth {
+      position: absolute;
+      bottom: 52px; right: 4px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 13px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--ink2);
+      box-shadow: 0 4px 20px rgba(8,80,65,.09);
+      z-index: 20;
+      animation: floatB 5s ease-in-out 1.5s infinite;
+    }
+    .hv-badge-growth span { color: var(--g500); }
+
+    /* 3 PILLARS */
+    .pillars {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+    }
+    .pillar {
+      padding: 40px 40px;
+      border-right: 1px solid var(--line);
+      text-decoration: none; color: inherit;
+      transition: background .15s;
+    }
+    .pillar:last-child { border-right: none; }
+    .pillar:hover { background: var(--bg2); }
+    .pillar-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .pillar-num { font-size: 11px; font-weight: 700; color: var(--ink3); letter-spacing: .8px; margin-bottom: 8px; text-transform: uppercase; }
+    .pillar h3 { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; margin-bottom: 8px; }
+    .pillar p { font-size: 14px; color: var(--ink3); line-height: 1.6; }
+
+    /* MAIN LAYOUT */
+    .page { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; }
+    .main-col { border-right: 1px solid var(--line); padding: 48px 48px 48px 40px; }
+    .side-col { padding: 48px 40px; }
+
+    .s-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .s-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--ink3); }
+    .s-lnk { font-size: 12px; font-weight: 500; color: var(--g500); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: gap .2s var(--r), color .15s; }
+    .s-lnk:hover { color: var(--g800); gap: 7px; }
+
+    /* BLOG FEED */
+    .blog-item {
+      padding: 22px 0; border-bottom: 1px solid var(--line);
+      text-decoration: none; color: inherit; display: block;
+    }
+    .blog-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .blog-item:hover .bi-title { color: var(--g800); }
+    .bi-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .bi-firm {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg2); border: 1px solid var(--line);
+      border-radius: 6px; padding: 3px 8px;
+      font-size: 11px; font-weight: 600; color: var(--ink2);
+    }
+    .bi-firm-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .bi-cat { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+    .c-m { color: #0C447C; } .c-f { color: #BA7517; } .c-ms { color: var(--g800); } .c-s { color: #534AB7; }
+    .bi-title { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.35; letter-spacing: -.2px; margin-bottom: 10px; transition: color .15s; }
+    .bi-excerpt { font-size: 13px; color: var(--ink3); line-height: 1.55; margin-bottom: 10px; }
+    .bi-meta { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink3); }
+    .av { width: 20px; height: 20px; border-radius: 50%; font-size: 8px; font-weight: 700; color: white; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .dot { color: var(--line); }
+
+    /* SIDEBAR */
+    .side-block { margin-bottom: 36px; }
+    .side-block:last-child { margin-bottom: 0; }
+
+    .write-card {
+      background: var(--g800); border-radius: 14px; padding: 24px;
+    }
+    .write-card h4 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 8px; letter-spacing: -.2px; }
+    .write-card p { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 18px; }
+    .write-steps { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .write-step { display: flex; align-items: center; gap: 9px; font-size: 13px; color: rgba(255,255,255,.75); }
+    .ws-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: 10px; font-weight: 700; color: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .btn-write {
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--g800); background: white; text-decoration: none;
+      padding: 10px 16px; border-radius: 8px; display: block; text-align: center;
+      transition: transform .1s;
+    }
+    .btn-write:hover { transform: translateY(-1px); }
+
+    .live-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+    .live-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: var(--ink3); margin-bottom: 10px; }
+    .ldot { width: 6px; height: 6px; border-radius: 50%; background: #FF5C5C; animation: pulse 1.4s ease-in-out infinite; }
+    .live-card h4 { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.35; margin-bottom: 6px; }
+    .live-who { font-size: 12px; color: var(--ink3); margin-bottom: 14px; }
+    .btn-live-sm {
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: white;
+      background: var(--g800); text-decoration: none; padding: 9px 14px; border-radius: 7px;
+      display: inline-block; transition: background .15s;
+    }
+    .btn-live-sm:hover { background: var(--g600); }
+    .live-free { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+
+    .pod-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+    .pod-item:last-child { border-bottom: none; }
+    .pod-item:hover .pi-title { color: var(--g800); }
+    .pi-play { width: 30px; height: 30px; border-radius: 50%; background: var(--g100); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--g800); transition: background .15s, color .15s; }
+    .pod-item:hover .pi-play { background: var(--g800); color: white; }
+    .pi-ep { font-size: 10px; color: var(--ink3); margin-bottom: 2px; }
+    .pi-title { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.3; transition: color .15s; }
+    .pi-dur { font-size: 11px; color: var(--ink3); margin-left: auto; flex-shrink: 0; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+      margin-bottom: 36px;
+    }
+    .stat-item { padding: 16px 18px; border-right: 1px solid var(--line); text-align: center; }
+    .stat-item:last-child { border-right: none; }
+    .stat-n { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -1px; }
+    .stat-l { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+    /* KAKO DELUJE */
+    .how-section {
+      background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 56px 40px;
+    }
+    .how-inner { max-width: 1160px; margin: 0 auto; }
+    .how-header { text-align: center; margin-bottom: 48px; }
+    .how-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); margin-bottom: 8px; }
+    .how-title { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: -.5px; }
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border-radius: 14px; overflow: hidden; }
+    .how-step { background: white; padding: 32px 30px; }
+    .hs-num { font-size: 11px; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px; }
+    .hs-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--g100); display: flex; align-items: center; justify-content: center; color: var(--g800); margin-bottom: 14px; }
+    .how-step h4 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; letter-spacing: -.2px; }
+    .how-step p { font-size: 13px; color: var(--ink3); line-height: 1.6; }
+
+    /* JOIN BAND */
+    .join-band {
+      border-top: 1px solid var(--line);
+      padding: 56px 40px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+      max-width: 1160px; margin: 0 auto;
+    }
+    .join-band h2 { font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -.6px; margin-bottom: 10px; }
+    .join-band h2 em { font-style: normal; color: var(--g500); }
+    .join-band p { font-size: 15px; color: var(--ink3); line-height: 1.65; max-width: 380px; }
+    .join-box {
+      background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
+      padding: 28px 28px 24px;
+    }
+    .join-box-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .join-box-sub { font-size: 13px; color: var(--ink3); margin-bottom: 20px; }
+    .join-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .join-opt {
+      display: flex; align-items: center; gap: 12px;
+      background: white; border: 1px solid var(--line); border-radius: 10px;
+      padding: 14px 16px; text-decoration: none; color: inherit;
+      transition: border-color .15s, transform .1s;
+    }
+    .join-opt:hover { border-color: var(--g500); transform: translateY(-1px); }
+    .jo-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .jo-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .jo-desc { font-size: 12px; color: var(--ink3); }
+    .jo-arr { margin-left: auto; color: var(--ink3); }
+    .join-note { font-size: 12px; color: var(--ink3); text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .join-note svg { color: var(--g500); }
+
+    /* FOOTER */
+    .footer-wrap { border-top: 1px solid var(--line); max-width: 1160px; margin: 0 auto; }
+    footer { padding: 44px 40px 28px; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+    .f-logo { font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+    .f-logo span { color: var(--g500); }
+    .f-sub { font-size: 13px; color: var(--ink3); line-height: 1.6; max-width: 180px; }
+    .fc h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--ink3); margin-bottom: 12px; }
+    .fc a { display: block; font-size: 13px; color: var(--ink3); text-decoration: none; margin-bottom: 8px; transition: color .15s; }
+    .fc a:hover { color: var(--ink); }
+    .footer-bot { padding: 16px 40px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 12px; color: var(--ink3); flex-wrap: wrap; gap: 8px; }
+    .footer-bot a { color: var(--ink3); text-decoration: none; margin-left: 16px; transition: color .15s; }
+    .footer-bot a:hover { color: var(--ink); }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      nav { padding: 0 24px; }
+      .nav-mid { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 56px 24px 48px; gap: 0; }
+      .hero-visual { display: none; }
+      .hero h1 { font-size: 36px; }
+      .pillars { grid-template-columns: 1fr; }
+      .pillar { border-right: none; border-bottom: 1px solid var(--line); }
+      .pillar:last-child { border-bottom: none; }
+      .page { grid-template-columns: 1fr; }
+      .main-col { border-right: none; border-bottom: 1px solid var(--line); padding: 32px 24px; }
+      .side-col { padding: 32px 24px; }
+      .how-section { padding: 44px 24px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .join-band { grid-template-columns: 1fr; gap: 40px; padding: 44px 24px; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .stats-bar .stat-item:nth-child(2) { border-right: none; }
+      .stats-bar .stat-item:nth-child(3) { border-top: 1px solid var(--line); }
+      .stats-bar .stat-item:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
+      footer { grid-template-columns: 1fr 1fr; gap: 28px; padding: 32px 24px 24px; }
+      .footer-bot { padding: 16px 24px; }
+    }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 30px; }
+      .hero { padding: 44px 20px 40px; }
+      .pillars { display: flex; flex-direction: column; }
+      footer { grid-template-columns: 1fr; }
+      .nav-right .btn-ghost { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Gradim<span>Se</span></a>
+  <div class="nav-mid">
+    <a href="#">Blogi</a>
+    <a href="#">Podcast</a>
+    <a href="#">Mentorstvo</a>
+    <a href="#">Live</a>
+    <a href="#">Skupnost</a>
+    <a href="#">Mapa</a>
+  </div>
+  <div class="nav-right">
+    <a href="#" class="btn-ghost">Prijava</a>
+    <a href="#" class="btn-primary">Objavi blog za firmo →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+<div class="hero">
+
+  <!-- LEFT: TEXT -->
+  <div>
+    <div class="hero-eyebrow a1">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M4 2V1M8 2V1M1 5h10"/></svg>
+      Slovenska platforma za podjetniške bloge
+    </div>
+    <h1 class="a2">Promoviraj firmo.<br/>Deli znanje.<br/><em>Pridobi bralce.</em></h1>
+    <p class="hero-sub a3">Objavi blog v imenu svoje firme — skupnost 240+ podjetnikov te bo brala, delila in kontaktirala. Brezplačno.</p>
+    <div class="hero-btns a4">
+      <a href="#" class="btn-hero">
+        Objavi blog za svojo firmo
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>
+      </a>
+      <a href="#" class="btn-hero-2">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M5.5 5l4 2-4 2V5z" fill="currentColor" stroke="none"/></svg>
+        Poglej obstoječe bloge
+      </a>
+    </div>
+    <div class="firms-strip a4">
+      <span class="fs-label">Pišejo z nami:</span>
+      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#085041"></span>Kovač Consulting</a>
+      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#534AB7"></span>Novak Finance</a>
+      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#0C447C"></span>Digital Jeglič</a>
+      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#BA7517"></span>MindGrowth</a>
+      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#1D9E75"></span>RusMedia</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: VISUAL ILLUSTRATION -->
+  <div class="hero-visual a3">
+
+    <!-- Animated dashed connection lines -->
+    <svg class="hv-svg" viewBox="0 0 420 390" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Lines from center card outward to readers -->
+      <line x1="210" y1="195" x2="68"  y2="82"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0"/>
+      <line x1="210" y1="195" x2="358" y2="96"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:.4s"/>
+      <line x1="210" y1="195" x2="44"  y2="302" stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:.8s"/>
+      <line x1="210" y1="195" x2="376" y2="298" stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:1.2s"/>
+      <line x1="210" y1="195" x2="210" y2="24"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:1.6s"/>
+    </svg>
+
+    <!-- Central blog post card -->
+    <div class="hv-post">
+      <div class="hv-post-top">
+        <span class="hv-dot-sm" style="background:#085041"></span>
+        <span class="hv-firm-name">Kovač Consulting</span>
+        <span class="hv-cat">Marketing</span>
+      </div>
+      <div class="hv-post-title">5 napak prvega leta posla — vodič za začetnike</div>
+      <div class="hv-lines">
+        <div class="hv-line" style="width:100%"></div>
+        <div class="hv-line" style="width:82%"></div>
+        <div class="hv-line" style="width:64%"></div>
+      </div>
+      <div class="hv-post-meta">
+        <div class="hv-av" style="background:#085041">MK</div>
+        <span style="font-size:11px;color:var(--ink3)">5 min branja · danes</span>
+      </div>
+    </div>
+
+    <!-- Reader avatars positioned around the card -->
+    <div class="hv-reader" style="top:54px; left:42px">
+      <div class="hv-av-lg" style="background:#534AB7">AN</div>
+    </div>
+    <div class="hv-reader" style="top:68px; right:42px">
+      <div class="hv-av-lg" style="background:#0C447C">LJ</div>
+    </div>
+    <div class="hv-reader" style="bottom:72px; left:22px">
+      <div class="hv-av-lg" style="background:#BA7517">TH</div>
+    </div>
+    <div class="hv-reader" style="bottom:64px; right:26px">
+      <div class="hv-av-lg" style="background:#1D9E75">KR</div>
+    </div>
+    <div class="hv-reader" style="top:6px; left:50%; margin-left:-20px">
+      <div class="hv-av-lg" style="background:#791F1F">PB</div>
+    </div>
+
+    <!-- Views badge (dark green pill, top right) -->
+    <div class="hv-badge-views">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linecap="round"><path d="M1 6.5c2-4 9-4 11 0C10 10.5 3 10.5 1 6.5z"/><circle cx="6.5" cy="6.5" r="1.8" fill="rgba(255,255,255,.85)" stroke="none"/></svg>
+      214 ogledov
+    </div>
+
+    <!-- Growth badge (white pill, bottom right) -->
+    <div class="hv-badge-growth">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"><path d="M1 11l3.5-5L8 9l2.5-4L13 8"/></svg>
+      <span>+47</span> novih bralcev
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- 3 PILLARS -->
+<div class="pillars">
+  <a href="#" class="pillar">
+    <div class="pillar-icon" style="background:#eaf5ef">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M3 5h14M3 9h10M3 13h7"/><path d="M15 13l2 2-2 2"/></svg>
+    </div>
+    <div class="pillar-num">01 — Pisanje</div>
+    <h3>Napiši blog za svojo firmo</h3>
+    <p>Registriraj firmo in začni objavljati. Vsaka objava nosi ime in logo tvoje firme — vidnost, ki gradi ugled.</p>
+  </a>
+  <a href="#" class="pillar">
+    <div class="pillar-icon" style="background:#eaf5ef">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/><circle cx="10" cy="10" r="2" fill="#085041"/></svg>
+    </div>
+    <div class="pillar-num">02 — Promocija</div>
+    <h3>Skupnost te bere in deli</h3>
+    <p>Tvoji blogi dosežejo 240+ podjetnikov direktno. Več bralcev, več zaupanja, več povpraševanj za tvojo firmo.</p>
+  </a>
+  <a href="#" class="pillar">
+    <div class="pillar-icon" style="background:#eaf5ef">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M10 3l2 5h5l-4 3 1.5 5L10 13.5 5.5 16 7 11 3 8h5z"/></svg>
+    </div>
+    <div class="pillar-num">03 — Učenje</div>
+    <h3>Uči se od najboljših</h3>
+    <p>Podcast, live seije in mentorstvo — vsebina ki jo ustvarjajo firme, pomaga vsem v skupnosti rasti hitreje.</p>
+  </a>
+</div>
+
+<!-- KAKO DELUJE -->
+<div class="how-section">
+  <div class="how-inner">
+    <div class="how-header">
+      <div class="how-label">Kako deluje</div>
+      <div class="how-title">Od registracije do bralcev v 10 minutah</div>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="hs-num">Korak 1</div>
+        <div class="hs-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
+        </div>
+        <h4>Registriraj firmo</h4>
+        <p>Ustvari profil firme z logom, opisom in področjem delovanja. Brezplačno, v 2 minutah.</p>
+      </div>
+      <div class="how-step">
+        <div class="hs-num">Korak 2</div>
+        <div class="hs-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l3-3 3 3 3-5 3 5"/><rect x="2" y="3" width="16" height="14" rx="2"/></svg>
+        </div>
+        <h4>Napiši in objavi</h4>
+        <p>Napiši blog iz svojih izkušenj. Objava se pojavi pod imenom firme — s kontaktom in linkom na vaš profil.</p>
+      </div>
+      <div class="how-step">
+        <div class="hs-num">Korak 3</div>
+        <div class="hs-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 17l4-8 4 4 3-5 3 9"/><circle cx="5" cy="8" r="2" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h4>Rast in povpraševanja</h4>
+        <p>Skupnost bere, komentira in kontaktira. Vsak blog je oglas ki ne izgleda kot oglas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN + SIDEBAR -->
+<div class="page">
+  <div class="main-col">
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-n">48</div><div class="stat-l">blogov firm</div></div>
+      <div class="stat-item"><div class="stat-n">240+</div><div class="stat-l">bralcev</div></div>
+      <div class="stat-item"><div class="stat-n">32</div><div class="stat-l">podcast ep.</div></div>
+      <div class="stat-item"><div class="stat-n">18</div><div class="stat-l">live seij</div></div>
+    </div>
+
+    <!-- BLOG FEED -->
+    <div class="s-head">
+      <span class="s-title">Zadnje objave firm</span>
+      <a href="#" class="s-lnk">Vsi blogi <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
+    </div>
+
+    <a href="#" class="blog-item">
+      <div class="bi-top">
+        <span class="bi-firm"><span class="bi-firm-dot" style="background:#085041"></span>Kovač Consulting</span>
+        <span class="bi-cat c-m">Marketing</span>
+      </div>
+      <div class="bi-title">5 napak ki sem jih naredil v prvem letu posla — in kako jih ti ne boš</div>
+      <div class="bi-excerpt">Preden sem razumel, kdo je sploh moja stranka, sem zapravil 3 mesece in 1.800 € na oglasih. Tukaj je vodič za tiste, ki šele začenjajo.</div>
+      <div class="bi-meta">
+        <div class="av" style="background:#085041">MK</div>
+        <span>Marko Kovač</span><span class="dot">·</span><span>5 min branja</span><span class="dot">·</span><span>danes</span>
+      </div>
+    </a>
+
+    <a href="#" class="blog-item">
+      <div class="bi-top">
+        <span class="bi-firm"><span class="bi-firm-dot" style="background:#534AB7"></span>Novak Finance d.o.o.</span>
+        <span class="bi-cat c-f">Finance</span>
+      </div>
+      <div class="bi-title">Kako urediti računovodstvo za s.p. brez računovodje — kompletni vodič</div>
+      <div class="bi-excerpt">Razlaga za podjetnike ki nimajo časa za davčni žargon. Korak za korakom, brez nepotrebnih tehničnih podrobnosti.</div>
+      <div class="bi-meta">
+        <div class="av" style="background:#534AB7">AN</div>
+        <span>Ana Novak</span><span class="dot">·</span><span>8 min branja</span><span class="dot">·</span><span>včeraj</span>
+      </div>
+    </a>
+
+    <a href="#" class="blog-item">
+      <div class="bi-top">
+        <span class="bi-firm"><span class="bi-firm-dot" style="background:#BA7517"></span>MindGrowth</span>
+        <span class="bi-cat c-ms">Mindset</span>
+      </div>
+      <div class="bi-title">Strah pred neuspehom me je zaustavil 2 leti — tukaj je kaj mi je pomagalo</div>
+      <div class="bi-excerpt">Burnout, dvom vase, in strah pred sodbo okolice. Zakaj je o tem treba govoriti odkrito — in kako naprej.</div>
+      <div class="bi-meta">
+        <div class="av" style="background:#BA7517">TH</div>
+        <span>Tim Horvat</span><span class="dot">·</span><span>4 min branja</span><span class="dot">·</span><span>12. maj</span>
+      </div>
+    </a>
+
+    <a href="#" class="blog-item">
+      <div class="bi-top">
+        <span class="bi-firm"><span class="bi-firm-dot" style="background:#1D9E75"></span>RusMedia</span>
+        <span class="bi-cat c-s">Prodaja</span>
+      </div>
+      <div class="bi-title">Kako sem dobila prvih 10 strank — brez omrežja, brez oglasov, brez zvez</div>
+      <div class="bi-excerpt">Praktičen vodič za vsakogar ki gradi od nič. Brez mitov o "instant uspehu".</div>
+      <div class="bi-meta">
+        <div class="av" style="background:#1D9E75">KR</div>
+        <span>Katja Rus</span><span class="dot">·</span><span>6 min branja</span><span class="dot">·</span><span>10. maj</span>
+      </div>
+    </a>
+
+    <a href="#" class="blog-item">
+      <div class="bi-top">
+        <span class="bi-firm"><span class="bi-firm-dot" style="background:#0C447C"></span>Digital Jeglič</span>
+        <span class="bi-cat c-m">Marketing</span>
+      </div>
+      <div class="bi-title">LinkedIn strategija za freelancerje — kaj resnično deluje v Sloveniji v 2025</div>
+      <div class="bi-excerpt">Testiral sem 6 različnih pristopov na lastnem profilu. Tukaj so rezultati in kar priporočam naprej.</div>
+      <div class="bi-meta">
+        <div class="av" style="background:#0C447C">LJ</div>
+        <span>Luka Jeglič</span><span class="dot">·</span><span>7 min branja</span><span class="dot">·</span><span>8. maj</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="side-col">
+
+    <div class="side-block">
+      <div class="write-card">
+        <h4>Objavi za svojo firmo</h4>
+        <p>Vsak blog nosi ime in kontakt vaše firme. Bralci postanejo stranke.</p>
+        <div class="write-steps">
+          <div class="write-step"><span class="ws-num">1</span>Registriraj firmo brezplačno</div>
+          <div class="write-step"><span class="ws-num">2</span>Napiši blog iz prakse</div>
+          <div class="write-step"><span class="ws-num">3</span>Skupnost te prebere in kontaktira</div>
+        </div>
+        <a href="#" class="btn-write">Začni pisati →</a>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="s-head">
+        <span class="s-title">Naslednja live seja</span>
+        <a href="#" class="s-lnk">Vse <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
+      </div>
+      <div class="live-card">
+        <div class="live-tag"><span class="ldot"></span> Sreda, 21. maja · 19:00</div>
+        <h4>Kako pridobiti prve stranke brez oglaševanja</h4>
+        <div class="live-who">Marko Kos &amp; Ana Novak · 48 prijavljenih</div>
+        <a href="#" class="btn-live-sm">Postavi vprašanje — 1 €</a>
+        <div class="live-free">Ogled je brezplačen za vse</div>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="s-head">
+        <span class="s-title">Podcast</span>
+        <a href="#" class="s-lnk">Vse <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
+      </div>
+      <a href="#" class="pod-item">
+        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
+        <div style="flex:1;min-width:0">
+          <div class="pi-ep">Ep. 32 · Intervju</div>
+          <div class="pi-title">Od 0 do 200k v 18 mesecih</div>
+        </div>
+        <div class="pi-dur">48 min</div>
+      </a>
+      <a href="#" class="pod-item">
+        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
+        <div style="flex:1;min-width:0">
+          <div class="pi-ep">Ep. 31 · Okrogla miza</div>
+          <div class="pi-title">Kako nastaviti cene storitev</div>
+        </div>
+        <div class="pi-dur">62 min</div>
+      </a>
+      <a href="#" class="pod-item">
+        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
+        <div style="flex:1;min-width:0">
+          <div class="pi-ep">Ep. 30 · Intervju</div>
+          <div class="pi-title">Prodaja brez pritiska</div>
+        </div>
+        <div class="pi-dur">41 min</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- JOIN BAND -->
+<div style="border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+<div class="join-band">
+  <div>
+    <h2>Tvoja firma<br/><em>sodi sem.</em></h2>
+    <p>GradimSe je kraj kjer slovenske firme gradijo ugled z znanjem — ne z oglasi. Pridruži se skupnosti ki bere, deli in raste skupaj.</p>
+  </div>
+  <div class="join-box">
+    <div class="join-box-title">Kako se pridružiš?</div>
+    <div class="join-box-sub">Izberi kar ustreza tebi.</div>
+    <div class="join-options">
+      <a href="#" class="join-opt">
+        <div class="jo-icon" style="background:#eaf5ef">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M3 14l3-3 3 3 3-5 3 5"/></svg>
+        </div>
+        <div>
+          <div class="jo-name">Objavi blog za firmo</div>
+          <div class="jo-desc">Brezplačno · vidnost · stranke</div>
+        </div>
+        <div class="jo-arr"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></div>
+      </a>
+      <a href="#" class="join-opt">
+        <div class="jo-icon" style="background:#eaf5ef">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="6" r="3"/><path d="M2 16v-1a6 6 0 016-6v0a6 6 0 016 6v1"/></svg>
+        </div>
+        <div>
+          <div class="jo-name">Pridruži se kot posameznik</div>
+          <div class="jo-desc">Brezplačno · beri · povprašaj</div>
+        </div>
+        <div class="jo-arr"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></div>
+      </a>
+    </div>
+    <div class="join-note">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6l2.5 2.5 5.5-5"/></svg>
+      Oba načina sta popolnoma brezplačna
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-wrap">
+  <footer>
+    <div>
+      <div class="f-logo">Gradim<span>Se</span></div>
+      <div class="f-sub">Slovenska platforma za podjetniške bloge, učenje in skupnost.</div>
+    </div>
+    <div class="fc">
+      <h4>Vsebina</h4>
+      <a href="#">Blogi firm</a>
+      <a href="#">Podcast</a>
+      <a href="#">Live seije</a>
+      <a href="#">Tečaj</a>
+    </div>
+    <div class="fc">
+      <h4>Skupnost</h4>
+      <a href="#">Mentorstvo</a>
+      <a href="#">Člani</a>
+      <a href="#">Mapa firm</a>
+      <a href="#">Partnerski program</a>
+    </div>
+    <div class="fc">
+      <h4>Info</h4>
+      <a href="#">O projektu</a>
+      <a href="#">Kontakt</a>
+      <a href="#">Pogoji</a>
+      <a href="#">GDPR</a>
+    </div>
+  </footer>
+  <div class="footer-bot">
+    <span>© 2025 GradimSe</span>
+    <div>
+      <a href="#">Zasebnost</a>
+      <a href="#">Pogoji</a>
+      <a href="#">GDPR</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
