@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skupnost — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-cta { font-size: .8rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; transition: opacity .2s; }
+    .nav-cta:hover { opacity: .7; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .page-hero { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3.5rem; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; animation: fadeUp .45s ease both; }
+    .page-hero-label { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1rem; display: block; }
+    .page-hero-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; line-height: 1.1; color: var(--ink); }
+    .page-hero-title em { font-style: italic; color: var(--green-dark); }
+    .page-hero-sub { font-size: .95rem; color: var(--muted); margin-top: 1rem; font-weight: 300; max-width: 480px; }
+    .hero-pill { display: inline-flex; align-items: center; gap: 7px; margin-top: 1.25rem; font-size: .7rem; font-weight: 500; letter-spacing: .04em; color: #4a7a5a; background: rgba(125,155,118,.11); border: 1px solid rgba(125,155,118,.2); padding: .3rem .85rem; border-radius: 100px; }
+    .hero-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: #7d9b76; animation: blink 2.2s ease infinite; }
+
+    .page-content { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    /* ── Member grid ── */
+    .member-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+    .member-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 20px; overflow: hidden;
+      cursor: pointer; transition: transform .22s, box-shadow .22s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.04);
+    }
+    .member-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.1); }
+    .mc-photo { position: relative; aspect-ratio: 1/1; overflow: hidden; }
+    .mc-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .32s; }
+    .member-card:hover .mc-photo img { transform: scale(1.05); }
+    .mc-hover-overlay { position: absolute; inset: 0; background: rgba(10,92,74,.75); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .22s; }
+    .member-card:hover .mc-hover-overlay { opacity: 1; }
+    .mc-hover-overlay span { font-size: .78rem; font-weight: 500; color: #fff; border: 1px solid rgba(255,255,255,.55); padding: .5rem 1.2rem; border-radius: 100px; letter-spacing: .02em; }
+    .mc-body { padding: 1.2rem 1.35rem 1.5rem; }
+    .mc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .85rem; }
+    .mc-tag { font-size: .6rem; font-weight: 500; color: var(--green-dark); background: var(--green-faint); border: 1px solid rgba(10,92,74,.1); padding: .17rem .55rem; border-radius: 100px; }
+    .mc-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: .2rem; }
+    .mc-role { font-size: .67rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .7rem; }
+    .mc-bio { font-size: .8rem; color: var(--ink2); line-height: 1.68; }
+
+    /* ── Internal tabs ── */
+    .sk-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+    .sk-tab { font-size: .875rem; font-weight: 400; color: var(--muted); padding: .85rem 1.4rem; cursor: pointer; border: none; background: none; font-family: var(--sans); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .18s, border-color .18s; display: flex; align-items: center; gap: .5rem; }
+    .sk-tab:hover { color: var(--ink); }
+    .sk-tab.active { font-weight: 500; color: var(--green-dark); border-bottom-color: var(--green-dark); }
+    .sk-tab-count { font-size: .65rem; background: var(--green-light); color: var(--green-dark); padding: .1rem .45rem; border-radius: 100px; font-weight: 600; }
+    .sk-pane { display: none; }
+    .sk-pane.active { display: block; }
+
+    /* ── Partnerji cards ── */
+    .partner-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 2.5rem; }
+    .partner-card { background: #fff; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr; box-shadow: 0 1px 5px rgba(0,0,0,.04); transition: box-shadow .22s, transform .22s; }
+    .partner-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.09); transform: translateY(-2px); }
+    .partner-visual { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 1.75rem 1.5rem; position: relative; overflow: hidden; }
+    .partner-monogram { font-family: var(--serif); font-size: 4rem; font-style: italic; color: rgba(255,255,255,.18); line-height: 1; position: absolute; right: -6px; bottom: -6px; }
+    .partner-initials { width: 52px; height: 52px; border-radius: 14px; background: rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 1.15rem; font-style: italic; color: #fff; position: relative; z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .partner-pkg { font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: rgba(255,255,255,.85); background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28); padding: .22rem .6rem; border-radius: 100px; position: relative; z-index: 1; }
+    .partner-body { padding: 1.6rem 1.75rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .partner-cat { font-size: .62rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: .45rem; }
+    .partner-name { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; letter-spacing: -.2px; color: var(--ink); margin-bottom: .5rem; }
+    .partner-desc { font-size: .875rem; color: var(--muted); line-height: 1.68; flex: 1; margin-bottom: 1.1rem; }
+    .partner-footer { display: flex; align-items: center; justify-content: space-between; }
+    .partner-verified { font-size: .68rem; color: var(--green-dark); display: flex; align-items: center; gap: .35rem; }
+    .partner-btn { font-size: .8rem; font-weight: 500; color: #fff; padding: .4rem 1.05rem; border-radius: 100px; text-decoration: none; transition: opacity .18s; }
+    .partner-cta-box { background: linear-gradient(135deg, #0A5C4A, #22A87E); border-radius: 20px; padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .partner-cta-box h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 400; color: #fff; letter-spacing: -.3px; margin-bottom: .4rem; }
+    .partner-cta-box p { font-size: .85rem; color: rgba(255,255,255,.75); }
+    .partner-cta-link { flex-shrink: 0; background: #fff; color: var(--green-dark); font-size: .85rem; font-weight: 600; padding: .65rem 1.5rem; border-radius: 100px; text-decoration: none; white-space: nowrap; box-shadow: 0 3px 12px rgba(0,0,0,.15); transition: opacity .18s; }
+    .partner-cta-link:hover { opacity: .9; }
+
+    /* ── Sponsor modal ── */
+    .sp-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(4px); z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .22s; }
+    .sp-overlay.active { opacity: 1; pointer-events: all; }
+    .sp-modal { background: #fff; border-radius: 24px; width: 100%; max-width: 660px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,.22); transform: translateY(18px) scale(.97); transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+    .sp-overlay.active .sp-modal { transform: translateY(0) scale(1); }
+    .sp-modal-head { border-radius: 24px 24px 0 0; padding: 2.5rem 2.5rem 2rem; position: relative; overflow: hidden; }
+    .sp-modal-monogram { font-family: var(--serif); font-size: 7rem; font-style: italic; color: rgba(255,255,255,.13); line-height: 1; position: absolute; right: -10px; bottom: -14px; pointer-events: none; }
+    .sp-modal-logo { width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.22); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 1.5rem; font-style: italic; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.18); margin-bottom: 1.1rem; }
+    .sp-modal-pkg { display: inline-block; font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; color: rgba(255,255,255,.9); background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3); padding: .22rem .7rem; border-radius: 100px; margin-bottom: .6rem; }
+    .sp-modal-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; color: #fff; letter-spacing: -.3px; line-height: 1.15; margin-bottom: .35rem; }
+    .sp-modal-cat { font-size: .72rem; color: rgba(255,255,255,.7); text-transform: uppercase; letter-spacing: .1em; }
+    .sp-close { position: absolute; top: 1.25rem; right: 1.25rem; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: background .18s; }
+    .sp-close:hover { background: rgba(255,255,255,.35); }
+    .sp-modal-body { padding: 2rem 2.5rem 2.5rem; }
+    .sp-section-title { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin-bottom: .75rem; }
+    .sp-desc { font-size: .92rem; color: var(--ink2); line-height: 1.75; margin-bottom: 1.75rem; }
+    .sp-list { list-style: none; margin: 0 0 1.75rem; padding: 0; display: flex; flex-direction: column; gap: .5rem; }
+    .sp-list li { font-size: .875rem; color: var(--ink2); line-height: 1.55; display: flex; align-items: flex-start; gap: .6rem; }
+    .sp-list li::before { content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-top: .42rem; flex-shrink: 0; }
+    .sp-benefit-box { background: var(--green-faint); border: 1px solid rgba(10,92,74,.14); border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; }
+    .sp-benefit-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--green-dark); margin-bottom: .4rem; }
+    .sp-benefit-text { font-size: .9rem; color: var(--ink2); line-height: 1.6; }
+    .sp-benefit-text strong { color: var(--green-dark); }
+    .sp-verified { display: flex; align-items: center; gap: .45rem; font-size: .75rem; color: var(--green-dark); font-weight: 500; margin-bottom: 1.5rem; }
+    .sp-modal-cta { display: block; width: 100%; text-align: center; font-size: .9rem; font-weight: 600; color: #fff; padding: .9rem; border-radius: 100px; text-decoration: none; transition: opacity .18s; box-shadow: 0 4px 18px rgba(0,0,0,.18); }
+    .sp-modal-cta:hover { opacity: .88; }
+    .partner-card { cursor: pointer; }
+
+    /* ── Mentorji cards ── */
+    .mentor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+    .mentor-card { background: #fff; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 1px 5px rgba(0,0,0,.04); transition: box-shadow .22s, transform .22s; }
+    .mentor-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.09); transform: translateY(-3px); }
+    .mentor-photo { position: relative; height: 180px; overflow: hidden; }
+    .mentor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .32s; }
+    .mentor-card:hover .mentor-photo img { transform: scale(1.05); }
+    .mentor-rate { position: absolute; top: .85rem; right: .85rem; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-radius: 100px; padding: .3rem .75rem; font-size: .78rem; font-weight: 700; color: var(--green-dark); box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .mentor-body { padding: 1.25rem 1.4rem 1.5rem; }
+    .mentor-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: .18rem; }
+    .mentor-role { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .75rem; }
+    .mentor-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .85rem; }
+    .mentor-tag { font-size: .62rem; font-weight: 500; color: var(--green-dark); background: var(--green-faint); border: 1px solid rgba(10,92,74,.1); padding: .17rem .55rem; border-radius: 100px; }
+    .mentor-bio { font-size: .82rem; color: var(--ink2); line-height: 1.65; margin-bottom: 1.1rem; }
+    .mentor-btn { display: block; width: 100%; text-align: center; font-size: .83rem; font-weight: 500; color: var(--green-dark); border: 1.5px solid rgba(10,92,74,.28); padding: .55rem; border-radius: 100px; text-decoration: none; transition: all .18s; }
+    .mentor-btn:hover { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+    .mentor-info-box { background: var(--green-faint); border: 1px solid rgba(10,92,74,.12); border-radius: 18px; padding: 1.5rem 1.75rem; display: flex; align-items: center; gap: 1.5rem; }
+    .mentor-info-box p { font-size: .85rem; color: var(--ink2); line-height: 1.6; }
+    .mentor-info-box strong { color: var(--green-dark); }
+
+    /* ── CTA pill ── */
+    .sk-cta { border-radius: 200px; background: #fff; border: 1px solid rgba(0,0,0,.07); box-shadow: 0 1px 4px rgba(0,0,0,.04); padding: 1.5rem 2.75rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .sk-cta-text { font-family: var(--serif); font-size: 1.2rem; font-style: italic; color: var(--ink); font-weight: 400; margin-bottom: .3rem; }
+    .sk-cta-sub { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+    .sk-cta-lnk { flex-shrink: 0; font-size: .8rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.3); padding-bottom: 1px; white-space: nowrap; transition: border-color .2s; }
+    .sk-cta-lnk:hover { border-color: var(--green-dark); }
+
+    /* ── Full-page profile overlay ── */
+    .profile-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(245,242,237,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .profile-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .profile-panel {
+      background: #fff; border-radius: 24px;
+      width: 100%; max-width: 880px;
+      max-height: calc(100vh - 2.5rem);
+      display: grid; grid-template-columns: 300px 1fr;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0,0,0,.5), 0 8px 32px rgba(0,0,0,.2);
+      position: relative;
+      transform: translateY(22px) scale(.97);
+      transition: transform .32s cubic-bezier(.22,.68,0,1.12);
+    }
+    .profile-overlay.active .profile-panel { transform: translateY(0) scale(1); }
+
+    .profile-close {
+      position: absolute; top: 1rem; right: 1rem; z-index: 20;
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(6px);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,.18);
+      transition: background .15s, transform .15s;
+    }
+    .profile-close:hover { background: #fff; transform: scale(1.08); }
+
+    .pp-photo-col { position: relative; overflow: hidden; }
+    .pp-photo-col img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .pp-photo-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,15,11,.88) 0%, rgba(6,15,11,.3) 45%, transparent 70%); }
+    .pp-photo-foot { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.6rem; }
+    .pp-photo-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .65rem; }
+    .pp-photo-tag { font-size: .58rem; font-weight: 500; color: rgba(255,255,255,.85); background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); padding: .17rem .6rem; border-radius: 100px; letter-spacing: .03em; }
+    .pp-photo-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; color: #fff; letter-spacing: -.5px; line-height: 1.1; margin-bottom: .25rem; }
+    .pp-photo-role { font-size: .67rem; color: rgba(255,255,255,.68); text-transform: uppercase; letter-spacing: .08em; }
+
+    .pp-info-col {
+      overflow-y: auto; padding: 2rem 2.25rem 2rem 1.75rem;
+      display: flex; flex-direction: column; gap: 1.4rem;
+    }
+
+    .pp-section-label { font-size: .62rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .55rem; }
+    .pp-bio { font-size: .9rem; color: var(--ink2); line-height: 1.82; margin-bottom: .65rem; }
+    .pp-bio-ext { font-size: .84rem; color: var(--muted); line-height: 1.8; }
+
+    .pp-stats { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .pp-stat { flex: 1; padding: 1rem .85rem; text-align: center; border-right: 1px solid var(--border); }
+    .pp-stat:last-child { border-right: none; }
+    .pp-stat-n { font-family: var(--serif); font-size: 1.2rem; color: var(--green); font-style: italic; line-height: 1; display: block; margin-bottom: .22rem; }
+    .pp-stat-l { font-size: .58rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; line-height: 1.3; }
+
+    .pp-quote { font-size: .86rem; color: var(--ink2); font-style: italic; line-height: 1.72; padding: .95rem 1.1rem .95rem 1.2rem; background: var(--green-faint); border-left: 3px solid var(--green-light); border-radius: 0 12px 12px 0; }
+
+    .pp-contacts { display: flex; flex-direction: column; gap: .45rem; }
+    .pp-contact { display: flex; align-items: center; gap: .65rem; font-size: .83rem; color: var(--ink2); text-decoration: none; padding: .62rem .9rem; border-radius: 10px; border: 1px solid var(--border); background: #fafafa; transition: border-color .15s, background .15s; }
+    .pp-contact:hover { border-color: rgba(10,92,74,.25); background: var(--green-faint); color: var(--green-dark); }
+    .pp-contact svg { flex-shrink: 0; color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-brand {}
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; line-height: 1.5; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+    @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } .footer-tagline { max-width: 100%; } }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .member-grid { grid-template-columns: 1fr 1fr; }
+      .sk-cta { flex-direction: column; align-items: flex-start; border-radius: 20px; padding: 1.5rem; }
+      .profile-panel { grid-template-columns: 1fr; max-height: calc(100vh - 1.5rem); }
+      .pp-photo-col { height: 280px; }
+      .pp-info-col { padding: 1.5rem; }
+    }
+
+    /* ── ACCOUNT ICON ── */
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s, box-shadow .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    .nav-account-btn.open { border-color: var(--green-dark); background: var(--green-faint); }
+
+    /* ── ACCOUNT PANEL ── */
+    .acct-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(22,25,23,.42); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .acct-overlay.active { opacity: 1; pointer-events: auto; }
+    .acct-panel { position: fixed; top: 68px; right: 2rem; z-index: 401; background: #fff; border-radius: 22px; width: calc(100vw - 4rem); max-width: 540px; box-shadow: 0 20px 60px rgba(0,0,0,.22), 0 4px 16px rgba(0,0,0,.1); overflow: hidden; transform: translateY(-10px) scale(.97); transition: transform .28s cubic-bezier(.22,.68,0,1.12); opacity: 0; pointer-events: none; }
+    .acct-overlay.active .acct-panel { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-panel.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-loggedout { padding: 2.25rem 2rem; text-align: center; }
+    .acct-lo-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 1.25rem; display: block; }
+    .acct-lo-logo span { color: var(--green); }
+    .acct-lo-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; letter-spacing: -.3px; }
+    .acct-lo-sub { font-size: .84rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.55; }
+    .acct-lo-btns { display: flex; gap: .7rem; justify-content: center; }
+    .acct-lo-btn { padding: .65rem 1.5rem; border-radius: 100px; font-size: .85rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all .15s; border: none; }
+    .acct-lo-btn.primary { background: linear-gradient(135deg, #0A5C4A, #22A87E); color: #fff; cursor: pointer; }
+    .acct-lo-btn.primary:hover { opacity: .9; }
+    .acct-lo-btn.ghost { background: none; color: var(--green-dark); border: 1.5px solid rgba(10,92,74,.22); cursor: pointer; }
+    .acct-lo-btn.ghost:hover { border-color: var(--green-dark); background: var(--green-faint); }
+
+    /* ══ JOIN MODAL (same as index.html) ══ */
+    .join-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(22,25,23,.62); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+    .join-overlay.active { opacity: 1; pointer-events: auto; }
+    .join-modal { background: #fff; border-radius: 26px; width: 100%; max-width: 800px; display: grid; grid-template-columns: 300px 1fr; overflow: hidden; box-shadow: 0 40px 120px rgba(0,0,0,.38), 0 8px 32px rgba(0,0,0,.14); max-height: calc(100vh - 2rem); position: relative; transform: translateY(20px) scale(.97); transition: transform .32s cubic-bezier(.22,.68,0,1.1); }
+    .join-overlay.active .join-modal { transform: translateY(0) scale(1); }
+    .join-left { background: linear-gradient(160deg, #063d2c 0%, #0A5C4A 40%, #0f8264 80%, #22A87E 100%); padding: 2.5rem 2rem; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .join-left::before { content: ''; position: absolute; width: 280px; height: 280px; border-radius: 50%; background: rgba(255,255,255,.05); top: -90px; right: -70px; pointer-events: none; }
+    .join-left::after { content: ''; position: absolute; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,.04); bottom: 30px; left: -50px; pointer-events: none; }
+    .jl-logo { font-family: var(--serif); font-size: 1.2rem; color: rgba(255,255,255,.88); letter-spacing: -.3px; margin-bottom: 2.25rem; display: block; position: relative; z-index: 1; }
+    .jl-logo span { color: rgba(255,255,255,.5); }
+    .jl-headline { font-family: var(--serif); font-size: 1.55rem; font-weight: 400; color: #fff; line-height: 1.22; letter-spacing: -.4px; margin-bottom: .5rem; position: relative; z-index: 1; }
+    .jl-headline em { font-style: italic; color: rgba(255,255,255,.68); }
+    .jl-sub { font-size: .79rem; color: rgba(255,255,255,.55); line-height: 1.68; margin-bottom: 1.75rem; position: relative; z-index: 1; }
+    .jl-perks { list-style: none; display: flex; flex-direction: column; gap: .65rem; flex: 1; position: relative; z-index: 1; }
+    .jl-perk { display: flex; align-items: center; gap: .65rem; font-size: .79rem; color: rgba(255,255,255,.78); }
+    .jl-perk-dot { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .jl-stats { display: flex; margin-top: 1.75rem; border-top: 1px solid rgba(255,255,255,.13); padding-top: 1.4rem; position: relative; z-index: 1; }
+    .jl-stat { flex: 1; text-align: center; }
+    .jl-stat:not(:last-child) { border-right: 1px solid rgba(255,255,255,.1); }
+    .jl-stat-n { font-family: var(--serif); font-size: 1.2rem; color: #fff; font-style: italic; display: block; line-height: 1; }
+    .jl-stat-l { font-size: .56rem; color: rgba(255,255,255,.46); text-transform: uppercase; letter-spacing: .07em; display: block; margin-top: .22rem; }
+    .join-right { padding: 2.25rem 2.25rem 2.25rem 2rem; overflow-y: auto; display: flex; flex-direction: column; justify-content: center; }
+    .join-close { position: absolute; top: .9rem; right: .9rem; z-index: 10; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(22,25,23,.07); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .join-close:hover { background: rgba(22,25,23,.13); }
+    .join-step { display: flex; flex-direction: column; }
+    .join-step.hidden { display: none; }
+    .join-progress { display: flex; align-items: center; gap: .45rem; margin-bottom: 1.5rem; }
+    .join-prog-bar { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background .3s; }
+    .join-prog-bar.fill { background: var(--green); }
+    .join-prog-label { font-size: .62rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .09em; white-space: nowrap; }
+    .join-step-title { font-family: var(--serif); font-size: 1.55rem; font-weight: 400; color: var(--ink); letter-spacing: -.4px; line-height: 1.15; margin-bottom: .3rem; }
+    .join-step-sub { font-size: .8rem; color: var(--muted); margin-bottom: 1.6rem; line-height: 1.5; }
+    .join-field { margin-bottom: 1rem; }
+    .join-label { font-size: .7rem; font-weight: 500; color: var(--ink2); display: block; margin-bottom: .35rem; letter-spacing: .01em; }
+    .join-label .opt { color: var(--muted); font-weight: 400; }
+    .join-input, .join-select, .join-textarea { width: 100%; padding: .7rem .9rem; border-radius: 10px; border: 1.5px solid rgba(14,90,66,.15); background: #fafafa; font-family: var(--sans); font-size: .875rem; color: var(--ink); outline: none; transition: border-color .18s, background .18s, box-shadow .18s; }
+    .join-input:focus, .join-select:focus, .join-textarea:focus { border-color: var(--green); background: #fff; box-shadow: 0 0 0 3px rgba(34,168,126,.12); }
+    .join-input::placeholder, .join-textarea::placeholder { color: #b8c2be; }
+    .join-select { appearance: none; padding-right: 2.2rem; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236E7870' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .85rem center; background-size: 10px 6px; background-color: #fafafa; }
+    .join-textarea { resize: vertical; min-height: 82px; }
+    .join-input.err, .join-select.err, .join-textarea.err { border-color: #d44444; box-shadow: 0 0 0 3px rgba(212,68,68,.09); }
+    .join-err-msg { font-size: .68rem; color: #c03030; margin-top: .28rem; display: none; }
+    .has-error .join-err-msg { display: block; }
+    .join-btn { width: 100%; padding: .8rem 1rem; border-radius: 100px; border: none; background: linear-gradient(135deg, #0A5C4A 0%, #22A87E 100%); color: #fff; font-size: .88rem; font-weight: 500; font-family: var(--sans); cursor: pointer; margin-top: .4rem; letter-spacing: .01em; transition: opacity .2s, transform .15s; display: flex; align-items: center; justify-content: center; gap: .4rem; }
+    .join-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .join-fine { font-size: .68rem; color: var(--muted); text-align: center; margin-top: .8rem; line-height: 1.5; }
+    .join-fine a { color: var(--green-dark); }
+    .join-toggle { font-size: .76rem; color: var(--muted); text-align: center; margin-top: 1rem; }
+    .join-toggle a { color: var(--green-dark); text-decoration: none; font-weight: 500; border-bottom: 1px solid rgba(10,92,74,.22); padding-bottom: 1px; transition: border-color .15s; }
+    .join-toggle a:hover { border-color: var(--green-dark); }
+    .join-back-btn { background: none; border: none; color: var(--muted); font-size: .76rem; cursor: pointer; font-family: var(--sans); padding: 0; display: inline-flex; align-items: center; gap: .3rem; margin-bottom: 1.25rem; transition: color .15s; }
+    .join-back-btn:hover { color: var(--ink); }
+    .join-success-wrap { text-align: center; padding: .5rem 0; }
+    .join-success-ring { width: 68px; height: 68px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.4rem; box-shadow: 0 0 0 8px rgba(34,168,126,.1); }
+    .join-success-title { font-family: var(--serif); font-size: 1.55rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; letter-spacing: -.3px; }
+    .join-success-sub { font-size: .82rem; color: var(--muted); line-height: 1.72; margin-bottom: 1.75rem; }
+    .join-success-sub strong { color: var(--ink2); }
+    @media (max-width: 640px) { .join-modal { grid-template-columns: 1fr; } .join-left { display: none; } .join-right { padding: 2rem 1.5rem; } }
+
+    .acct-login-wrap { padding: 1.75rem 2rem 2rem; }
+    .acct-login-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .3rem; letter-spacing: -.3px; }
+    .acct-login-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-login-back { background: none; border: none; color: var(--muted); font-size: .8rem; cursor: pointer; padding: 0; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .35rem; font-family: var(--sans); transition: color .15s; }
+    .acct-login-back:hover { color: var(--green); }
+    .acct-login-err { font-size: .79rem; color: #c0392b; margin: -.1rem 0 .8rem; min-height: 1.1rem; }
+    .acct-loggedin-inner { padding: 1.75rem 2rem 2rem; }
+    .acct-logout-btn { background: none; border: 1px solid rgba(14,90,66,.18); color: var(--muted); font-size: .78rem; padding: .4rem 1rem; border-radius: 100px; cursor: pointer; font-family: var(--sans); transition: all .15s; margin-top: .75rem; width: 100%; }
+    .acct-logout-btn:hover { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+    .acct-admin-badge { font-size: .68rem; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; padding: .18rem .55rem; border-radius: 100px; letter-spacing: .03em; font-weight: 500; }
+    /* ── Naši sponzorji sekcija ── */
+    .nsp-section { padding: 0 0 4.5rem; transition: opacity .65s ease, transform .65s ease; }
+    .nsp-section.nsp-ready { opacity: 0; transform: translateY(20px); }
+    .nsp-section.nsp-ready.visible { opacity: 1; transform: translateY(0); }
+    .nsp-divider { height: 1px; background: rgba(0,0,0,.08); margin-bottom: 3.5rem; }
+    .nsp-inner { max-width: 720px; margin: 0 auto; text-align: center; padding: 0 1.5rem; }
+    .nsp-eyebrow { font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: .2em; color: var(--muted); margin-bottom: .65rem; }
+    .nsp-title { font-family: var(--serif); font-size: 1.55rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; margin-bottom: 2.25rem; }
+    .nsp-cards { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+    .nsp-card { background: #FAF9F6; border: 1px solid rgba(0,0,0,.07); border-radius: 12px; padding: 20px 32px; display: flex; flex-direction: column; align-items: center; gap: .55rem; transition: box-shadow .22s, transform .22s; }
+    .nsp-card:hover { box-shadow: 0 6px 22px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .nsp-init { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: .95rem; font-weight: 700; font-style: italic; }
+    .nsp-name { font-family: var(--sans); font-size: .78rem; font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .nsp-cta { font-family: var(--sans); font-size: .75rem; color: var(--muted); }
+    .nsp-cta a { color: var(--green-dark); text-decoration: none; font-weight: 500; border-bottom: 1px solid rgba(10,92,74,.22); padding-bottom: 1px; transition: border-color .15s, color .15s; }
+    .nsp-cta a:hover { border-color: var(--green-dark); color: var(--green); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html" class="active">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="5.5" r="3.5"/>
+      <path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+    </svg>
+  </button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Skupnost</span>
+    <h1 class="page-hero-title">240+ podjetnikov.<br><em>Ena skupnost.</em></h1>
+    <p class="page-hero-sub">Resnični podjetniki, resnične zgodbe. Tvoje pleme je tukaj.</p>
+    <div class="hero-pill"><span class="hero-pill-dot"></span>&nbsp;+12 novih članov ta mesec</div>
+  </div>
+</div>
+
+<div class="page-content">
+
+  <!-- ── Tabs ── -->
+  <!-- ── Člani ── -->
+  <div class="member-grid">
+
+    <div class="member-card" data-member-id="mk">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=11" alt="Marko Kovač">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">12k MRR</span><span class="mc-tag">Podcast gost</span><span class="mc-tag">SaaS</span></div>
+        <p class="mc-name">Marko Kovač</p>
+        <p class="mc-role">SaaS · Startup · Ustanovitelj</p>
+        <p class="mc-bio">Zapustil korporativni svet pri 31 in zgradil SaaS produkt z 12k mesečnega prihodka — brez ekipe in brez investitorja.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="ap">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=49" alt="Ana Potočnik">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">200k €/let</span><span class="mc-tag">Podjetnik meseca</span></div>
+        <p class="mc-name">Ana Potočnik</p>
+        <p class="mc-role">E-commerce · Ustanoviteljica</p>
+        <p class="mc-bio">Računovodkinja, ki je pri 38 zaprla Excel in odprla spletno trgovino. Danes ima 200k letnega prometa brez kreditov.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="jn">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=68" alt="Jure Novak">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">3 restavracije</span><span class="mc-tag">Brez kredita</span></div>
+        <p class="mc-name">Jure Novak</p>
+        <p class="mc-role">Gostinstvo · Lastnik</p>
+        <p class="mc-bio">Pet let, trije lokali, nič posojil. Ena stvar naenkrat — ampak prava stvar, narejena prav.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="kl">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=25" alt="Kaja Lebar">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">40+ strank</span><span class="mc-tag">Agencija</span></div>
+        <p class="mc-name">Kaja Lebar</p>
+        <p class="mc-role">Marketing · Agencija</p>
+        <p class="mc-bio">Nekdanja marketing managerka, ki je 'kar enkrat poskusila' freelanceriti in se nikoli vrnila v pisarno.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="tb">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=15" alt="Tomaž Bregar">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">50k €/let</span><span class="mc-tag">B2B SaaS</span></div>
+        <p class="mc-name">Tomaž Bregar</p>
+        <p class="mc-role">SaaS · B2B</p>
+        <p class="mc-bio">Inženir brez prodajnih izkušenj, ki je zgradil B2B SaaS samo s pogovarjanjem s strankami.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="sh">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=43" alt="Sara Hrovat">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">100+ klientov</span><span class="mc-tag">Coaching</span></div>
+        <p class="mc-name">Sara Hrovat</p>
+        <p class="mc-role">Life Coaching · Ustanoviteljica</p>
+        <p class="mc-bio">Odšla iz direktorske pisarne in začela znova. Danes pomaga 100+ klientom najti smer v karieri in poslu.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="lj">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=50" alt="Luka Jeglič">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">8k sledilcev</span><span class="mc-tag">LinkedIn</span></div>
+        <p class="mc-name">Luka Jeglič</p>
+        <p class="mc-role">LinkedIn · Marketing</p>
+        <p class="mc-bio">Na LinkedInu od 0 do 8.000 sledilcev v šestih mesecih brez enega evra oglasov.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="mh">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=20" alt="Maja Hudnik">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">60k €/let</span><span class="mc-tag">Studio</span></div>
+        <p class="mc-name">Maja Hudnik</p>
+        <p class="mc-role">Fotografija · Studio</p>
+        <p class="mc-bio">Studio začela v garaži z izposojeno kamero. Danes ima lasten studio v centru Ljubljane in ekipo dveh.</p>
+      </div>
+    </div>
+
+    <div class="member-card" data-member-id="pk">
+      <div class="mc-photo">
+        <img src="https://i.pravatar.cc/300?img=3" alt="Peter Kranjc">
+        <div class="mc-hover-overlay"><span>Odpri profil</span></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-tags"><span class="mc-tag">3 SaaS produkti</span><span class="mc-tag">Dev</span></div>
+        <p class="mc-name">Peter Kranjc</p>
+        <p class="mc-role">Spletni razvoj · SaaS</p>
+        <p class="mc-bio">Freelance razvijalec, ki ni mogel nehat reševati enakih problemov — zato je zgradil tri profitabilne SaaS produkte.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sk-cta">
+    <div>
+      <p class="sk-cta-text">Imaš zgodbo za povedati?</p>
+      <p class="sk-cta-sub">Pridruži se 240+ slovenskim podjetnikom in deli svojo izkušnjo.</p>
+    </div>
+    <a href="#" class="sk-cta-lnk" id="skCtaJoin">Pridruži se skupnosti →</a>
+  </div>
+
+
+</div>
+
+<!-- ── Naši sponzorji ── -->
+<section class="nsp-section" id="nspSection">
+  <div class="nsp-divider"></div>
+  <div class="nsp-inner">
+    <p class="nsp-eyebrow">Podpirajo skupnost</p>
+    <h2 class="nsp-title">Naši sponzorji</h2>
+    <div class="nsp-cards">
+      <div class="nsp-card">
+        <div class="nsp-init" style="background:#E8F5F0;color:#0A5C4A;">RN</div>
+        <span class="nsp-name">Računovodstvo Novak</span>
+      </div>
+      <div class="nsp-card">
+        <div class="nsp-init" style="background:#EFF6FF;color:#1D4ED8;">BP</div>
+        <span class="nsp-name">Banka za podjetnike</span>
+      </div>
+      <div class="nsp-card">
+        <div class="nsp-init" style="background:#FEF3C7;color:#92400E;">PK</div>
+        <span class="nsp-name">Pravna pisarna Kovač</span>
+      </div>
+    </div>
+    <p class="nsp-cta"><a href="oglasi.html">Postanite sponzor →</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Full-page profile overlay -->
+<div class="profile-overlay" id="profileOverlay">
+  <div class="profile-panel" id="profilePanel">
+    <button class="profile-close" id="profileClose" aria-label="Zapri">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#161917" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+    </button>
+
+    <div class="pp-photo-col">
+      <img src="" alt="" id="ppImg">
+      <div class="pp-photo-grad"></div>
+      <div class="pp-photo-foot">
+        <div class="pp-photo-tags" id="ppTags"></div>
+        <div class="pp-photo-name" id="ppName"></div>
+        <div class="pp-photo-role" id="ppRole"></div>
+      </div>
+    </div>
+
+    <div class="pp-info-col">
+      <div>
+        <p class="pp-section-label">O meni</p>
+        <p class="pp-bio" id="ppBio"></p>
+        <p class="pp-bio-ext" id="ppBioExt"></p>
+      </div>
+
+      <div class="pp-stats" id="ppStats"></div>
+
+      <blockquote class="pp-quote" id="ppQuote"></blockquote>
+
+      <div>
+        <p class="pp-section-label">Kontakt</p>
+        <div class="pp-contacts">
+          <a href="#" class="pp-contact" id="ppPhone">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+              <path d="M5 1.5H2.5C1.95 1.5 1.5 1.95 1.5 2.5c0 5.8 4.2 10 10 10 .55 0 1-.45 1-1V9l-2.5-.8-.7 1.5C8.1 9.2 4.8 5.9 4.3 4.7L5.8 4 5 1.5z"/>
+            </svg>
+            <span id="ppPhoneText"></span>
+          </a>
+          <a href="#" class="pp-contact" id="ppEmail">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+              <rect x="1" y="3.5" width="12" height="7.5" rx="1.3"/>
+              <path d="M1 3.5l6 4.5 6-4.5"/>
+            </svg>
+            <span id="ppEmailText"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const memberData = {
+  mk: {
+    name: 'Marko Kovač',
+    role: 'SaaS · Startup · Ustanovitelj',
+    photo: 'https://i.pravatar.cc/300?img=11',
+    tags: ['SaaS', 'Podcast gost', '12k MRR', 'Bootstrapped'],
+    bio: 'Od razvijalca do ustanovitelja — v 3 letih zgradil SaaS produkt z 12.000 € mesečnega prihodka, brez vlagateljev in brez ekipe.',
+    bioExt: 'Marko je zapustil korporativni svet pri 31 letih z eno idejo: rešiti problem, ki ga je sam doživljal vsak dan. Brez investitorja, brez ekipe — samo laptop in voljo. Danes njegovo orodje uporablja 240+ podjetij mesečno. Je redni gost GradimSe podcasta in eden najpogosteje citiranih glasov skupnosti. Ne prodaja iluzij, deli izkušnje.',
+    stats: [{n:'12.000 €', l:'Mes. prihodek'}, {n:'3 leta', l:'Do profitabilnosti'}, {n:'0 €', l:'Zunanji kapital'}],
+    phone: '+386 41 123 456',
+    email: 'marko.kovac@gradimse.si',
+    quote: '"Uspeh ni v ideji. Je v tisočih malih odločitvah po tem, ko si idejo povedal glasno."'
+  },
+  ap: {
+    name: 'Ana Potočnik',
+    role: 'E-commerce · Ustanoviteljica',
+    photo: 'https://i.pravatar.cc/300?img=49',
+    tags: ['200k €/let', 'Podjetnik meseca', 'Brez investitorja', 'E-commerce'],
+    bio: 'Začela pri 38, brez investitorja. V treh letih zgradila e-commerce podjetje z 200.000 € letnega prometa.',
+    bioExt: 'Pri 38 je Ana zaprla Excelov list za vedno in odprla spletno trgovino za ročno delo. Ni vedela, kaj je CRM, ni imela spletnih tečajev — imela je samo navdušenje in pripravljenost učiti se sproti. Danes vodi podjetje, ki raste 40% letno. Njen nasvet vsem: začnite majhno, a začnite danes.',
+    stats: [{n:'200k €', l:'Letni promet'}, {n:'+40%', l:'Letna rast'}, {n:'0 €', l:'Investicij'}],
+    phone: '+386 40 234 567',
+    email: 'ana.potocnik@shop.si',
+    quote: '"Najboljši čas za začetek je bil včeraj. Drugi najboljši čas je danes."'
+  },
+  jn: {
+    name: 'Jure Novak',
+    role: 'Gostinstvo · Lastnik',
+    photo: 'https://i.pravatar.cc/300?img=68',
+    tags: ['3 restavracije', 'Brez kredita', '5 let', 'Gostinstvo'],
+    bio: 'Pet let, trije lokali, nič kredita. Zgrajeno postopoma — s potrpežljivostjo in fokusiranim konceptom.',
+    bioExt: 'Jure je odprl svojo prvo picerijo s 7.000 € prihrankov in brez poslovnega načrta. Pet let pozneje ima tri uspešne restavracije in ekipo 14 ljudi. Skrivnost? Osredotočenost na kakovost in vztrajnost pri konceptu. Nikoli ni vzel posojila, nikoli se ni spraševal "kaj pa, če ne uspe" — vedel je, da bo.',
+    stats: [{n:'3', l:'Restavracije'}, {n:'14', l:'Zaposlenih'}, {n:'0 €', l:'Posojil'}],
+    phone: '+386 51 345 678',
+    email: 'jure.novak@novakbistro.si',
+    quote: '"Vsak gost je priložnost za odnos, ne samo za transakcijo."'
+  },
+  kl: {
+    name: 'Kaja Lebar',
+    role: 'Marketing · Agencija',
+    photo: 'https://i.pravatar.cc/300?img=25',
+    tags: ['40+ strank', 'Freelance → agencija', 'Branding', 'Marketing'],
+    bio: 'Začela kot freelancerka iz dnevne sobe. Danes vodi boutique agencijo z ekipo 6 ljudi in 40+ aktivnimi strankami.',
+    bioExt: 'Kaja je začela freelanceriti med porodniškim dopustom — "samo za en mesec", pravi danes s smehom. Pet let pozneje vodi boutique agencijo, ki skrbi za branding in marketing 40+ podjetij. Ekipa šestih, nobena ne sedi v pisarni vsak dan, vsi so izjemno motivirani. Dokazala je, da se da graditi dobro podjetje fleksibilno.',
+    stats: [{n:'40+', l:'Aktivnih strank'}, {n:'6', l:'Članov ekipe'}, {n:'5 let', l:'Agencija'}],
+    phone: '+386 41 456 789',
+    email: 'kaja@lebarmarketing.si',
+    quote: '"Dober branding te ne dela večjega — dela te prepričljivejšega."'
+  },
+  tb: {
+    name: 'Tomaž Bregar',
+    role: 'SaaS · B2B',
+    photo: 'https://i.pravatar.cc/300?img=15',
+    tags: ['50k €/let', 'Bootstrapped', 'B2B SaaS'],
+    bio: 'Bootstrapped SaaS za B2B trg. 50.000 € letnega prihodka brez vlagateljev — samo fokus in dolgotrajne stranke.',
+    bioExt: 'Tomaž je bil inženir, ki ni maral prodaje. Zato je zgradil B2B SaaS, ki prodaja sam. V prvih 6 mesecih ni imel niti enega plačevalnega kupca — potem se je lotil pravih pogovorov s pravimi strankami. Danes ima 50k letnega prihodka, vsaka stranka plačuje več kot 2 leti in skoraj nobena ne odhaja.',
+    stats: [{n:'50.000 €', l:'Letni prihodek'}, {n:'3 leta', l:'Do profitabilnosti'}, {n:'0 €', l:'Vlagatelji'}],
+    phone: '+386 70 567 890',
+    email: 'tomaz@bregartech.si',
+    quote: '"Počasi gre, ampak ko pride — ostane. Stranka ki ti zaupa, ti plačuje leta."'
+  },
+  sh: {
+    name: 'Sara Hrovat',
+    role: 'Life Coaching · Ustanoviteljica',
+    photo: 'https://i.pravatar.cc/300?img=43',
+    tags: ['100+ klientov', 'Korporacija → svoboda', 'Coaching'],
+    bio: 'Zapustila direktorski položaj in začela znova. Danes pomaga 100+ klientom najti pravo smer v karieri in poslu.',
+    bioExt: 'Sara je bila direktorica z visoko plačo in stalno prisotnim občutkom, da dela napačno stvar. Pri 41 je dala odpoved in se usmerila v coaching — brez certifikata, brez izkušenj, samo z globokim razumevanjem, kaj pomeni biti ujeta v napačnem okolju. Danes pomaga 100+ klientom, ki točno vedo zakaj so pri njej.',
+    stats: [{n:'100+', l:'Klientov'}, {n:'4+ leta', l:'Praksa'}, {n:'5★', l:'Povprečna ocena'}],
+    phone: '+386 40 678 901',
+    email: 'sara@hrovatcoaching.si',
+    quote: '"Strah pred spremembo je manjši od obžalovanja, da spremembe nisi naredila."'
+  },
+  lj: {
+    name: 'Luka Jeglič',
+    role: 'LinkedIn · Marketing',
+    photo: 'https://i.pravatar.cc/300?img=50',
+    tags: ['8k sledilcev', 'Organsko', '6 mesecev', 'LinkedIn'],
+    bio: '8.000 sledilcev v 6 mesecih brez enega evra oglasov. Pomaga podjetnikom, da postanejo vidni na LinkedInu.',
+    bioExt: 'Luka ni bil "influencer tip". Bil je freelancer, ki ni vedel, kako razložiti, kaj počne. Potem je začel pisati na LinkedInu — brez strategije, samo iskreno. V 6 mesecih je zbral 8.000 sledilcev in 15 novih strank direktno prek platforme. Zdaj pomaga slovenskim podjetnikom narediti enako.',
+    stats: [{n:'8.000', l:'Sledilcev'}, {n:'6 mes.', l:'Do rasti'}, {n:'0 €', l:'Oglasi'}],
+    phone: '+386 51 789 012',
+    email: 'luka@jeglic.si',
+    quote: '"LinkedIn ni življenjepis. Je tvoj glas — in vsak dan imaš priložnost, da ga uporabiš."'
+  },
+  mh: {
+    name: 'Maja Hudnik',
+    role: 'Fotografija · Studio',
+    photo: 'https://i.pravatar.cc/300?img=20',
+    tags: ['60k €/let', 'Studio', 'Portretna fotografija'],
+    bio: 'Studio začela v garaži z izposojeno kamero. Danes ima lasten studio v centru Ljubljane, ekipo dveh in 60k € letnih prihodkov.',
+    bioExt: 'Maja je začela fotografirati s posojeno kamero v garaži staršev. Prvih 5 let so bile pogodbe skromne, studio improviziran, zaslužek nestalen. Potem je dobila eno stranko, ki ji je odprla vrata novemu segmentu — korporativni portretni fotografiji. Danes ima lasten studio in stabilne prihodke.',
+    stats: [{n:'60.000 €', l:'Letni prihodek'}, {n:'2', l:'Člana ekipe'}, {n:'Studio', l:'Ljubljana center'}],
+    phone: '+386 40 890 123',
+    email: 'maja@hudnikfoto.si',
+    quote: '"Vsaka slika je priložnost, da nekomu pokažeš, kako lep je."'
+  },
+  pk: {
+    name: 'Peter Kranjc',
+    role: 'Spletni razvoj · SaaS',
+    photo: 'https://i.pravatar.cc/300?img=3',
+    tags: ['3 SaaS produkti', 'Freelance → produkt', 'Dev'],
+    bio: 'Iz freelance razvijalca do lastnika 3 SaaS produktov. Dokaz, da razvijalci ne rabijo investitorjev — rabijo pravo idejo.',
+    bioExt: 'Peter je nehal reševati iste probleme za različne stranke in se lotil enkrat zgraditi rešitev za vsakogar. Danes ima tri živahne SaaS produkte, noben ni "unicorn", vsi so profitabilni. Filozofija: ne iščeš milijardne tržne niše, iščeš realni problem in ga rešiš dobro.',
+    stats: [{n:'3', l:'SaaS produkti'}, {n:'vsi', l:'Profitabilni'}, {n:'Solo', l:'Bootstrapped'}],
+    phone: '+386 41 890 123',
+    email: 'peter@kranjcdev.si',
+    quote: '"Koda je poceni. Prava vrednost je razumevanje problema, ki ga rešuješ."'
+  }
+};
+
+const profileOverlay = document.getElementById('profileOverlay');
+
+function openProfile(id) {
+  const d = memberData[id];
+  if (!d) return;
+
+  document.getElementById('ppImg').src = d.photo;
+  document.getElementById('ppImg').alt = d.name;
+  document.getElementById('ppName').textContent = d.name;
+  document.getElementById('ppRole').textContent = d.role;
+  document.getElementById('ppBio').textContent = d.bio;
+  document.getElementById('ppBioExt').textContent = d.bioExt;
+  document.getElementById('ppQuote').textContent = d.quote;
+
+  document.getElementById('ppTags').innerHTML = d.tags.map(t => `<span class="pp-photo-tag">${t}</span>`).join('');
+  document.getElementById('ppStats').innerHTML = d.stats.map(s => `<div class="pp-stat"><span class="pp-stat-n">${s.n}</span><span class="pp-stat-l">${s.l}</span></div>`).join('');
+
+  const ph = document.getElementById('ppPhone');
+  ph.href = 'tel:' + d.phone.replace(/\s/g, '');
+  document.getElementById('ppPhoneText').textContent = d.phone;
+
+  const em = document.getElementById('ppEmail');
+  em.href = 'mailto:' + d.email;
+  document.getElementById('ppEmailText').textContent = d.email;
+
+  profileOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfile() {
+  profileOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  const hash = window.location.hash;
+  if (hash && memberData[hash.slice(1)]) {
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  }
+}
+
+document.querySelectorAll('[data-member-id]').forEach(card => {
+  card.addEventListener('click', () => {
+    const id = card.dataset.memberId;
+    history.replaceState(null, '', '#' + id);
+    openProfile(id);
+  });
+});
+
+document.getElementById('profileClose').addEventListener('click', closeProfile);
+profileOverlay.addEventListener('click', e => {
+  if (e.target === profileOverlay) closeProfile();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProfile();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.slice(1);
+  if (hash && memberData[hash]) openProfile(hash);
+});
+</script>
+
+<!-- ── JOIN MODAL ── -->
+<div class="join-overlay" id="joinOverlay">
+  <div class="join-modal">
+    <button class="join-close" id="joinClose" aria-label="Zapri">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#2E3830" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+    </button>
+    <div class="join-left">
+      <span class="jl-logo">Gradim<span>Se</span></span>
+      <h2 class="jl-headline">Skupnost <em>pravih</em> podjetnikov.</h2>
+      <p class="jl-sub">Vstopi med 240+ slovenskimi podjetniki, ki resnično gradijo — brez nepotrebnih tečajev in praznih obljub.</p>
+      <ul class="jl-perks">
+        <li class="jl-perk"><span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>Live delavnice vsak teden</li>
+        <li class="jl-perk"><span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>Objavi svojo zgodbo brez posrednikov</li>
+        <li class="jl-perk"><span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>Direkten dostop do mentorjev</li>
+        <li class="jl-perk"><span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>Podcast, blog in skupnost na enem mestu</li>
+      </ul>
+      <div class="jl-stats">
+        <div class="jl-stat"><span class="jl-stat-n">240+</span><span class="jl-stat-l">Članov</span></div>
+        <div class="jl-stat"><span class="jl-stat-n">12</span><span class="jl-stat-l">Delavnic/mes.</span></div>
+        <div class="jl-stat"><span class="jl-stat-n">€2M+</span><span class="jl-stat-l">Skupen promet</span></div>
+      </div>
+    </div>
+    <div class="join-right">
+      <div class="join-step" id="joinStep1">
+        <div class="join-progress"><div class="join-prog-bar fill"></div><div class="join-prog-bar"></div><span class="join-prog-label">Korak 1 / 2</span></div>
+        <h3 class="join-step-title">Ustvari račun</h3>
+        <p class="join-step-sub">Brezplačno. Brez kreditne kartice.</p>
+        <div class="join-field" id="f-name"><label class="join-label">Ime in priimek</label><input type="text" class="join-input" id="jName" placeholder="Jana Novak" autocomplete="name"><p class="join-err-msg">Prosimo vnesite vaše ime.</p></div>
+        <div class="join-field" id="f-email"><label class="join-label">Email naslov</label><input type="email" class="join-input" id="jEmail" placeholder="jana@podjetje.si" autocomplete="email"><p class="join-err-msg">Prosimo vnesite veljaven email naslov.</p></div>
+        <div class="join-field" id="f-pass"><label class="join-label">Geslo</label><input type="password" class="join-input" id="jPass" placeholder="najmanj 8 znakov" autocomplete="new-password"><p class="join-err-msg">Geslo mora imeti vsaj 8 znakov.</p></div>
+        <button class="join-btn" id="joinNext">Naprej <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h7M7 4l3 2.5L7 9"/></svg></button>
+        <p class="join-fine">Z registracijo sprejemate <a href="#">Pogoje uporabe</a> in <a href="#">Politiko zasebnosti</a>.</p>
+        <p class="join-toggle">Že imate račun? <a href="#" id="showLogin">Prijavite se</a></p>
+      </div>
+      <div class="join-step hidden" id="joinStep2">
+        <button class="join-back-btn" id="joinBack"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 6.5 8 10"/></svg>Nazaj</button>
+        <div class="join-progress"><div class="join-prog-bar fill"></div><div class="join-prog-bar fill"></div><span class="join-prog-label">Korak 2 / 2</span></div>
+        <h3 class="join-step-title">Tvoj profil</h3>
+        <p class="join-step-sub">Skupnost je prava, ker so pravi njeni člani.</p>
+        <div class="join-field" id="f-area"><label class="join-label">Področje delovanja</label><select class="join-select" id="jArea"><option value="">Izberi področje …</option><option>SaaS / Tehnologija</option><option>E-commerce</option><option>Marketing / Agencija</option><option>Gostinstvo / F&amp;B</option><option>Coaching / Svetovanje</option><option>Kreativne storitve</option><option>Razvoj / Freelance</option><option>Finance / Računovodstvo</option><option>Zdravje / Wellness</option><option>Drugo</option></select><p class="join-err-msg">Izberite področje delovanja.</p></div>
+        <div class="join-field" id="f-bio"><label class="join-label">Kratka predstavitev</label><textarea class="join-textarea" id="jBio" placeholder="Sem podjetnik z 2 leti izkušenj…" rows="3"></textarea><p class="join-err-msg">Prosimo dodajte kratko predstavitev.</p></div>
+        <div class="join-field"><label class="join-label">LinkedIn profil <span class="opt">(neobvezno)</span></label><input type="url" class="join-input" id="jLinkedin" placeholder="linkedin.com/in/ime-priimek"></div>
+        <button class="join-btn" id="joinSubmit">Pridruži se skupnosti →</button>
+      </div>
+      <div class="join-step hidden" id="joinLogin">
+        <div class="join-progress" style="margin-bottom:1.5rem;"><span class="join-prog-label" style="margin-left:0">Prijava v račun</span></div>
+        <h3 class="join-step-title">Dobrodošli nazaj.</h3>
+        <p class="join-step-sub">Vpišite se v vaš GradimSe račun.</p>
+        <div class="join-field" id="f-lemail"><label class="join-label">Email naslov</label><input type="email" class="join-input" id="jLEmail" placeholder="jana@podjetje.si" autocomplete="email"><p class="join-err-msg">Prosimo vnesite email naslov.</p></div>
+        <div class="join-field" id="f-lpass"><label class="join-label">Geslo</label><input type="password" class="join-input" id="jLPass" placeholder="••••••••" autocomplete="current-password"><p class="join-err-msg">Prosimo vnesite geslo.</p></div>
+        <button class="join-btn" id="loginSubmit">Prijavi se →</button>
+        <p class="join-toggle">Nimate računa? <a href="#" id="showRegister">Registracija</a></p>
+      </div>
+      <div class="join-step hidden" id="joinSuccess">
+        <div class="join-success-wrap">
+          <div class="join-success-ring"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#22A87E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6.5 6.5 11.5-13"/></svg></div>
+          <h3 class="join-success-title">Dobrodošel/a!</h3>
+          <p class="join-success-sub">Tvoja prijava je bila uspešna.<br>Potrditveni email smo poslali na <strong id="successEmail"></strong>.</p>
+          <button class="join-btn" id="joinDone">Pojdi v skupnost →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ACCOUNT OVERLAY ── -->
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <div id="acctLoButtons">
+    <div class="acct-loggedout">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Pridruži se 240+ slovenskim podjetnikom.<br>Brezplačno, brez kreditne kartice.</p>
+      <div class="acct-lo-btns">
+        <button class="acct-lo-btn primary" id="acctOpenRegister">Registracija</button>
+        <button class="acct-lo-btn ghost" id="acctOpenLogin">Prijava</button>
+      </div>
+    </div>
+  </div>
+  <div class="acct-login-wrap" id="acctLoginForm" style="display:none;">
+    <button class="acct-login-back" id="acctLoginBack">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7.5 1L2.5 5.5l5 4.5"/></svg>
+      Nazaj
+    </button>
+    <h3 class="acct-login-title">Prijava</h3>
+    <p class="acct-login-sub">Dobrodošli nazaj v skupnost.</p>
+    <div class="acct-field"><label class="acct-label">E-pošta</label><input type="email" class="acct-inp" id="loginEmail" placeholder="vas@email.com" autocomplete="email"></div>
+    <div class="acct-field"><label class="acct-label">Geslo</label><input type="password" class="acct-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <div class="acct-login-err" id="loginErr"></div>
+    <button class="acct-publish-btn" id="loginSubmitBtn" style="width:100%;justify-content:center;">Prijavi se</button>
+  </div>
+  <div id="acctLoggedIn" style="display:none;">
+    <div class="acct-loggedin-inner">
+      <div class="acct-user-info">
+        <div class="acct-avatar" id="acctAvatarInitials">GS</div>
+        <div><div class="acct-uname" id="acctDisplayName"></div><div class="acct-urole" id="acctDisplayRole">Član skupnosti</div></div>
+      </div>
+      <a href="index.html" class="acct-lo-btn primary" style="display:block;text-align:center;margin-top:1.25rem;text-decoration:none;">Odpri dashboard</a>
+      <button class="acct-logout-btn" id="acctLogoutBtn">Odjava</button>
+    </div>
+  </div>
+</div>
+</div><!-- /acct-overlay -->
+
+<script>
+// ── Join modal ──
+(function() {
+  const overlay = document.getElementById('joinOverlay');
+  const STEPS = ['joinStep1','joinStep2','joinLogin','joinSuccess'];
+
+  function showStep(id) { STEPS.forEach(s => document.getElementById(s).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+
+  function openJoin(step) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    showStep(step || 'joinStep1');
+  }
+
+  function closeJoin() { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+  function fieldErr(fieldId, bad) {
+    const el = document.getElementById(fieldId);
+    el.classList.toggle('has-error', bad);
+    const inp = el.querySelector('.join-input,.join-select,.join-textarea');
+    if (inp) inp.classList.toggle('err', bad);
+    return bad;
+  }
+
+  document.getElementById('skCtaJoin').addEventListener('click', e => { e.preventDefault(); openJoin(); });
+  document.getElementById('joinClose').addEventListener('click', closeJoin);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeJoin(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('active')) closeJoin(); });
+
+  ['jName','jEmail','jPass'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const map = { jName:'f-name', jEmail:'f-email', jPass:'f-pass' };
+      const el = document.getElementById(map[id]);
+      if (el) { el.classList.remove('has-error'); const inp = el.querySelector('.join-input'); if(inp) inp.classList.remove('err'); }
+    });
+  });
+
+  document.getElementById('joinNext').addEventListener('click', () => {
+    const name  = document.getElementById('jName').value.trim();
+    const email = document.getElementById('jEmail').value.trim();
+    const pass  = document.getElementById('jPass').value;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const e1 = fieldErr('f-name',  !name);
+    const e2 = fieldErr('f-email', !emailOk);
+    const e3 = fieldErr('f-pass',  pass.length < 8);
+    if (!e1 && !e2 && !e3) showStep('joinStep2');
+  });
+
+  document.getElementById('joinBack').addEventListener('click', () => showStep('joinStep1'));
+
+  document.getElementById('joinSubmit').addEventListener('click', () => {
+    const area = document.getElementById('jArea').value;
+    const bio  = document.getElementById('jBio').value.trim();
+    const e1 = fieldErr('f-area', !area);
+    const e2 = fieldErr('f-bio',  !bio);
+    if (!e1 && !e2) {
+      document.getElementById('successEmail').textContent = document.getElementById('jEmail').value.trim();
+      showStep('joinSuccess');
+    }
+  });
+
+  document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); showStep('joinLogin'); });
+  document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); showStep('joinStep1'); });
+
+  document.getElementById('loginSubmit').addEventListener('click', () => {
+    const em = document.getElementById('jLEmail').value.trim();
+    const ps = document.getElementById('jLPass').value;
+    const e1 = fieldErr('f-lemail', !em);
+    const e2 = fieldErr('f-lpass',  !ps);
+    if (!e1 && !e2) {
+      document.getElementById('successEmail').textContent = em;
+      showStep('joinSuccess');
+    }
+  });
+
+  document.getElementById('joinDone').addEventListener('click', closeJoin);
+
+  // Account panel wires
+  document.getElementById('acctOpenRegister').addEventListener('click', () => {
+    document.getElementById('acctOverlay').classList.remove('active');
+    document.getElementById('accountBtn').classList.remove('open');
+    openJoin('joinStep1');
+  });
+  document.getElementById('acctOpenLogin').addEventListener('click', () => {
+    document.getElementById('acctOverlay').classList.remove('active');
+    document.getElementById('accountBtn').classList.remove('open');
+    openJoin('joinLogin');
+  });
+})();
+
+// ── Account panel ──
+(function(){
+  const overlay=document.getElementById('acctOverlay');
+  const btn=document.getElementById('accountBtn');
+  let loggedIn=false,currentUser={};
+  try{const s=localStorage.getItem('gs_user');if(s){currentUser=JSON.parse(s);loggedIn=true;}}catch(e){}
+  if(loggedIn)btn.classList.add('open');
+  function showState(){
+    if(loggedIn){
+      document.getElementById('acctLoButtons').style.display='none';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='';
+      const initials=(currentUser.name||'GS').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('acctAvatarInitials').textContent=initials;
+      document.getElementById('acctDisplayName').textContent=currentUser.name||'';
+      document.getElementById('acctDisplayRole').innerHTML=currentUser.isAdmin?'<span class="acct-admin-badge">Admin</span>':(currentUser.area||'Član skupnosti');
+    }else{
+      document.getElementById('acctLoButtons').style.display='';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='none';
+    }
+  }
+  btn.addEventListener('click',()=>{showState();overlay.classList.add('active');btn.classList.add('open');document.body.style.overflow='hidden';});
+  function close(){overlay.classList.remove('active');if(!loggedIn)btn.classList.remove('open');document.body.style.overflow='';}
+  overlay.addEventListener('click',e=>{if(e.target===overlay||!document.getElementById('acctPanel').contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  document.getElementById('acctOpenLogin').addEventListener('click',()=>{document.getElementById('acctLoButtons').style.display='none';document.getElementById('acctLoginForm').style.display='';document.getElementById('loginEmail').focus();});
+  document.getElementById('acctLoginBack').addEventListener('click',()=>{document.getElementById('acctLoginForm').style.display='none';document.getElementById('acctLoButtons').style.display='';});
+  function doLogin(){
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPass').value;
+    const errEl=document.getElementById('loginErr');
+    if(!email){errEl.textContent='Vnesite e-poštni naslov.';return;}
+    if(!pass){errEl.textContent='Vnesite geslo.';return;}
+    errEl.textContent='';
+    const isAdmin=email.toLowerCase()==='domenavbelj01@gmail.com';
+    const name=isAdmin?'Domena Vbelj':email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    currentUser={name,email,area:isAdmin?'Admin · GradimSe':'Clan skupnosti',isAdmin};
+    loggedIn=true;
+    try{localStorage.setItem('gs_user',JSON.stringify(currentUser));}catch(e){}
+    showState();btn.classList.add('open');
+  }
+  document.getElementById('loginSubmitBtn').addEventListener('click',doLogin);
+  document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('acctLogoutBtn').addEventListener('click',()=>{loggedIn=false;currentUser={};try{localStorage.removeItem('gs_user');}catch(e){}btn.classList.remove('open');close();});
+  // Wire register button to join modal if it exists
+  const regBtn=document.getElementById('acctOpenRegister');
+  if(regBtn){regBtn.addEventListener('click',()=>{
+    const jo=document.getElementById('joinOverlay');
+    if(jo){close();jo.classList.add('active');document.body.style.overflow='hidden';['joinStep1','joinStep2','joinLogin','joinSuccess'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.add('hidden');});const j1=document.getElementById('joinStep1');if(j1)j1.classList.remove('hidden');}
+    else{window.location.href='index.html';}
+  });}
+})();
+
+// Internal tab switching
+document.querySelectorAll('.sk-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sk-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sk-pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('pane-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Sponsor modal
+(function(){
+  const SPONSORS = {
+    financepro: {
+      initials: 'Fi',
+      name: 'FinancePro',
+      cat: 'Računovodstvo & Finance',
+      pkg: 'Platinum',
+      gradient: 'linear-gradient(145deg,#0A5C4A,#22A87E)',
+      btnColor: 'linear-gradient(135deg,#0A5C4A,#22A87E)',
+      btnText: 'Preizkusite brezplačno →',
+      btnHref: 'oglasi.html',
+      desc: 'FinancePro je moderna računovodska rešitev, zasnovana posebej za slovenska podjetja — s.p. in d.o.o. Platforma samodejno izračuna DDV, generira e-račune skladne s standardom FURS in pripravi letna poročila za AJPES. Vse v enem mestu, brez papirnatih stroškov.',
+      services: [
+        'Avtomatski DDV obračun in e-oddaja na eDavki',
+        'E-računi po standardu FURS — izdaja in sprejemanje',
+        'Letna poročila za AJPES z enim klikom',
+        'Bančna integracija (NLB, Sparkasse, Revolut Business)',
+        'Mobilna aplikacija za skeniranje računov na terenu',
+        'Posvetovanje z licenciranim računovodjem v aplikaciji',
+      ],
+      benefit: 'Člani GradimSe prvih <strong>30 dni popolnoma brezplačno</strong> — brez kreditne kartice, brez vezave. Po preizkusu 25 % popust na letni paket.',
+    },
+    znamkastudio: {
+      initials: 'Zn',
+      name: 'ZnamkaStudio',
+      cat: 'Branding & Vizualna identiteta',
+      pkg: 'Gold',
+      gradient: 'linear-gradient(145deg,#7a5f18,#c8922a)',
+      btnColor: 'linear-gradient(135deg,#7a5f18,#c8922a)',
+      btnText: 'Oglejte si portfolio →',
+      btnHref: 'oglasi.html',
+      desc: 'ZnamkaStudio je boutique branding studio iz Ljubljane, specializiran za ambiciozna slovenska podjetja, ki želijo vizualno identiteto na ravni globalnih blagovnih znamk. Od ideje do končne izvedbe — v rokah ene ekipe.',
+      services: [
+        'Celostna grafična podoba: logo, barvna paleta, tipografija',
+        'Brand book in design sistem za interno uporabo',
+        'Spletna stran po meri (Webflow / WordPress)',
+        'Embalaža in tiskani materiali',
+        'Prezentacijske predloge (PowerPoint / Keynote)',
+        'Strategija pozicioniranja blagovne znamke',
+      ],
+      benefit: 'Člani GradimSe prejmejo <strong>15 % popust na vse pakete</strong>. Ob naročilu celovite identitete brezplačen brand audit vrednosti €200.',
+    },
+    pronajemnik: {
+      initials: 'Pr',
+      name: 'ProNajemnik',
+      cat: 'Pisarniški prostori & Coworking',
+      pkg: 'Silver',
+      gradient: 'linear-gradient(145deg,#2c4f6a,#4a90c4)',
+      btnColor: 'linear-gradient(135deg,#2c4f6a,#4a90c4)',
+      btnText: 'Rezervirajte ogled →',
+      btnHref: 'oglasi.html',
+      desc: 'ProNajemnik ponuja fleksibilne pisarniške prostore in coworking lokacije v centru Ljubljane, Maribora in Kopra. Prostori so opremljeni za takojšnjo delo — hitri internet, tiskanje, kuhinja, sejne sobe. Idealno za startupi, freelancerje in ekipe do 15 ljudi.',
+      services: [
+        'Dnevni najem coworking mize od €15/dan',
+        'Mesečni najem zasebne pisarne od €299/mes',
+        'Sejne sobe na uro — kapaciteta 4–20 oseb',
+        'Naslov podjetja za pravno registracijo',
+        'Hitri fiber internet, tiskalnik, skener',
+        'Dostop 24/7 z magnetno kartico',
+      ],
+      benefit: 'Člani GradimSe prejmejo <strong>prvi mesec najem za pol cene</strong> na vseh lokacijah. Ob letni pogodbi 2 meseca brezplačno.',
+    },
+  };
+
+  const overlay = document.getElementById('spOverlay');
+  const modal = document.getElementById('spModal');
+
+  function openSponsor(key) {
+    const s = SPONSORS[key];
+    if (!s) return;
+    modal.querySelector('.sp-modal-head').style.background = s.gradient;
+    modal.querySelector('.sp-modal-monogram').textContent = s.initials;
+    modal.querySelector('.sp-modal-logo').textContent = s.initials;
+    modal.querySelector('.sp-modal-pkg').textContent = s.pkg;
+    modal.querySelector('.sp-modal-name').textContent = s.name;
+    modal.querySelector('.sp-modal-cat').textContent = s.cat;
+    modal.querySelector('.sp-desc').textContent = s.desc;
+    const ul = modal.querySelector('.sp-list');
+    ul.innerHTML = s.services.map(t => `<li>${t}</li>`).join('');
+    modal.querySelector('.sp-benefit-text').innerHTML = s.benefit;
+    const cta = modal.querySelector('.sp-modal-cta');
+    cta.style.background = s.btnColor;
+    cta.textContent = s.btnText;
+    cta.href = s.btnHref;
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSponsor() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.partner-card[data-sponsor]').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      openSponsor(card.dataset.sponsor);
+    });
+  });
+
+  document.getElementById('spClose').addEventListener('click', closeSponsor);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeSponsor(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSponsor(); });
+})();
+
+// Fade-in ob scrollu
+(function(){
+  const el = document.getElementById('nspSection');
+  if (!el || !('IntersectionObserver' in window)) return;
+  el.classList.add('nsp-ready');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        el.classList.add('visible');
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.08 });
+  obs.observe(el);
+})();
+</script>
+
+<!-- Sponsor detail modal -->
+<div class="sp-overlay" id="spOverlay">
+  <div class="sp-modal" id="spModal">
+    <div class="sp-modal-head">
+      <div class="sp-modal-monogram"></div>
+      <div class="sp-modal-logo"></div>
+      <div class="sp-modal-pkg"></div>
+      <div class="sp-modal-name"></div>
+      <div class="sp-modal-cat"></div>
+      <button class="sp-close" id="spClose" aria-label="Zapri">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+      </button>
+    </div>
+    <div class="sp-modal-body">
+      <p class="sp-section-title">O podjetju</p>
+      <p class="sp-desc"></p>
+
+      <p class="sp-section-title">Kaj ponujajo</p>
+      <ul class="sp-list"></ul>
+
+      <div class="sp-benefit-box">
+        <p class="sp-benefit-label">Ugodnost za člane GradimSe</p>
+        <p class="sp-benefit-text"></p>
+      </div>
+
+      <div class="sp-verified">
+        <svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 1L1.5 3v2.5C1.5 8.3 3.5 10.2 6 11c2.5-.8 4.5-2.7 4.5-5.5V3L6 1z"/><path d="M3.5 6l2 2 3-3"/></svg>
+        Preverjeni sponzor skupnosti GradimSe
+      </div>
+
+      <a href="#" class="sp-modal-cta"></a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

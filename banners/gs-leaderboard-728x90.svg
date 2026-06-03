@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="728" height="90" viewBox="0 0 728 90">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#063d2c"/>
+      <stop offset="45%" stop-color="#0A5C4A"/>
+      <stop offset="100%" stop-color="#22A87E"/>
+    </linearGradient>
+    <linearGradient id="btnbg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.10)"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="728" height="90"/></clipPath>
+  </defs>
+
+  <rect width="728" height="90" fill="url(#bg)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="690" cy="-25" r="90" fill="rgba(255,255,255,0.045)" clip-path="url(#clip)"/>
+  <circle cx="100" cy="115" r="110" fill="rgba(255,255,255,0.03)" clip-path="url(#clip)"/>
+  <circle cx="380" cy="100" r="70" fill="rgba(255,255,255,0.025)" clip-path="url(#clip)"/>
+
+  <!-- Vertical divider -->
+  <line x1="158" y1="20" x2="158" y2="70" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+  <!-- Logo -->
+  <text x="24" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="rgba(255,255,255,0.95)" letter-spacing="-0.5">Gradim</text>
+  <text x="97" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="rgba(255,255,255,0.45)" letter-spacing="-0.5">Se</text>
+  <text x="24" y="61" font-family="Arial, sans-serif" font-size="8.5" fill="rgba(255,255,255,0.42)" letter-spacing="1.2" font-weight="400">SLOVENIJA</text>
+
+  <!-- Main headline -->
+  <text x="178" y="40" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-style="italic" fill="rgba(255,255,255,0.95)" letter-spacing="-0.3">Skupnost pravih podjetnikov.</text>
+
+  <!-- Sub text -->
+  <text x="178" y="59" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="rgba(255,255,255,0.58)" letter-spacing="0.1">240+ članov · Live delavnice vsak teden · Podcast · Blogi</text>
+
+  <!-- CTA Button -->
+  <rect x="574" y="24" width="138" height="42" rx="21" fill="url(#btnbg)"/>
+  <rect x="574" y="24" width="138" height="42" rx="21" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+  <text x="643" y="50" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.3">Pridruži se →</text>
+</svg>

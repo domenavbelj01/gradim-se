@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #22A87E;
+      --green-dark: #0A5C4A;
+      --green-mid:  #0f8264;
+      --green-light:#DDF2E8;
+      --green-faint:#F0FAF5;
+      --ink:        #0F172A;
+      --ink2:       #1E293B;
+      --muted:      #64748B;
+      --border:     #E2E8F0;
+      --surface:    #F8FAFC;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans:  'DM Sans', system-ui, sans-serif;
+    }
+
+    html, body { height: 100%; font-family: var(--sans); background: #F1F5F9; color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 10% 0%, rgba(10,92,74,.18) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 35% at 88% 8%, rgba(34,168,126,.12) 0%, transparent 50%),
+        #F1F5F9;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.75rem 2.5rem 2.5rem;
+      max-width: 420px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.06);
+    }
+    .login-logo {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      color: var(--ink);
+      letter-spacing: -.3px;
+      margin-bottom: .4rem;
+    }
+    .login-logo span { color: var(--green); }
+    .login-eyebrow {
+      font-size: .63rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted); margin-bottom: 2rem;
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .login-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 22px; height: 1.5px;
+      background: var(--green);
+    }
+    .login-card h2 {
+      font-family: var(--serif);
+      font-size: 1.55rem; font-weight: 400;
+      color: var(--ink); margin-bottom: .5rem;
+      letter-spacing: -.3px;
+    }
+    .login-card p {
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: 2rem; line-height: 1.5;
+    }
+    .login-field { margin-bottom: 1rem; }
+    .login-label {
+      display: block;
+      font-size: .72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--ink2); margin-bottom: .45rem;
+    }
+    .login-inp {
+      width: 100%; padding: .72rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: var(--sans); font-size: .88rem;
+      color: var(--ink); background: var(--surface);
+      outline: none; transition: border-color .18s, box-shadow .18s;
+    }
+    .login-inp:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(34,168,126,.12);
+      background: #fff;
+    }
+    .login-btn {
+      width: 100%; padding: .82rem 1.5rem;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: #fff; border: none;
+      border-radius: 12px;
+      font-family: var(--sans); font-size: .9rem; font-weight: 600;
+      cursor: pointer; margin-top: .5rem;
+      transition: opacity .18s, transform .18s;
+      display: flex; align-items: center; justify-content: center; gap: .55rem;
+    }
+    .login-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .login-btn:active { transform: translateY(0); }
+    .login-error {
+      font-size: .78rem; color: #DC2626;
+      background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: 9px; padding: .6rem .9rem;
+      margin-top: .85rem; display: none;
+    }
+    .login-error.show { display: block; }
+    .login-back {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .76rem; color: var(--muted);
+      text-decoration: none; margin-top: 1.5rem;
+      justify-content: center; transition: color .15s;
+    }
+    .login-back:hover { color: var(--ink); }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; height: 100vh; overflow: hidden; }
+
+    .adm-layout {
+      display: flex; height: 100%;
+    }
+
+    /* Sidebar */
+    .adm-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: linear-gradient(170deg, #083324 0%, #04200f 100%);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .adm-sb-head {
+      padding: 1.75rem 1.5rem 1.4rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .adm-sb-logo {
+      font-family: var(--serif);
+      font-size: 1.15rem; color: #fff;
+      letter-spacing: -.2px; margin-bottom: .25rem;
+    }
+    .adm-sb-logo span { color: #4DEBA0; }
+    .adm-sb-role {
+      font-size: .58rem; text-transform: uppercase;
+      letter-spacing: .15em; color: rgba(255,255,255,.35);
+    }
+    .adm-nav {
+      flex: 1; padding: 1rem .8rem;
+      display: flex; flex-direction: column; gap: 2px;
+      overflow-y: auto;
+    }
+    .adm-nav-section {
+      font-size: .55rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .14em;
+      color: rgba(255,255,255,.25);
+      padding: .8rem .8rem .35rem;
+      margin-top: .3rem;
+    }
+    .adm-nav-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .52rem .9rem;
+      border-radius: 10px;
+      font-size: .83rem; font-weight: 500;
+      color: rgba(255,255,255,.55);
+      cursor: pointer; border: none; background: none;
+      font-family: var(--sans); width: 100%; text-align: left;
+      transition: background .15s, color .15s;
+      position: relative;
+    }
+    .adm-nav-item:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.9); }
+    .adm-nav-item.active { background: rgba(34,168,126,.22); color: #4DEBA0; font-weight: 600; }
+    .adm-nav-item.active svg { stroke: #4DEBA0; }
+    .adm-nav-item svg { flex-shrink: 0; opacity: .75; }
+    .adm-nav-item.active svg { opacity: 1; }
+    .adm-nav-badge {
+      margin-left: auto;
+      font-size: .6rem; font-weight: 600;
+      padding: .1rem .45rem; border-radius: 100px;
+      background: rgba(77,235,160,.18); color: #4DEBA0;
+    }
+    .adm-nav-badge.warn { background: rgba(245,200,66,.18); color: #f5c842; }
+    .adm-sb-foot {
+      padding: 1rem .8rem 1.4rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+    .adm-sb-user {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .5rem .8rem; border-radius: 10px;
+      margin-bottom: .4rem;
+      background: rgba(255,255,255,.04);
+    }
+    .adm-sb-av {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .adm-sb-user-name { font-size: .8rem; font-weight: 600; color: rgba(255,255,255,.85); line-height: 1.2; }
+    .adm-sb-user-role { font-size: .62rem; color: rgba(255,255,255,.35); }
+    .adm-logout-btn {
+      display: flex; align-items: center; gap: .65rem;
+      padding: .45rem .9rem; border-radius: 9px;
+      font-size: .78rem; color: rgba(255,255,255,.3);
+      cursor: pointer; border: none; background: none;
+      font-family: var(--sans); width: 100%;
+      transition: color .15s, background .15s;
+    }
+    .adm-logout-btn:hover { color: rgba(255,255,255,.6); background: rgba(255,255,255,.06); }
+
+    /* Main area */
+    .adm-main {
+      flex: 1; overflow-y: auto;
+      background: #F1F5F9;
+    }
+
+    /* Top bar */
+    .adm-topbar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(241,245,249,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2.25rem;
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .adm-topbar-title {
+      font-family: var(--serif);
+      font-size: 1.05rem; font-weight: 400;
+      color: var(--ink); letter-spacing: -.2px;
+    }
+    .adm-topbar-right {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .adm-topbar-date {
+      font-size: .73rem; color: var(--muted);
+    }
+    .adm-back-link {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .76rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; padding: .38rem .8rem;
+      border: 1px solid var(--border); border-radius: 100px;
+      background: #fff; transition: all .15s;
+    }
+    .adm-back-link:hover { color: var(--ink); border-color: #CBD5E1; }
+
+    /* Content panes */
+    .adm-content { display: none; padding: 2rem 2.25rem 3rem; }
+    .adm-content.active { display: block; }
+    .adm-content-head {
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .adm-content-title {
+      font-family: var(--serif);
+      font-size: 1.5rem; font-weight: 400;
+      color: var(--ink); letter-spacing: -.3px;
+    }
+    .adm-content-sub { font-size: .78rem; color: var(--muted); margin-top: .3rem; }
+    .adm-content-action {
+      font-size: .78rem; font-weight: 500; color: var(--green-dark);
+      text-decoration: none; padding: .42rem .9rem;
+      border: 1.5px solid rgba(10,92,74,.25); border-radius: 100px;
+      background: rgba(34,168,126,.05); transition: all .15s;
+    }
+    .adm-content-action:hover { background: rgba(34,168,126,.1); }
+
+    /* KPI grid */
+    .adm-kpi-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .adm-kpi-card {
+      background: #fff; border-radius: 16px;
+      padding: 1.3rem 1.4rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,.04);
+      transition: box-shadow .18s;
+    }
+    .adm-kpi-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+    .adm-kpi-icon {
+      width: 36px; height: 36px; border-radius: 11px;
+      background: rgba(34,168,126,.1);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: .9rem;
+    }
+    .adm-kpi-val {
+      font-family: var(--serif);
+      font-size: 1.75rem; font-weight: 700;
+      color: var(--ink); line-height: 1; margin-bottom: .3rem;
+    }
+    .adm-kpi-lbl {
+      font-size: .63rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+    .adm-kpi-delta { font-size: .7rem; font-weight: 500; margin-top: .45rem; }
+    .adm-kpi-delta.up { color: #16A34A; }
+    .adm-kpi-delta.warn { color: #B45309; }
+
+    /* Charts placeholder */
+    .adm-chart-row {
+      display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .adm-chart-card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.5rem;
+    }
+    .adm-chart-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .adm-chart-title { font-size: .85rem; font-weight: 600; color: var(--ink); }
+    .adm-chart-sub { font-size: .7rem; color: var(--muted); margin-top: .15rem; }
+    .adm-mini-bar-list { display: flex; flex-direction: column; gap: .65rem; }
+    .adm-mini-bar-row { display: flex; align-items: center; gap: .75rem; font-size: .76rem; }
+    .adm-mini-bar-label { width: 80px; flex-shrink: 0; color: var(--muted); }
+    .adm-mini-bar-track { flex: 1; height: 6px; background: #F1F5F9; border-radius: 100px; overflow: hidden; }
+    .adm-mini-bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--green-dark), var(--green)); }
+    .adm-mini-bar-val { width: 32px; text-align: right; font-weight: 600; color: var(--ink); }
+    .adm-trend-list { display: flex; flex-direction: column; gap: 0; }
+    .adm-trend-row {
+      display: flex; align-items: center;
+      padding: .6rem 0;
+      border-bottom: 1px solid #F8FAFC;
+      gap: 1rem; font-size: .78rem;
+    }
+    .adm-trend-row:last-child { border-bottom: none; }
+    .adm-trend-month { width: 52px; font-weight: 600; color: var(--ink2); }
+    .adm-trend-bar-track { flex: 1; height: 8px; background: #F1F5F9; border-radius: 100px; overflow: hidden; }
+    .adm-trend-bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--green-dark), var(--green)); }
+    .adm-trend-val { width: 55px; text-align: right; font-weight: 600; color: var(--green-dark); }
+
+    /* Section label */
+    .adm-section-label {
+      font-size: .63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .11em;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+
+    /* Tables */
+    .adm-table-wrap {
+      overflow-x: auto; border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem; background: #fff;
+    }
+    .adm-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .adm-table thead th {
+      background: #F8FAFC; color: var(--muted);
+      font-weight: 600; font-size: .63rem;
+      text-transform: uppercase; letter-spacing: .09em;
+      padding: .7rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .adm-table tbody tr { border-top: 1px solid #F8FAFC; }
+    .adm-table tbody tr:hover { background: var(--green-faint); }
+    .adm-table td { padding: .68rem 1rem; color: var(--ink2); vertical-align: middle; }
+    .adm-user { display: flex; align-items: center; gap: .65rem; }
+    .adm-av {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .68rem; font-weight: 700; flex-shrink: 0;
+    }
+    .adm-amount { font-weight: 700; color: var(--green-dark); font-size: .88rem; }
+    .adm-badge {
+      font-size: .62rem; font-weight: 600;
+      padding: .2rem .58rem; border-radius: 100px;
+      white-space: nowrap; letter-spacing: .02em;
+    }
+    .adm-badge.green { background: #DCFCE7; color: #15803D; }
+    .adm-badge.muted { background: #F1F5F9; color: var(--muted); }
+    .adm-badge.yellow { background: #FEF3C7; color: #92400E; }
+    .adm-badge.blue { background: #DBEAFE; color: #1D4ED8; }
+    .adm-footer-note { font-size: .72rem; color: #94A3B8; padding: .25rem 0; }
+    .adm-link { color: var(--green); text-decoration: none; font-weight: 500; }
+    .adm-link:hover { text-decoration: underline; }
+
+    /* Payments stats */
+    .adm-pay-stats {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .adm-pay-stat {
+      background: #fff; border-radius: 14px;
+      padding: 1.2rem 1.4rem; border: 1px solid var(--border);
+    }
+    .adm-pay-stat-val {
+      font-family: var(--serif); font-size: 1.6rem;
+      font-weight: 700; color: var(--ink);
+    }
+    .adm-pay-stat-lbl {
+      font-size: .66rem; color: var(--muted);
+      margin-top: .3rem; text-transform: uppercase; letter-spacing: .06em;
+    }
+
+    /* Sponsors */
+    .adm-sp-grid { display: flex; flex-direction: column; gap: .85rem; margin-bottom: 1.5rem; }
+    .adm-sp-card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid var(--border); padding: 1.1rem 1.4rem;
+      display: flex; align-items: center; gap: 1.1rem;
+      transition: box-shadow .18s;
+    }
+    .adm-sp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+    .adm-sp-logo {
+      width: 46px; height: 46px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 1rem;
+      font-style: italic; color: #fff; flex-shrink: 0;
+    }
+    .adm-sp-info { flex: 1; }
+    .adm-sp-name { font-size: .9rem; font-weight: 700; color: var(--ink); }
+    .adm-sp-meta { font-size: .7rem; color: var(--muted); margin-top: 3px; }
+    .adm-sp-actions { display: flex; align-items: center; gap: .65rem; }
+    .adm-sp-edit {
+      font-size: .73rem; font-weight: 500; color: var(--ink);
+      text-decoration: none; padding: .35rem .85rem;
+      border: 1px solid var(--border); border-radius: 100px;
+      background: #fff; transition: all .15s;
+    }
+    .adm-sp-edit:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .adm-add-btn {
+      display: flex; align-items: center; gap: .55rem;
+      font-size: .83rem; font-weight: 500; color: var(--green);
+      background: rgba(34,168,126,.05);
+      border: 1.5px dashed rgba(34,168,126,.3); border-radius: 14px;
+      padding: 1rem 1.4rem; width: 100%;
+      cursor: pointer; font-family: var(--sans);
+      justify-content: center; transition: background .15s;
+    }
+    .adm-add-btn:hover { background: rgba(34,168,126,.1); }
+
+    /* Settings */
+    .adm-settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .adm-settings-card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid var(--border); padding: 1.5rem;
+    }
+    .adm-settings-card-title {
+      font-size: .85rem; font-weight: 700; color: var(--ink);
+      margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .adm-settings-field { margin-bottom: 1rem; }
+    .adm-settings-label {
+      font-size: .68rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .08em;
+      display: block; margin-bottom: .4rem;
+    }
+    .adm-settings-inp {
+      width: 100%; padding: .6rem .9rem;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: var(--sans); font-size: .83rem;
+      color: var(--ink); outline: none;
+      transition: border-color .15s;
+    }
+    .adm-settings-inp:focus { border-color: var(--green); }
+    .adm-settings-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .65rem 0;
+      border-bottom: 1px solid #F8FAFC;
+    }
+    .adm-settings-toggle:last-child { border-bottom: none; }
+    .adm-toggle-info { }
+    .adm-toggle-title { font-size: .83rem; font-weight: 500; color: var(--ink2); }
+    .adm-toggle-sub { font-size: .7rem; color: var(--muted); margin-top: .1rem; }
+    .toggle-switch {
+      position: relative; width: 40px; height: 22px; flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; cursor: pointer;
+      background: #CBD5E1; border-radius: 100px;
+      transition: background .2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; left: 3px; top: 3px;
+      background: #fff; border-radius: 50%;
+      transition: transform .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+    .adm-settings-save {
+      margin-top: 1.25rem; padding: .65rem 1.4rem;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: #fff; border: none; border-radius: 10px;
+      font-family: var(--sans); font-size: .82rem; font-weight: 600;
+      cursor: pointer; transition: opacity .15s;
+    }
+    .adm-settings-save:hover { opacity: .88; }
+
+    /* Notification dot */
+    .adm-notif-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #EF4444; position: absolute;
+      top: 6px; right: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .adm-kpi-grid { grid-template-columns: repeat(2,1fr); }
+      .adm-chart-row { grid-template-columns: 1fr; }
+      .adm-settings-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .adm-sidebar { width: 200px; }
+      .adm-content { padding: 1.25rem; }
+      .adm-topbar { padding: 0 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">Gradim<span>Se</span></div>
+      <div class="login-eyebrow">Admin panel</div>
+      <h2>Dobrodošli nazaj</h2>
+      <p>Ta stran je dostopna samo pooblaščenemu administratorju.</p>
+      <div class="login-field">
+        <label class="login-label" for="loginEmail">E-naslov</label>
+        <input type="email" class="login-inp" id="loginEmail" placeholder="admin@gradimse.si" autocomplete="email">
+      </div>
+      <div class="login-field">
+        <label class="login-label" for="loginPass">Geslo</label>
+        <input type="password" class="login-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="login-btn" id="loginBtn">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M7.5 1L14 4.5v3.8C14 12.1 11.1 14.7 7.5 15 3.9 14.7 1 12.1 1 8.3V4.5L7.5 1z"/><path d="M4.5 7.8l2.3 2.3 3.7-3.8"/></svg>
+        Prijava v admin
+      </button>
+      <div class="login-error" id="loginError">Napačen e-naslov ali geslo. Poskusite znova.</div>
+      <a href="index.html" class="login-back">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M7 2L3 6l4 4"/></svg>
+        Nazaj na spletno stran
+      </a>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD ── -->
+  <div id="dashboard">
+    <div class="adm-layout">
+
+      <!-- Sidebar -->
+      <div class="adm-sidebar">
+        <div class="adm-sb-head">
+          <div class="adm-sb-logo">Gradim<span>Se</span></div>
+          <div class="adm-sb-role">Admin panel · v1.0</div>
+        </div>
+        <nav class="adm-nav">
+          <div class="adm-nav-section">Splošno</div>
+          <button class="adm-nav-item active" data-section="overview">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.5"/></svg>
+            Pregled
+          </button>
+          <div class="adm-nav-section">Upravljanje</div>
+          <button class="adm-nav-item" data-section="members">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="5" r="3"/><path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M11 5.5c1 .5 2 1.5 2 3M13 12c-.2-2-1.5-3.5-2.5-4"/></svg>
+            Člani
+            <span class="adm-nav-badge">247</span>
+          </button>
+          <button class="adm-nav-item" data-section="payments">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3.5" width="13" height="8" rx="2"/><path d="M1 7h13"/><path d="M4.5 10h3"/></svg>
+            Plačila
+          </button>
+          <button class="adm-nav-item" data-section="sponsors">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5l1.6 3.2 3.5.5-2.5 2.5.6 3.5-3.2-1.7-3.2 1.7.6-3.5L2.4 5.2l3.5-.5z"/></svg>
+            Sponzorji
+            <span class="adm-nav-badge warn">3</span>
+          </button>
+          <div class="adm-nav-section">Vsebina</div>
+          <button class="adm-nav-item" data-section="inquiries" style="position:relative;">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2.5" width="13" height="10" rx="2"/><path d="M1 5.5l6.5 4 6.5-4"/></svg>
+            Povpraševanja
+            <span class="adm-nav-badge">5</span>
+          </button>
+          <button class="adm-nav-item" data-section="settings">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.5"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.7 2.7l1 1M11.3 11.3l1 1M11.3 2.7l-1 1M2.7 11.3l1-1"/></svg>
+            Nastavitve
+          </button>
+        </nav>
+        <div class="adm-sb-foot">
+          <div class="adm-sb-user">
+            <div class="adm-sb-av" id="sbAvatar">DV</div>
+            <div>
+              <div class="adm-sb-user-name" id="sbName">Domena Vbelj</div>
+              <div class="adm-sb-user-role">Administrator</div>
+            </div>
+          </div>
+          <button class="adm-logout-btn" id="logoutBtn">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 1.5H2.5A1.5 1.5 0 001 3v7a1.5 1.5 0 001.5 1.5H5"/><path d="M9 9.5l2.5-3L9 4M4 6.5h7.5"/></svg>
+            Odjava
+          </button>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="adm-main">
+        <!-- Top bar -->
+        <div class="adm-topbar">
+          <div class="adm-topbar-title" id="topbarTitle">Pregled platforme</div>
+          <div class="adm-topbar-right">
+            <div class="adm-topbar-date" id="topbarDate"></div>
+            <a href="index.html" class="adm-back-link">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M7 2L3 6l4 4"/></svg>
+              Na spletno stran
+            </a>
+          </div>
+        </div>
+
+        <!-- ── PREGLED ── -->
+        <div class="adm-content active" id="adm-overview">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Pregled platforme</div>
+              <div class="adm-content-sub">Junij 2026 · zadnja posodobitev danes</div>
+            </div>
+          </div>
+          <div class="adm-kpi-grid">
+            <div class="adm-kpi-card">
+              <div class="adm-kpi-icon">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="5.5" r="3.5"/><path d="M1 15c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
+              </div>
+              <div class="adm-kpi-val">247</div>
+              <div class="adm-kpi-lbl">Skupaj članov</div>
+              <div class="adm-kpi-delta up">↑ +12 ta teden</div>
+            </div>
+            <div class="adm-kpi-card">
+              <div class="adm-kpi-icon">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1l1.9 3.8 4.2.6-3 3 .7 4.2L8.5 11l-3.8 2 .7-4.2-3-3 4.2-.6z"/></svg>
+              </div>
+              <div class="adm-kpi-val">189</div>
+              <div class="adm-kpi-lbl">Pro članov</div>
+              <div class="adm-kpi-delta up">↑ +5 ta mesec</div>
+            </div>
+            <div class="adm-kpi-card">
+              <div class="adm-kpi-icon">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="14" height="9" rx="2"/><path d="M1.5 7.5h14"/><path d="M5 11h3.5"/></svg>
+              </div>
+              <div class="adm-kpi-val">€2.187</div>
+              <div class="adm-kpi-lbl">Prihodki ta mesec</div>
+              <div class="adm-kpi-delta up">↑ +€342 vs. prejšnji</div>
+            </div>
+            <div class="adm-kpi-card">
+              <div class="adm-kpi-icon">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l1.7 3.4 3.8.5-2.7 2.7.6 3.8-3.4-1.8-3.4 1.8.6-3.8L3 5.4l3.8-.5z"/></svg>
+              </div>
+              <div class="adm-kpi-val">3</div>
+              <div class="adm-kpi-lbl">Aktivni sponzorji</div>
+              <div class="adm-kpi-delta warn">⚠ 1 poteče kmalu</div>
+            </div>
+          </div>
+
+          <div class="adm-chart-row">
+            <div class="adm-chart-card">
+              <div class="adm-chart-head">
+                <div>
+                  <div class="adm-chart-title">Rast članov po mesecih</div>
+                  <div class="adm-chart-sub">Jans–Jun 2026</div>
+                </div>
+              </div>
+              <div class="adm-trend-list">
+                <div class="adm-trend-row"><div class="adm-trend-month">Jan</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:38%"></div></div><div class="adm-trend-val">+38</div></div>
+                <div class="adm-trend-row"><div class="adm-trend-month">Feb</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:52%"></div></div><div class="adm-trend-val">+52</div></div>
+                <div class="adm-trend-row"><div class="adm-trend-month">Mar</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:44%"></div></div><div class="adm-trend-val">+44</div></div>
+                <div class="adm-trend-row"><div class="adm-trend-month">Apr</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:61%"></div></div><div class="adm-trend-val">+61</div></div>
+                <div class="adm-trend-row"><div class="adm-trend-month">Maj</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:55%"></div></div><div class="adm-trend-val">+55</div></div>
+                <div class="adm-trend-row"><div class="adm-trend-month">Jun</div><div class="adm-trend-bar-track"><div class="adm-trend-bar-fill" style="width:28%"></div></div><div class="adm-trend-val">+28 ↗</div></div>
+              </div>
+            </div>
+            <div class="adm-chart-card">
+              <div class="adm-chart-head">
+                <div>
+                  <div class="adm-chart-title">Vsebina po kategorijah</div>
+                  <div class="adm-chart-sub">Skupaj aktivnih</div>
+                </div>
+              </div>
+              <div class="adm-mini-bar-list">
+                <div class="adm-mini-bar-row"><div class="adm-mini-bar-label">Blog</div><div class="adm-mini-bar-track"><div class="adm-mini-bar-fill" style="width:85%"></div></div><div class="adm-mini-bar-val">42</div></div>
+                <div class="adm-mini-bar-row"><div class="adm-mini-bar-label">Forum</div><div class="adm-mini-bar-track"><div class="adm-mini-bar-fill" style="width:70%"></div></div><div class="adm-mini-bar-val">128</div></div>
+                <div class="adm-mini-bar-row"><div class="adm-mini-bar-label">Profili</div><div class="adm-mini-bar-track"><div class="adm-mini-bar-fill" style="width:55%"></div></div><div class="adm-mini-bar-val">247</div></div>
+                <div class="adm-mini-bar-row"><div class="adm-mini-bar-label">Podcast</div><div class="adm-mini-bar-track"><div class="adm-mini-bar-fill" style="width:10%"></div></div><div class="adm-mini-bar-val">0</div></div>
+                <div class="adm-mini-bar-row"><div class="adm-mini-bar-label">Delavnice</div><div class="adm-mini-bar-track"><div class="adm-mini-bar-fill" style="width:10%"></div></div><div class="adm-mini-bar-val">0</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="adm-section-label">Zadnja aktivnost</div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead><tr><th>Dejanje</th><th>Kdo</th><th>Kdaj</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Nova registracija</td>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td>
+                  <td>danes, 09:14</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td>Plačilo Pro €9</td>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td>
+                  <td>danes, 08:32</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td>Nova objava v forumu</td>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td>
+                  <td>včeraj, 21:05</td>
+                  <td><span class="adm-badge blue">V pregledu</span></td>
+                </tr>
+                <tr>
+                  <td>Blog oddan v pregled</td>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td>
+                  <td>včeraj, 18:40</td>
+                  <td><span class="adm-badge blue">V pregledu</span></td>
+                </tr>
+                <tr>
+                  <td>Plačilo Tečaj €49</td>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#FCE7F3;color:#9D174D;">KN</div>Katja Novak</div></td>
+                  <td>23. maj, 11:20</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── ČLANI ── -->
+        <div class="adm-content" id="adm-members">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Registrirani člani</div>
+              <div class="adm-content-sub">247 skupaj · 189 Pro · 58 Free</div>
+            </div>
+            <a href="#" class="adm-content-action">Izvozi CSV</a>
+          </div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead><tr><th>Ime</th><th>E-pošta</th><th>Plan</th><th>Včlanjen</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">marko@example.com</td>
+                  <td><span class="adm-badge green">Pro</span></td>
+                  <td>Jan 2026</td>
+                  <td><span class="adm-badge green">Aktiven</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#DBEAFE;color:#1D4ED8;">AP</div>Ana Pirnat</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">ana@example.com</td>
+                  <td><span class="adm-badge muted">Free</span></td>
+                  <td>Feb 2026</td>
+                  <td><span class="adm-badge green">Aktiven</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">tomaz@example.com</td>
+                  <td><span class="adm-badge green">Pro</span></td>
+                  <td>Mar 2026</td>
+                  <td><span class="adm-badge green">Aktiven</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#FCE7F3;color:#9D174D;">KN</div>Katja Novak</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">katja@example.com</td>
+                  <td><span class="adm-badge muted">Free</span></td>
+                  <td>Mar 2026</td>
+                  <td><span class="adm-badge muted">Neaktiven</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">luka@example.com</td>
+                  <td><span class="adm-badge green">Pro</span></td>
+                  <td>Apr 2026</td>
+                  <td><span class="adm-badge green">Aktiven</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td>
+                  <td style="color:var(--muted);font-size:.77rem;">sara@example.com</td>
+                  <td><span class="adm-badge green">Pro</span></td>
+                  <td>Maj 2026</td>
+                  <td><span class="adm-badge green">Aktiven</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="adm-footer-note">Prikazuje 6 od 247 članov · <a href="#" class="adm-link">Naloži več</a></div>
+        </div>
+
+        <!-- ── PLAČILA ── -->
+        <div class="adm-content" id="adm-payments">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Plačila</div>
+              <div class="adm-content-sub">Junij 2026 · skupaj €2.187</div>
+            </div>
+            <a href="#" class="adm-content-action">Izvozi CSV</a>
+          </div>
+          <div class="adm-pay-stats">
+            <div class="adm-pay-stat">
+              <div class="adm-pay-stat-val">€2.187</div>
+              <div class="adm-pay-stat-lbl">Skupaj ta mesec</div>
+            </div>
+            <div class="adm-pay-stat">
+              <div class="adm-pay-stat-val">189</div>
+              <div class="adm-pay-stat-lbl">Pro naročnin</div>
+            </div>
+            <div class="adm-pay-stat">
+              <div class="adm-pay-stat-val">+12</div>
+              <div class="adm-pay-stat-lbl">Novih ta teden</div>
+            </div>
+          </div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead><tr><th>Član</th><th>Znesek</th><th>Plan</th><th>Datum</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td>
+                  <td class="adm-amount">€9</td><td>Pro</td><td>22. maj 2026</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td>
+                  <td class="adm-amount">€9</td><td>Pro</td><td>20. maj 2026</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td>
+                  <td class="adm-amount">€49</td><td>Tečaj</td><td>18. maj 2026</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td>
+                  <td class="adm-amount">€9</td><td>Pro</td><td>15. maj 2026</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+                <tr>
+                  <td><div class="adm-user"><div class="adm-av" style="background:#CCFBF1;color:#0F766E;">NK</div>Nina Kos</div></td>
+                  <td class="adm-amount">€150</td><td>Mentorstvo</td><td>10. maj 2026</td>
+                  <td><span class="adm-badge green">Potrjeno</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="adm-footer-note">Prikazuje 5 od 127 plačil · <a href="#" class="adm-link">Naloži več</a></div>
+        </div>
+
+        <!-- ── SPONZORJI ── -->
+        <div class="adm-content" id="adm-sponsors">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Sponzorji</div>
+              <div class="adm-content-sub">3 aktivni · 1 poteče kmalu</div>
+            </div>
+            <a href="sponzorji.html" class="adm-content-action">Poglej javno stran</a>
+          </div>
+          <div class="adm-sp-grid">
+            <div class="adm-sp-card">
+              <div class="adm-sp-logo" style="background:linear-gradient(135deg,#0A5C4A,#22A87E);">Fi</div>
+              <div class="adm-sp-info">
+                <div class="adm-sp-name">FinancePro</div>
+                <div class="adm-sp-meta">Platinum · poteče 31. avg 2026</div>
+              </div>
+              <div class="adm-sp-actions">
+                <span class="adm-badge green">Aktiven</span>
+                <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+              </div>
+            </div>
+            <div class="adm-sp-card">
+              <div class="adm-sp-logo" style="background:linear-gradient(135deg,#7a5f18,#c8922a);">Zn</div>
+              <div class="adm-sp-info">
+                <div class="adm-sp-name">ZnamkaStudio</div>
+                <div class="adm-sp-meta">Gold · poteče 15. jul 2026</div>
+              </div>
+              <div class="adm-sp-actions">
+                <span class="adm-badge green">Aktiven</span>
+                <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+              </div>
+            </div>
+            <div class="adm-sp-card">
+              <div class="adm-sp-logo" style="background:linear-gradient(135deg,#2c4f6a,#4a90c4);">Pr</div>
+              <div class="adm-sp-info">
+                <div class="adm-sp-name">ProNajemnik</div>
+                <div class="adm-sp-meta">Silver · poteče 1. jun 2026</div>
+              </div>
+              <div class="adm-sp-actions">
+                <span class="adm-badge yellow">Poteče kmalu</span>
+                <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+              </div>
+            </div>
+          </div>
+          <button class="adm-add-btn">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="7.5" y1="2" x2="7.5" y2="13"/><line x1="2" y1="7.5" x2="13" y2="7.5"/></svg>
+            Dodaj novega sponzorja
+          </button>
+        </div>
+
+        <!-- ── POVPRAŠEVANJA ── -->
+        <div class="adm-content" id="adm-inquiries">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Povpraševanja</div>
+              <div class="adm-content-sub">5 novih · od entry forme na domači strani</div>
+            </div>
+          </div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead><tr><th>E-pošta</th><th>Sporočilo</th><th>Prejeto</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-size:.78rem;color:var(--muted);">maja.horvat@gmail.com</td>
+                  <td style="max-width:280px;font-size:.78rem;">Iščem računovodjo za moje s.p. – kdo priporoča?</td>
+                  <td>danes, 10:22</td>
+                  <td><span class="adm-badge blue">Novo</span></td>
+                </tr>
+                <tr>
+                  <td style="font-size:.78rem;color:var(--muted);">jure.mali@podjetnik.si</td>
+                  <td style="max-width:280px;font-size:.78rem;">Zanima me mentorstvo za startup v fazi ideje.</td>
+                  <td>danes, 08:55</td>
+                  <td><span class="adm-badge blue">Novo</span></td>
+                </tr>
+                <tr>
+                  <td style="font-size:.78rem;color:var(--muted);">tina.ks@gmail.com</td>
+                  <td style="max-width:280px;font-size:.78rem;">Potrebujem pomoč pri registraciji podjetja.</td>
+                  <td>včeraj, 19:30</td>
+                  <td><span class="adm-badge muted">Pregledno</span></td>
+                </tr>
+                <tr>
+                  <td style="font-size:.78rem;color:var(--muted);">andraz.k@example.com</td>
+                  <td style="max-width:280px;font-size:.78rem;">Kdaj bo naslednja delavnica za prodajo?</td>
+                  <td>23. maj, 14:10</td>
+                  <td><span class="adm-badge muted">Pregledno</span></td>
+                </tr>
+                <tr>
+                  <td style="font-size:.78rem;color:var(--muted);">petra.n@biznis.si</td>
+                  <td style="max-width:280px;font-size:.78rem;">Zanima me sponzorstvo – kako poteka?</td>
+                  <td>22. maj, 11:05</td>
+                  <td><span class="adm-badge green">Odgovorjeno</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── NASTAVITVE ── -->
+        <div class="adm-content" id="adm-settings">
+          <div class="adm-content-head">
+            <div>
+              <div class="adm-content-title">Nastavitve</div>
+              <div class="adm-content-sub">Konfiguracija platforme GradimSe</div>
+            </div>
+          </div>
+          <div class="adm-settings-grid">
+            <div class="adm-settings-card">
+              <div class="adm-settings-card-title">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="6.5"/><path d="M7.5 4v4l2.5 1.5"/></svg>
+                Splošno
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Ime platforme</label>
+                <input class="adm-settings-inp" type="text" value="GradimSe">
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Kontaktni e-naslov</label>
+                <input class="adm-settings-inp" type="email" value="domenavbelj01@gmail.com">
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Tagline</label>
+                <input class="adm-settings-inp" type="text" value="Skupnost slovenskih podjetnikov">
+              </div>
+              <button class="adm-settings-save">Shrani spremembe</button>
+            </div>
+            <div class="adm-settings-card">
+              <div class="adm-settings-card-title">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 8h4v6H1zM5.5 5h4v9H5.5zM10 2h4v12h-4"/></svg>
+                Funkcionalnosti
+              </div>
+              <div class="adm-settings-toggle">
+                <div class="adm-toggle-info">
+                  <div class="adm-toggle-title">Entry overlay</div>
+                  <div class="adm-toggle-sub">Prikaži formo ob prihodu na stran</div>
+                </div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="adm-settings-toggle">
+                <div class="adm-toggle-info">
+                  <div class="adm-toggle-title">Registracija odprta</div>
+                  <div class="adm-toggle-sub">Novi člani se lahko registrirajo</div>
+                </div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="adm-settings-toggle">
+                <div class="adm-toggle-info">
+                  <div class="adm-toggle-title">Način vzdrževanja</div>
+                  <div class="adm-toggle-sub">Skrij stran za javnost</div>
+                </div>
+                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+              </div>
+              <div class="adm-settings-toggle">
+                <div class="adm-toggle-info">
+                  <div class="adm-toggle-title">E-mail obvestila</div>
+                  <div class="adm-toggle-sub">Prejemi obvestila o novih članih</div>
+                </div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+            <div class="adm-settings-card">
+              <div class="adm-settings-card-title">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1L1.5 4v3.5C1.5 10.8 4 13 7.5 14c3.5-1 6-3.2 6-6.5V4L7.5 1z"/><path d="M4.5 7.5l2 2 3-3"/></svg>
+                Varnost
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Admin e-naslov</label>
+                <input class="adm-settings-inp" type="email" value="domenavbelj01@gmail.com" readonly style="opacity:.6;cursor:not-allowed;">
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Novo geslo</label>
+                <input class="adm-settings-inp" type="password" placeholder="••••••••">
+              </div>
+              <div class="adm-settings-field">
+                <label class="adm-settings-label">Potrdi geslo</label>
+                <input class="adm-settings-inp" type="password" placeholder="••••••••">
+              </div>
+              <button class="adm-settings-save">Posodobi geslo</button>
+            </div>
+            <div class="adm-settings-card">
+              <div class="adm-settings-card-title">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="6.5"/><path d="M7.5 4v3.5l2 2"/></svg>
+                Hitri dostopi
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.25rem;">
+                <a href="index.html" class="adm-content-action" style="text-align:center;">Domača stran →</a>
+                <a href="skupnost.html" class="adm-content-action" style="text-align:center;">Skupnost →</a>
+                <a href="sponzorji.html" class="adm-content-action" style="text-align:center;">Sponzorji →</a>
+                <a href="podjetnik-meseca.html" class="adm-content-action" style="text-align:center;">Podjetnik meseca →</a>
+                <a href="delavnice.html" class="adm-content-action" style="text-align:center;">Delavnice →</a>
+                <a href="podcast.html" class="adm-content-action" style="text-align:center;">Podcast →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /adm-main -->
+    </div><!-- /adm-layout -->
+  </div><!-- /dashboard -->
+
+  <script>
+  (function () {
+    const ADMIN_EMAIL = 'domenavbelj01@gmail.com';
+    const ADMIN_PASS  = 'GradimSe2026';
+
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboard   = document.getElementById('dashboard');
+    const loginBtn    = document.getElementById('loginBtn');
+    const loginError  = document.getElementById('loginError');
+    const logoutBtn   = document.getElementById('logoutBtn');
+
+    const SECTION_TITLES = {
+      overview:  'Pregled platforme',
+      members:   'Registrirani člani',
+      payments:  'Plačila',
+      sponsors:  'Sponzorji',
+      inquiries: 'Povpraševanja',
+      settings:  'Nastavitve',
+    };
+
+    function showDashboard(email) {
+      loginScreen.style.display = 'none';
+      dashboard.style.display = 'block';
+      sessionStorage.setItem('adm_auth', '1');
+      const initials = email.split('@')[0].slice(0,2).toUpperCase();
+      document.getElementById('sbAvatar').textContent = initials;
+      setDate();
+    }
+
+    function setDate() {
+      const now = new Date();
+      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+      document.getElementById('topbarDate').textContent = now.toLocaleDateString('sl-SI', opts);
+    }
+
+    function switchSection(key) {
+      document.querySelectorAll('.adm-nav-item').forEach(b =>
+        b.classList.toggle('active', b.dataset.section === key)
+      );
+      document.querySelectorAll('.adm-content').forEach(p =>
+        p.classList.toggle('active', p.id === 'adm-' + key)
+      );
+      document.getElementById('topbarTitle').textContent = SECTION_TITLES[key] || '';
+    }
+
+    loginBtn.addEventListener('click', function () {
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pass  = document.getElementById('loginPass').value;
+      if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+        loginError.classList.remove('show');
+        showDashboard(email);
+      } else {
+        loginError.classList.add('show');
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+    });
+
+    document.getElementById('loginPass').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+    document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('loginPass').focus();
+    });
+
+    logoutBtn.addEventListener('click', function () {
+      sessionStorage.removeItem('adm_auth');
+      loginScreen.style.display = '';
+      dashboard.style.display = 'none';
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPass').value = '';
+    });
+
+    document.querySelectorAll('.adm-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => switchSection(btn.dataset.section));
+    });
+
+    showDashboard(ADMIN_EMAIL);
+  })();
+  </script>
+</body>
+</html>

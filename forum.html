@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forum — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#606968;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s, box-shadow .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    .nav-account-btn.open { border-color: var(--green-dark); background: var(--green-faint); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .page-hero { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3.5rem; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; animation: fadeUp .45s ease both; }
+    .page-hero-label { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1rem; display: block; }
+    .page-hero-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; line-height: 1.1; color: var(--ink); }
+    .page-hero-title em { font-style: italic; color: var(--green-dark); }
+    .page-hero-sub { font-size: .95rem; color: var(--muted); margin-top: 1rem; font-weight: 300; max-width: 520px; }
+
+    /* Layout */
+    .forum-layout { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 5rem; display: grid; grid-template-columns: 1fr 280px; gap: 2rem; align-items: start; }
+
+    /* Compose box */
+    .compose-wrap { margin-bottom: 2rem; }
+    .compose-box { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+    .compose-header { display: flex; align-items: center; gap: .85rem; margin-bottom: 1rem; }
+    .compose-av { width: 38px; height: 38px; border-radius: 50%; background: var(--green-light); color: var(--green-dark); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .85rem; flex-shrink: 0; }
+    .compose-name { font-weight: 500; font-size: .9rem; }
+    .compose-ta { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: .8rem 1rem; font-family: var(--sans); font-size: .9rem; color: var(--ink); resize: none; min-height: 90px; transition: border-color .18s, box-shadow .18s; outline: none; }
+    .compose-ta:focus { border-color: rgba(34,168,126,.4); box-shadow: 0 0 0 3px rgba(34,168,126,.09); }
+    .compose-ta::placeholder { color: var(--muted); }
+    .compose-footer { display: flex; align-items: center; justify-content: space-between; margin-top: .85rem; }
+    .compose-hint { font-size: .75rem; color: var(--muted); }
+    .compose-submit { font-size: .85rem; font-weight: 500; background: var(--green-dark); color: #fff; border: none; padding: .55rem 1.4rem; border-radius: 100px; cursor: pointer; font-family: var(--sans); transition: opacity .18s; }
+    .compose-submit:hover { opacity: .88; }
+    .compose-submit:disabled { opacity: .4; cursor: default; }
+
+    /* Not logged in prompt */
+    .compose-locked { background: #fff; border: 1px dashed rgba(10,92,74,.25); border-radius: 18px; padding: 1.5rem 1.5rem; text-align: center; margin-bottom: 2rem; }
+    .compose-locked p { font-size: .9rem; color: var(--muted); margin-bottom: .85rem; }
+    .compose-locked a { font-size: .85rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.3); }
+
+    /* Filter bar */
+    .forum-filter { display: flex; gap: .4rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .f-btn { font-size: .75rem; font-weight: 500; padding: .3rem .85rem; border-radius: 100px; border: 1px solid var(--border); background: #fff; color: var(--muted); cursor: pointer; transition: all .15s; font-family: var(--sans); }
+    .f-btn:hover { background: var(--green-faint); color: var(--green-dark); }
+    .f-btn.active { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+
+    /* Posts feed */
+    .posts-feed { display: flex; flex-direction: column; gap: 14px; }
+
+    .post-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 5px rgba(0,0,0,.04); transition: box-shadow .2s; animation: slideIn .35s ease both; }
+    .post-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+    .post-card.pinned { border-color: rgba(34,168,126,.3); background: linear-gradient(135deg,#f5fdf9,#fff); }
+
+    .post-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .85rem; }
+    .post-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .78rem; flex-shrink: 0; }
+    .post-meta { flex: 1; }
+    .post-name { font-weight: 500; font-size: .88rem; color: var(--ink); }
+    .post-time { font-size: .72rem; color: var(--muted); }
+    .post-pin-badge { font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; background: var(--green-light); color: var(--green-dark); padding: .15rem .5rem; border-radius: 100px; }
+
+    .post-tag { display: inline-block; font-size: .62rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; padding: .2rem .6rem; border-radius: 100px; margin-bottom: .6rem; }
+    .tag-vprasanje { background: #e8e4ff; color: #5b21b6; }
+    .tag-ideja { background: #fff3cd; color: #8a6f1a; }
+    .tag-zgodba { background: var(--green-light); color: var(--green-dark); }
+    .tag-oglas { background: #fce8e8; color: #9b2222; }
+    .tag-novost { background: #e0f0ff; color: #1a5b9b; }
+
+    .post-text { font-size: .9rem; color: var(--ink); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+
+    .post-footer { display: flex; align-items: center; gap: 1.2rem; margin-top: 1rem; padding-top: .85rem; border-top: 1px solid var(--border); }
+    .post-action { display: flex; align-items: center; gap: .35rem; font-size: .78rem; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--sans); padding: .25rem .5rem; border-radius: 8px; transition: background .15s, color .15s; }
+    .post-action:hover { background: var(--green-faint); color: var(--green-dark); }
+    .post-action.liked { color: #e05a5a; }
+    .post-action.liked svg { stroke: #e05a5a; fill: #e05a5a; }
+    .post-separator { flex: 1; }
+
+    /* Sidebar */
+    .forum-sidebar { position: sticky; top: 80px; }
+    .sidebar-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 1.25rem; box-shadow: 0 1px 5px rgba(0,0,0,.04); margin-bottom: 1rem; }
+    .sidebar-title { font-family: var(--serif); font-size: 1rem; font-weight: 400; margin-bottom: 1rem; color: var(--ink); }
+    .sidebar-stat { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; padding: .35rem 0; border-bottom: 1px solid var(--border); }
+    .sidebar-stat:last-child { border-bottom: none; }
+    .sidebar-stat-val { font-weight: 600; color: var(--green-dark); }
+    .sidebar-tag-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .sidebar-tag { font-size: .72rem; padding: .25rem .7rem; border-radius: 100px; border: 1px solid var(--border); background: #fff; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .sidebar-tag:hover { background: var(--green-faint); color: var(--green-dark); border-color: rgba(10,92,74,.2); }
+    .sidebar-members { display: flex; flex-direction: column; gap: .6rem; }
+    .sidebar-member { display: flex; align-items: center; gap: .6rem; }
+    .sidebar-member-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 600; flex-shrink: 0; }
+    .sidebar-member-name { font-size: .82rem; font-weight: 500; }
+    .sidebar-member-role { font-size: .7rem; color: var(--muted); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); background: #f8f7f3; padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; display: block; margin-bottom: .75rem; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .82rem; color: var(--muted); line-height: 1.65; max-width: 240px; margin-bottom: 1.1rem; }
+    .footer-socials { display: flex; gap: .6rem; }
+    .footer-social { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: transform .18s, color .18s, box-shadow .18s; }
+    .footer-social:hover { color: var(--green-dark); transform: translateY(-2px) scale(1.1); box-shadow: 0 4px 12px rgba(34,168,126,.18); }
+    .footer-col { display: flex; flex-direction: column; gap: .5rem; }
+    .footer-col-title { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--ink2); margin-bottom: .35rem; }
+    .footer-col a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-col a:hover { color: var(--ink); }
+    .footer-bottom { max-width: 860px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+
+    /* Account panel */
+    .acct-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(22,25,23,.42); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .acct-overlay.active { opacity: 1; pointer-events: auto; }
+    .acct-panel { position: fixed; top: 68px; right: 2rem; z-index: 401; background: #fff; border-radius: 22px; width: calc(100vw - 4rem); max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.22), 0 4px 16px rgba(0,0,0,.1); overflow: hidden; transform: translateY(-10px) scale(.97); transition: transform .28s cubic-bezier(.22,.68,0,1.12); opacity: 0; pointer-events: none; }
+    .acct-overlay.active .acct-panel { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-loggedout { padding: 2rem; text-align: center; }
+    .acct-lo-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 1rem; display: block; }
+    .acct-lo-logo span { color: var(--green); }
+    .acct-lo-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; margin-bottom: .4rem; }
+    .acct-lo-sub { font-size: .82rem; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.6; }
+    .acct-lo-btns { display: flex; flex-direction: column; gap: .5rem; }
+    .acct-lo-btn { width: 100%; padding: .7rem; border-radius: 100px; font-size: .875rem; font-weight: 500; cursor: pointer; font-family: var(--sans); border: 1.5px solid transparent; transition: all .18s; }
+    .acct-lo-btn.primary { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+    .acct-lo-btn.ghost { background: transparent; border-color: rgba(14,90,66,.25); color: var(--ink2); }
+    .acct-loggedin { padding: 1.5rem; }
+    .acct-loggedin-name { font-weight: 500; font-size: .95rem; margin-bottom: .25rem; }
+    .acct-loggedin-role { font-size: .78rem; color: var(--muted); margin-bottom: 1rem; }
+    .acct-admin-badge { font-size: .68rem; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; padding: .18rem .55rem; border-radius: 100px; }
+    .acct-logout-simple { font-size: .8rem; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--sans); }
+    .acct-logout-simple:hover { color: #c0392b; }
+
+    /* Photo upload in compose */
+    .compose-photo-btn { display: flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--sans); padding: .25rem .6rem; border-radius: 8px; transition: background .15s, color .15s; flex-shrink: 0; }
+    .compose-photo-btn:hover { background: var(--green-faint); color: var(--green-dark); }
+    .compose-photos-preview { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; min-height: 0; }
+    .compose-thumb { position: relative; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); flex-shrink: 0; }
+    .compose-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .compose-thumb-remove { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,.58); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 9px; line-height: 1; padding: 0; }
+    .compose-thumb-remove:hover { background: rgba(220,50,50,.8); }
+    .compose-hint { flex: 1; text-align: center; }
+
+    /* Post images grid */
+    .post-images { display: grid; gap: 4px; margin-top: .85rem; border-radius: 12px; overflow: hidden; }
+    .post-images.count-1 { grid-template-columns: 1fr; }
+    .post-images.count-2 { grid-template-columns: 1fr 1fr; }
+    .post-images.count-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .post-images.count-4 { grid-template-columns: 1fr 1fr; }
+    .post-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; cursor: zoom-in; display: block; transition: opacity .15s; }
+    .post-images.count-1 .post-img { aspect-ratio: 16/9; }
+    .post-img:hover { opacity: .92; }
+
+    /* Lightbox */
+    .img-lightbox { position: fixed; inset: 0; z-index: 900; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; cursor: zoom-out; }
+    .img-lightbox.active { opacity: 1; pointer-events: auto; }
+    .img-lightbox img { max-width: min(92vw, 1100px); max-height: 90vh; object-fit: contain; border-radius: 8px; pointer-events: none; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+    .img-lightbox-close { position: absolute; top: 1.25rem; right: 1.5rem; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #fff; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .img-lightbox-close:hover { background: rgba(255,255,255,.2); }
+
+    /* Comments */
+    .comments-panel { border-top: 1px solid var(--border); padding: 1rem 0 0; margin-top: .15rem; }
+    .comment-item { display: flex; gap: .6rem; margin-bottom: .75rem; }
+    .comment-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .62rem; font-weight: 600; flex-shrink: 0; }
+    .comment-bubble { flex: 1; background: var(--green-faint); border: 1px solid var(--border); border-radius: 12px 12px 12px 3px; padding: .55rem .85rem; }
+    .comment-meta { display: flex; align-items: baseline; gap: .45rem; margin-bottom: .2rem; }
+    .comment-name { font-size: .78rem; font-weight: 500; color: var(--ink); }
+    .comment-time { font-size: .65rem; color: var(--muted); }
+    .comment-text { font-size: .84rem; color: var(--ink2); line-height: 1.55; }
+    .no-comments-yet { font-size: .82rem; color: var(--muted); padding: .25rem 0 .8rem; }
+    .no-comments-yet a { color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.25); }
+    .comment-compose { display: flex; gap: .6rem; align-items: flex-end; margin-top: .5rem; }
+    .comment-compose-inner { flex: 1; display: flex; align-items: flex-end; background: #fff; border: 1.5px solid var(--border); border-radius: 12px; transition: border-color .15s; overflow: hidden; }
+    .comment-compose-inner:focus-within { border-color: rgba(34,168,126,.4); }
+    .comment-ta { flex: 1; border: none; padding: .55rem .75rem; font-family: var(--sans); font-size: .84rem; color: var(--ink); resize: none; outline: none; background: transparent; min-height: 36px; max-height: 120px; }
+    .comment-submit-btn { width: 36px; height: 36px; flex-shrink: 0; background: none; color: var(--green-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .15s; }
+    .comment-submit-btn:hover { color: var(--green); }
+    .post-action.active { background: var(--green-faint); color: var(--green-dark); }
+    .comment-count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 15px; padding: 0 4px; border-radius: 100px; background: var(--green-light); color: var(--green-dark); font-size: .63rem; font-weight: 700; line-height: 1; }
+
+    @media (max-width: 700px) {
+      .forum-layout { grid-template-columns: 1fr; }
+      .forum-sidebar { position: static; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html" class="active">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="5.5" r="3.5"/>
+      <path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Skupnost · Forum</span>
+    <h1 class="page-hero-title">Skupni <em>pogovor</em></h1>
+    <p class="page-hero-sub">Postavi vprašanje, deli idejo ali zgodbo. Skupnost 240+ podjetnikov ti odpiše.</p>
+  </div>
+</div>
+
+<!-- ── FORUM LAYOUT ── -->
+<div class="forum-layout">
+
+  <!-- Main column -->
+  <div class="forum-main">
+
+    <!-- Compose box / locked -->
+    <div id="composeWrap"></div>
+
+    <!-- Filter -->
+    <div class="forum-filter">
+      <button class="f-btn active" data-filter="vse">Vse</button>
+      <button class="f-btn" data-filter="vprasanje">Vprašanja</button>
+      <button class="f-btn" data-filter="ideja">Ideje</button>
+      <button class="f-btn" data-filter="zgodba">Zgodbe</button>
+      <button class="f-btn" data-filter="novost">Novosti</button>
+    </div>
+
+    <!-- Posts feed -->
+    <div class="posts-feed" id="postsFeed"></div>
+
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="forum-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">Statistika foruma</div>
+      <div class="sidebar-stat"><span>Skupaj objav</span><span class="sidebar-stat-val">184</span></div>
+      <div class="sidebar-stat"><span>Aktivnih članov</span><span class="sidebar-stat-val">92</span></div>
+      <div class="sidebar-stat"><span>Ta teden</span><span class="sidebar-stat-val">+23</span></div>
+      <div class="sidebar-stat"><span>Odgovorjenih vpr.</span><span class="sidebar-stat-val">97 %</span></div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">Kategorije</div>
+      <div class="sidebar-tag-list">
+        <span class="sidebar-tag">Vprašanja</span>
+        <span class="sidebar-tag">Ideje</span>
+        <span class="sidebar-tag">Zgodbe</span>
+        <span class="sidebar-tag">Finance</span>
+        <span class="sidebar-tag">Marketing</span>
+        <span class="sidebar-tag">Pravno</span>
+        <span class="sidebar-tag">Startup</span>
+        <span class="sidebar-tag">Mindset</span>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">Aktivni člani</div>
+      <div class="sidebar-members">
+        <div class="sidebar-member"><div class="sidebar-member-av" style="background:#ddf2e8;color:#0a5c4a;">MK</div><div><div class="sidebar-member-name">Marko Kovač</div><div class="sidebar-member-role">SaaS · Startup</div></div></div>
+        <div class="sidebar-member"><div class="sidebar-member-av" style="background:#e8e4ff;color:#5b21b6;">AP</div><div><div class="sidebar-member-name">Ana Pirnat</div><div class="sidebar-member-role">E-commerce</div></div></div>
+        <div class="sidebar-member"><div class="sidebar-member-av" style="background:#fff3cd;color:#8a6f1a;">TP</div><div><div class="sidebar-member-name">Tomaž Potočnik</div><div class="sidebar-member-role">Konzulting</div></div></div>
+        <div class="sidebar-member"><div class="sidebar-member-av" style="background:#e0f0ff;color:#1a5b9b;">LJ</div><div><div class="sidebar-member-name">Luka Jerič</div><div class="sidebar-member-role">B2B Prodaja</div></div></div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── IMAGE LIGHTBOX ── -->
+<div class="img-lightbox" id="imgLightbox">
+  <button class="img-lightbox-close" id="lightboxClose" aria-label="Zapri">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="Slika objave">
+</div>
+
+<!-- ── ACCOUNT OVERLAY ── -->
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <div id="acctLoButtons">
+    <div class="acct-loggedout">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Prijavi se da pišeš v forum.</p>
+      <div class="acct-lo-btns">
+        <button class="acct-lo-btn primary" onclick="window.location='index.html'">Registracija</button>
+        <button class="acct-lo-btn ghost" onclick="window.location='index.html'">Prijava</button>
+      </div>
+    </div>
+  </div>
+  <div id="acctLoggedIn" style="display:none;">
+    <div class="acct-loggedin">
+      <div class="acct-loggedin-name" id="acctName">—</div>
+      <div class="acct-loggedin-role" id="acctRole">—</div>
+      <button class="acct-logout-simple" id="acctLogoutBtn">Odjava</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Comments state ──
+let comments = {};
+try { comments = JSON.parse(localStorage.getItem('gs_forum_comments') || '{}'); } catch(e) {}
+function saveComments() { try { localStorage.setItem('gs_forum_comments', JSON.stringify(comments)); } catch(e) {} }
+const openCommentPanels = new Set();
+
+function toggleComments(postId) {
+  if (openCommentPanels.has(postId)) { openCommentPanels.delete(postId); } else { openCommentPanels.add(postId); }
+  renderFeed();
+  if (openCommentPanels.has(postId)) { const ta = document.getElementById('cta-' + postId); if (ta) setTimeout(() => ta.focus(), 0); }
+}
+
+function submitComment(postId) {
+  if (!user.name) return;
+  const ta = document.getElementById('cta-' + postId);
+  const text = ta ? ta.value.trim() : '';
+  if (!text) { if (ta) ta.focus(); return; }
+  const initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  if (!comments[postId]) comments[postId] = [];
+  comments[postId].push({ id: 'c_' + Date.now(), name: user.name, initials, avColor: '#ddf2e8', avText: '#0a5c4a', time: 'Pravkar', text });
+  saveComments();
+  openCommentPanels.add(postId);
+  renderFeed();
+}
+
+// ── Photo upload state ──
+let selectedPhotos = [];
+
+function renderPhotoPreview() {
+  const preview = document.getElementById('photosPreview');
+  if (!preview) return;
+  if (!selectedPhotos.length) { preview.innerHTML = ''; return; }
+  preview.innerHTML = selectedPhotos.map((src, i) => `
+    <div class="compose-thumb">
+      <img src="${src}" alt="">
+      <button class="compose-thumb-remove" onclick="removePhoto(${i})" type="button" aria-label="Odstrani">✕</button>
+    </div>`).join('');
+}
+
+function removePhoto(i) {
+  selectedPhotos.splice(i, 1);
+  renderPhotoPreview();
+}
+
+function bindPhotoEvents() {
+  const photoBtn   = document.getElementById('photoBtn');
+  const photoInput = document.getElementById('photoInput');
+  if (!photoBtn || !photoInput) return;
+  photoBtn.addEventListener('click', () => photoInput.click());
+  photoInput.addEventListener('change', () => {
+    const files = Array.from(photoInput.files);
+    const slots = 4 - selectedPhotos.length;
+    if (slots <= 0) return;
+    files.slice(0, slots).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = e => { selectedPhotos.push(e.target.result); renderPhotoPreview(); };
+      reader.readAsDataURL(file);
+    });
+    photoInput.value = '';
+  });
+}
+
+// ── Data ──
+const SEED_POSTS = [
+  {
+    id: 'p0', pinned: true,
+    name: 'Domena Vbelj', initials: 'DV', avColor: '#ddf2e8', avText: '#0a5c4a',
+    time: 'Danes · 09:00', tag: 'novost', tagLabel: 'Novost',
+    text: 'Dobrodošli v forum GradimSe skupnosti! 🎉\n\nTo je prostor za vse vaše misli, vprašanja, ideje in zgodbe iz podjetniške poti. Pišite svobodno — skupnost je tu da pomaga in navdihuje.',
+    likes: 42, liked: false
+  },
+  {
+    id: 'p1', pinned: false,
+    name: 'Marko Kovač', initials: 'MK', avColor: '#ddf2e8', avText: '#0a5c4a',
+    time: 'Danes · 08:34', tag: 'vprasanje', tagLabel: 'Vprašanje',
+    text: 'Pozdrav vsem! Razmišljam o prehodu iz s.p. na d.o.o. — ali je pri vas kdo to že naredil? Kdaj je pravi čas? Zanima me predvsem vidik davkov in administrativnega bremena.',
+    likes: 14, liked: false
+  },
+  {
+    id: 'p2', pinned: false,
+    name: 'Ana Pirnat', initials: 'AP', avColor: '#e8e4ff', avText: '#5b21b6',
+    time: 'Včeraj · 19:12', tag: 'zgodba', tagLabel: 'Zgodba',
+    text: 'Pred enim letom sem prodala prvih 10 paketov — danes sem presegla €10.000 MRR. Ni šlo brez padcev, a vztrajnost dela razliko. Kdor ima vprašanja — z veseljem podelim izkušnje 💪',
+    likes: 58, liked: false
+  },
+  {
+    id: 'p3', pinned: false,
+    name: 'Tomaž Potočnik', initials: 'TP', avColor: '#fff3cd', avText: '#8a6f1a',
+    time: 'Včeraj · 14:05', tag: 'ideja', tagLabel: 'Ideja',
+    text: 'Predlog za skupnost: bi bilo zanimivo organizirati mesečni "hot seat" Zoom klic, kjer en podjetnik predstavi svoj izziv in skupaj iščemo rešitve? Kdo bi se prijavil?',
+    likes: 31, liked: false
+  },
+  {
+    id: 'p4', pinned: false,
+    name: 'Luka Jerič', initials: 'LJ', avColor: '#e0f0ff', avText: '#1a5b9b',
+    time: '22. maj · 11:48', tag: 'vprasanje', tagLabel: 'Vprašanje',
+    text: 'Kakšna orodja za CRM uporabljate za B2B prodajo? Trenutno imam vse v Excelu kar ni idealno 😅 Budget je pod €50/mes.',
+    likes: 9, liked: false
+  },
+  {
+    id: 'p5', pinned: false,
+    name: 'Sara Petrovič', initials: 'SP', avColor: '#f0ffe8', avText: '#2d6a1f',
+    time: '21. maj · 16:30', tag: 'zgodba', tagLabel: 'Zgodba',
+    text: 'Prvič sem nastopila na poslovni konferenci in sem bila totalno nepripravljena na tremo. Ampak: po prvem stavku je šlo samo od sebe. Sporočilo? Začnite kljub strahu.',
+    likes: 27, liked: false
+  }
+];
+
+// Merge seed + localStorage posts
+function loadPosts() {
+  let userPosts = [];
+  try { userPosts = JSON.parse(localStorage.getItem('gs_forum_posts') || '[]'); } catch(e) {}
+  return [...userPosts, ...SEED_POSTS];
+}
+
+function savePosts(posts) {
+  try {
+    const userPosts = posts.filter(p => !SEED_POSTS.find(s => s.id === p.id));
+    localStorage.setItem('gs_forum_posts', JSON.stringify(userPosts));
+  } catch(e) {}
+}
+
+let posts = loadPosts();
+let currentFilter = 'vse';
+let user = {};
+try { const s = localStorage.getItem('gs_user'); if (s) user = JSON.parse(s); } catch(e) {}
+
+// ── Tag display ──
+const TAG_LABELS = { vprasanje: 'Vprašanje', ideja: 'Ideja', zgodba: 'Zgodba', oglas: 'Oglas', novost: 'Novost' };
+const TAG_CLASSES = { vprasanje: 'tag-vprasanje', ideja: 'tag-ideja', zgodba: 'tag-zgodba', oglas: 'tag-oglas', novost: 'tag-novost' };
+
+// ── Compose box ──
+function renderCompose() {
+  const wrap = document.getElementById('composeWrap');
+  if (user.name) {
+    const initials = user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    wrap.innerHTML = `
+      <div class="compose-box" style="margin-bottom:1.5rem;">
+        <div class="compose-header">
+          <div class="compose-av">${initials}</div>
+          <div class="compose-name">${user.name}</div>
+        </div>
+        <select id="postTagSel" style="width:100%;margin-bottom:.75rem;border:1.5px solid var(--border);border-radius:10px;padding:.5rem .85rem;font-family:var(--sans);font-size:.85rem;color:var(--ink);background:#fff;outline:none;">
+          <option value="vprasanje">Vprašanje</option>
+          <option value="ideja">Ideja</option>
+          <option value="zgodba">Zgodba</option>
+          <option value="novost">Novost</option>
+        </select>
+        <textarea class="compose-ta" id="composeTa" placeholder="Kaj imaš na mislih? Postavi vprašanje, deli idejo ali zgodbo…" rows="3"></textarea>
+        <div class="compose-photos-preview" id="photosPreview"></div>
+        <input type="file" id="photoInput" accept="image/*" multiple style="display:none;">
+        <div class="compose-footer">
+          <button class="compose-photo-btn" id="photoBtn" type="button">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="2.5" width="12" height="9" rx="1.5"/><circle cx="4.5" cy="5.5" r="1"/><path d="M1 10l3-3.5 2.5 2.5 2-2.5 3.5 4"/></svg>
+            Fotografija
+          </button>
+          <span class="compose-hint">Vsi člani vidijo tvojo objavo</span>
+          <button class="compose-submit" id="composeBtn">Objavi</button>
+        </div>
+      </div>`;
+    document.getElementById('composeBtn').addEventListener('click', submitPost);
+    bindPhotoEvents();
+    renderPhotoPreview();
+  } else {
+    wrap.innerHTML = `
+      <div class="compose-locked">
+        <p>Prijavi se da pišeš v forum skupnosti.</p>
+        <a href="index.html">Prijava ali registracija →</a>
+      </div>`;
+  }
+}
+
+function submitPost() {
+  const text = document.getElementById('composeTa').value.trim();
+  const tag  = document.getElementById('postTagSel').value;
+  if (!text) { document.getElementById('composeTa').focus(); return; }
+  const initials = user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const newPost = {
+    id: 'u_' + Date.now(),
+    pinned: false,
+    name: user.name,
+    initials,
+    avColor: '#ddf2e8',
+    avText: '#0a5c4a',
+    time: 'Pravkar',
+    tag,
+    tagLabel: TAG_LABELS[tag],
+    text,
+    images: selectedPhotos.length ? selectedPhotos.slice() : undefined,
+    likes: 0,
+    liked: false
+  };
+  posts = [newPost, ...posts];
+  selectedPhotos = [];
+  savePosts(posts);
+  renderFeed();
+  renderCompose();
+}
+
+// ── Feed ──
+function renderFeed() {
+  const feed = document.getElementById('postsFeed');
+  const filtered = currentFilter === 'vse' ? posts : posts.filter(p => p.tag === currentFilter);
+  if (!filtered.length) {
+    feed.innerHTML = '<p style="color:var(--muted);font-size:.9rem;padding:1rem 0;">Ni objav v tej kategoriji.</p>';
+    return;
+  }
+  feed.innerHTML = filtered.map(p => {
+    const postComments = comments[p.id] || [];
+    const uInit = user.name ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : '';
+    const isOpen = openCommentPanels.has(p.id);
+
+    const commentPanelHtml = isOpen ? `
+      <div class="comments-panel">
+        ${postComments.length ? postComments.map(c => `
+          <div class="comment-item">
+            <div class="comment-av" style="background:${c.avColor};color:${c.avText};">${c.initials}</div>
+            <div class="comment-bubble">
+              <div class="comment-meta"><span class="comment-name">${escHtml(c.name)}</span><span class="comment-time">${c.time}</span></div>
+              <div class="comment-text">${escHtml(c.text)}</div>
+            </div>
+          </div>`).join('') : '<div class="no-comments-yet">Bodi prvi, ki komentira.</div>'}
+        ${user.name ? `
+          <div class="comment-compose">
+            <div class="comment-av" style="background:#ddf2e8;color:#0a5c4a;">${uInit}</div>
+            <div class="comment-compose-inner">
+              <textarea class="comment-ta" id="cta-${p.id}" placeholder="Napiši komentar…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment('${p.id}');}"></textarea>
+              <button class="comment-submit-btn" onclick="submitComment('${p.id}')" title="Pošlji">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 1.5L1 5.8l4.2 2L11.5 1.5zm0 0L7.5 11.5 5.2 7.8"/></svg>
+              </button>
+            </div>
+          </div>` : '<div class="no-comments-yet"><a href="index.html">Prijavi se</a> da komentiraš.</div>'}
+      </div>` : '';
+
+    return `
+    <div class="post-card${p.pinned ? ' pinned' : ''}">
+      <div class="post-header">
+        <div class="post-av" style="background:${p.avColor};color:${p.avText};">${p.initials}</div>
+        <div class="post-meta">
+          <div class="post-name">${escHtml(p.name)}</div>
+          <div class="post-time">${p.time}</div>
+        </div>
+        ${p.pinned ? '<span class="post-pin-badge">📌 Pripeto</span>' : ''}
+      </div>
+      <span class="post-tag ${TAG_CLASSES[p.tag] || ''}">${p.tagLabel}</span>
+      <div class="post-text">${escHtml(p.text)}</div>
+      ${p.images && p.images.length ? `<div class="post-images count-${Math.min(p.images.length, 4)}">${p.images.slice(0, 4).map((src, i) => `<img class="post-img" src="${src}" alt="Slika" data-post-id="${p.id}" data-img-idx="${i}">`).join('')}</div>` : ''}
+      <div class="post-footer">
+        <button class="post-action${p.liked ? ' liked' : ''}" onclick="toggleLike('${p.id}')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="${p.liked ? '#e05a5a' : 'none'}" stroke="${p.liked ? '#e05a5a' : 'currentColor'}" stroke-width="1.4" stroke-linecap="round"><path d="M7 12S1.5 8.5 1.5 5a3 3 0 015.5-1.6A3 3 0 0112.5 5C12.5 8.5 7 12 7 12z"/></svg>
+          ${p.likes}
+        </button>
+        <div class="post-separator"></div>
+        <button class="post-action${isOpen ? ' active' : ''}" onclick="toggleComments('${p.id}')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1.5 2.5h11v7.5H8.5L7 12l-1.5-2H1.5V2.5z"/></svg>
+          ${postComments.length ? `<span class="comment-count-badge">${postComments.length}</span>` : ''}
+          Komentarji
+        </button>
+      </div>
+      ${commentPanelHtml}
+    </div>`;
+  }).join('');
+}
+
+function toggleLike(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  if (!user.name) { alert('Prijavi se da daš všeček.'); return; }
+  p.liked = !p.liked;
+  p.likes += p.liked ? 1 : -1;
+  savePosts(posts);
+  renderFeed();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Filter buttons ──
+document.querySelectorAll('.f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderFeed();
+  });
+});
+
+// ── Account ──
+const accountBtn = document.getElementById('accountBtn');
+const acctOverlay = document.getElementById('acctOverlay');
+if (user.name) {
+  accountBtn.classList.add('open');
+  document.getElementById('acctLoButtons').style.display = 'none';
+  document.getElementById('acctLoggedIn').style.display = '';
+  document.getElementById('acctName').textContent = user.name;
+  document.getElementById('acctRole').innerHTML = user.isAdmin
+    ? '<span class="acct-admin-badge">Admin</span>'
+    : (user.area || 'Član skupnosti');
+}
+accountBtn.addEventListener('click', () => acctOverlay.classList.toggle('active'));
+acctOverlay.addEventListener('click', e => { if (e.target === acctOverlay) acctOverlay.classList.remove('active'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') acctOverlay.classList.remove('active'); });
+const logoutBtn = document.getElementById('acctLogoutBtn');
+if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem('gs_user'); location.reload(); });
+
+// ── Init ──
+renderCompose();
+renderFeed();
+
+// ── Lightbox ──
+(function() {
+  const lb      = document.getElementById('imgLightbox');
+  const lbImg   = document.getElementById('lightboxImg');
+  const lbClose = document.getElementById('lightboxClose');
+
+  document.getElementById('postsFeed').addEventListener('click', function(e) {
+    const img = e.target.closest('.post-img');
+    if (!img) return;
+    const postId = img.dataset.postId;
+    const idx    = parseInt(img.dataset.imgIdx, 10);
+    const post   = posts.find(p => p.id === postId);
+    if (!post || !post.images || !post.images[idx]) return;
+    lbImg.src = post.images[idx];
+    lb.classList.add('active');
+  });
+
+  function closeLb() { lb.classList.remove('active'); lbImg.src = ''; }
+  lbClose.addEventListener('click', closeLb);
+  lb.addEventListener('click', function(e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('active')) closeLb(); });
+})();
+</script>
+</body>
+</html>

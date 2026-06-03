@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600" viewBox="0 0 300 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#041f16"/>
+      <stop offset="40%" stop-color="#063d2c"/>
+      <stop offset="75%" stop-color="#0A5C4A"/>
+      <stop offset="100%" stop-color="#22A87E"/>
+    </linearGradient>
+    <linearGradient id="cardbg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+    </linearGradient>
+    <linearGradient id="perkbg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="300" height="600"/></clipPath>
+  </defs>
+
+  <rect width="300" height="600" fill="url(#bg)"/>
+
+  <!-- Decorative elements -->
+  <circle cx="280" cy="30" r="130" fill="rgba(255,255,255,0.04)" clip-path="url(#clip)"/>
+  <circle cx="-30" cy="580" r="160" fill="rgba(255,255,255,0.04)" clip-path="url(#clip)"/>
+  <circle cx="150" cy="310" r="200" fill="rgba(34,168,126,0.07)" clip-path="url(#clip)"/>
+
+  <!-- Top label -->
+  <text x="150" y="38" font-family="Arial, sans-serif" font-size="8.5" fill="rgba(255,255,255,0.38)" text-anchor="middle" letter-spacing="2">SLOVENIJA · PODJETNIŠTVO</text>
+
+  <!-- Logo large -->
+  <text x="150" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="700" fill="rgba(255,255,255,0.95)" text-anchor="middle" letter-spacing="-1">Gradim<tspan fill="rgba(255,255,255,0.38)">Se</tspan></text>
+
+  <!-- Headline -->
+  <text x="150" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-style="italic" fill="rgba(255,255,255,0.88)" text-anchor="middle" letter-spacing="-0.3">Skupnost pravih</text>
+  <text x="150" y="154" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-style="italic" fill="rgba(255,255,255,0.88)" text-anchor="middle" letter-spacing="-0.3">podjetnikov.</text>
+
+  <!-- Sub -->
+  <text x="150" y="180" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.5)" text-anchor="middle">Brezplačno · Brez kreditne kartice</text>
+
+  <!-- Divider -->
+  <line x1="30" y1="204" x2="270" y2="204" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- Stats row -->
+  <text x="65" y="232" font-family="Georgia, serif" font-size="22" font-style="italic" fill="white" text-anchor="middle">240+</text>
+  <text x="65" y="248" font-family="Arial, sans-serif" font-size="7.5" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="0.8">ČLANOV</text>
+
+  <line x1="150" y1="218" x2="150" y2="258" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <text x="235" y="232" font-family="Georgia, serif" font-size="22" font-style="italic" fill="white" text-anchor="middle">5.200</text>
+  <text x="235" y="248" font-family="Arial, sans-serif" font-size="7.5" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="0.8">MESEČNO</text>
+
+  <!-- Divider -->
+  <line x1="30" y1="276" x2="270" y2="276" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- Perks list -->
+  <text x="30" y="310" font-family="Arial, sans-serif" font-size="8.5" fill="rgba(255,255,255,0.38)" letter-spacing="1.2">KAJ DOBIŠ</text>
+
+  <!-- Perk 1 -->
+  <rect x="24" y="322" width="252" height="38" rx="8" fill="url(#perkbg)"/>
+  <circle cx="46" cy="341" r="10" fill="rgba(34,168,126,0.35)"/>
+  <text x="46" y="346" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle">✓</text>
+  <text x="64" y="345" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.82)">Live delavnice vsak teden</text>
+
+  <!-- Perk 2 -->
+  <rect x="24" y="366" width="252" height="38" rx="8" fill="url(#perkbg)"/>
+  <circle cx="46" cy="385" r="10" fill="rgba(34,168,126,0.35)"/>
+  <text x="46" y="390" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle">✓</text>
+  <text x="64" y="389" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.82)">Objavi svojo zgodbo</text>
+
+  <!-- Perk 3 -->
+  <rect x="24" y="410" width="252" height="38" rx="8" fill="url(#perkbg)"/>
+  <circle cx="46" cy="429" r="10" fill="rgba(34,168,126,0.35)"/>
+  <text x="46" y="434" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle">✓</text>
+  <text x="64" y="433" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.82)">Podcast, blog &amp; skupnost</text>
+
+  <!-- Perk 4 -->
+  <rect x="24" y="454" width="252" height="38" rx="8" fill="url(#perkbg)"/>
+  <circle cx="46" cy="473" r="10" fill="rgba(34,168,126,0.35)"/>
+  <text x="46" y="478" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle">✓</text>
+  <text x="64" y="477" font-family="Arial, sans-serif" font-size="11" fill="rgba(255,255,255,0.82)">Direkten stik z mentorji</text>
+
+  <!-- Quote -->
+  <line x1="30" y1="510" x2="5" y2="510" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  <text x="38" y="507" font-family="Georgia, serif" font-size="10.5" font-style="italic" fill="rgba(255,255,255,0.62)">»Najboljša odločitev za moje</text>
+  <text x="38" y="522" font-family="Georgia, serif" font-size="10.5" font-style="italic" fill="rgba(255,255,255,0.62)">podjetje leta 2025.«</text>
+  <text x="38" y="540" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.38)">— Marko Kovač, SaaS ustanovitelj</text>
+
+  <!-- CTA Button -->
+  <rect x="24" y="558" width="252" height="22" rx="11" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <text x="150" y="573.5" font-family="Arial, sans-serif" font-size="9" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="0.3">gradimse.si</text>
+
+  <rect x="24" y="562" width="252" height="30" rx="15" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <text x="150" y="582" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="white" text-anchor="middle" letter-spacing="0.4">Pridruži se brezplačno →</text>
+</svg>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Podcast — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; }
+    .acct-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(22,25,23,.42); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .acct-overlay.active { opacity: 1; pointer-events: auto; }
+    .acct-panel { position: fixed; top: 68px; right: 2rem; z-index: 401; background: #fff; border-radius: 22px; width: calc(100vw - 4rem); max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,.22); padding: 2rem; text-align: center; transform: translateY(-10px) scale(.97); transition: transform .28s cubic-bezier(.22,.68,0,1.12); opacity: 0; pointer-events: none; }
+    .acct-overlay.active .acct-panel { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-panel.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-lo-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 1.1rem; display: block; }
+    .acct-lo-logo span { color: var(--green); }
+    .acct-lo-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; }
+    .acct-lo-sub { font-size: .84rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-lo-btns { display: flex; gap: .7rem; justify-content: center; }
+    .acct-lo-btn { padding: .65rem 1.5rem; border-radius: 100px; font-size: .85rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all .15s; text-decoration: none; display: inline-block; }
+    .acct-lo-btn.primary { background: linear-gradient(135deg, #0A5C4A, #22A87E); color: #fff; border: none; }
+    .acct-lo-btn.ghost { background: none; color: var(--green-dark); border: 1.5px solid rgba(10,92,74,.22); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+    .page-hero { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3.5rem; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; animation: fadeUp .45s ease both; }
+    .page-hero-label { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1rem; display: block; }
+    .page-hero-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; line-height: 1.1; color: var(--ink); }
+    .page-hero-title em { font-style: italic; color: var(--green-dark); }
+    .page-hero-sub { font-size: .95rem; color: var(--muted); margin-top: 1rem; font-weight: 300; max-width: 480px; }
+
+    .page-content { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .eyebrow { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 1.25rem; }
+    .section-title { font-family: var(--serif); font-size: clamp(1.5rem,3vw,2rem); font-weight: 400; letter-spacing: -.5px; line-height: 1.2; margin-bottom: 2rem; color: var(--ink); }
+    .section-title em { font-style: italic; color: var(--green); }
+
+    /* ── Episode list ── */
+    .pod-list { display: flex; flex-direction: column; gap: 10px; }
+    .pod-item { display: flex; align-items: center; gap: 1.25rem; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 14px; background: #fff; text-decoration: none; color: inherit; transition: background .18s, transform .18s, box-shadow .18s; box-shadow: 0 1px 4px rgba(0,0,0,.04); cursor: pointer; }
+    .pod-item:hover { background: var(--green-faint); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+    .pod-item:hover .pi-title { color: var(--green-dark); }
+    .pi-thumb { width: 80px; height: 58px; border-radius: 8px; flex-shrink: 0; overflow: hidden; position: relative; }
+    .pi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pi-thumb-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.52); opacity: 0; transition: opacity .18s; }
+    .pod-item:hover .pi-thumb-play { opacity: 1; }
+    .pi-play-icon { width: 34px; height: 24px; background: #ff0000; border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+    .pi-yt-label { position: absolute; bottom: 4px; right: 5px; font-size: .56rem; font-weight: 600; color: #fff; background: rgba(0,0,0,.6); padding: 1px 4px; border-radius: 3px; letter-spacing: .03em; }
+    .pi-info { flex: 1; min-width: 0; }
+    .pi-ep { font-size: .68rem; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: .05em; }
+    .pi-title { font-size: .92rem; font-weight: 400; color: var(--ink); line-height: 1.35; transition: color .15s; }
+    .pi-dur { font-size: .75rem; color: var(--muted); flex-shrink: 0; }
+
+    /* ── Platform links ── */
+    .platforms { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.5rem 0; border-top: 1px solid var(--border); margin-top: 2.5rem; }
+    .platforms-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .platform-btn { display: inline-flex; align-items: center; gap: .45rem; font-size: .78rem; font-weight: 500; color: var(--ink2); background: #fff; border: 1px solid var(--border); border-radius: 100px; padding: .4rem 1rem; text-decoration: none; transition: border-color .18s, color .18s; }
+    .platform-btn:hover { border-color: var(--green); color: var(--green-dark); }
+
+    /* ── Video player overlay ── */
+    .pod-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.88); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .25s; padding: 1rem; }
+    .pod-overlay.open { opacity: 1; pointer-events: auto; }
+    .pod-player { width: 700px; max-width: 100%; background: #0e0e0e; border-radius: 18px; overflow: hidden; position: relative; box-shadow: 0 40px 100px rgba(0,0,0,.7); }
+    .pp-close { position: absolute; top: .85rem; right: .85rem; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.15); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background .15s; }
+    .pp-close:hover { background: rgba(255,255,255,.15); }
+    .pp-close svg { display: block; }
+
+    /* Video area */
+    .pp-video { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; overflow: hidden; cursor: pointer; }
+    .pp-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .3s; }
+    .pp-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .pp-play-overlay.dim { background: rgba(0,0,0,.35); }
+    .pp-play-big { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,.92); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .18s, background .18s, opacity .25s; }
+    .pp-play-big:hover { transform: scale(1.1); background: #fff; }
+    .pp-play-big.playing { opacity: 0; }
+    .pp-video:hover .pp-play-big.playing { opacity: 1; }
+
+    /* Controls */
+    .pp-controls { background: #141414; padding: 1rem 1.4rem 1.3rem; }
+    .pp-meta { margin-bottom: .85rem; }
+    .pp-ep-lbl { font-size: .65rem; color: #666; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .2rem; }
+    .pp-title-txt { font-family: var(--serif); font-size: 1.05rem; color: #e8e8e8; line-height: 1.3; }
+
+    .pp-prog-wrap { position: relative; height: 4px; background: #2a2a2a; border-radius: 2px; cursor: pointer; margin-bottom: .75rem; }
+    .pp-prog-wrap:hover { height: 6px; margin-bottom: calc(.75rem - 2px); }
+    .pp-prog-fill { height: 100%; background: var(--green); border-radius: 2px; width: 0%; pointer-events: none; }
+    .pp-prog-thumb { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #fff; transform: translate(-50%, -50%); pointer-events: none; display: none; }
+    .pp-prog-wrap:hover .pp-prog-thumb { display: block; }
+
+    .pp-time-row { display: flex; justify-content: space-between; margin-bottom: .85rem; }
+    .pp-time-row span { font-size: .72rem; color: #666; font-variant-numeric: tabular-nums; }
+
+    .pp-btns { display: flex; align-items: center; gap: .5rem; }
+    .pp-btn { background: none; border: none; cursor: pointer; color: #aaa; font-family: var(--sans); font-size: .8rem; font-weight: 500; padding: .4rem .65rem; border-radius: 8px; transition: background .15s, color .15s; display: flex; align-items: center; gap: .35rem; }
+    .pp-btn:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .pp-btn-play { font-size: .95rem; padding: .45rem .8rem; background: rgba(34,168,126,.15); color: var(--green); border: 1px solid rgba(34,168,126,.3); border-radius: 100px; }
+    .pp-btn-play:hover { background: rgba(34,168,126,.25); color: #fff; }
+    .pp-vol { margin-left: auto; }
+
+footer { border-top: 1px solid var(--border); background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-brand {}
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; line-height: 1.5; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+    @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } .footer-tagline { max-width: 100%; } }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .pp-title-txt { font-size: .9rem; }
+    }
+
+    .acct-login-wrap { padding: 1.75rem 2rem 2rem; }
+    .acct-login-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .3rem; letter-spacing: -.3px; }
+    .acct-login-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-login-back { background: none; border: none; color: var(--muted); font-size: .8rem; cursor: pointer; padding: 0; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .35rem; font-family: var(--sans); transition: color .15s; }
+    .acct-login-back:hover { color: var(--green); }
+    .acct-login-err { font-size: .79rem; color: #c0392b; margin: -.1rem 0 .8rem; min-height: 1.1rem; }
+    .acct-loggedin-inner { padding: 1.75rem 2rem 2rem; }
+    .acct-logout-btn { background: none; border: 1px solid rgba(14,90,66,.18); color: var(--muted); font-size: .78rem; padding: .4rem 1rem; border-radius: 100px; cursor: pointer; font-family: var(--sans); transition: all .15s; margin-top: .75rem; width: 100%; }
+    .acct-logout-btn:hover { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+    .acct-admin-badge { font-size: .68rem; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; padding: .18rem .55rem; border-radius: 100px; letter-spacing: .03em; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html" class="active">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="5.5" r="3.5"/><path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/></svg>
+  </button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Podcast</span>
+    <h1 class="page-hero-title">Poslušaj <em>zgodbe.</em></h1>
+    <p class="page-hero-sub">Intervjuji, okrogle mize in solo epizode z izkušenimi slovenskimi podjetniki.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <p class="eyebrow">Vse epizode</p>
+  <p class="section-title">GradimSe <em>Podcast.</em></p>
+
+  <div class="pod-list">
+
+    <div class="pod-item" data-ep-idx="0">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep32gs/160/116" alt="Ep. 32">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 32 · Intervju</div><div class="pi-title">Od 0 do 200k v 18 mesecih — Ana Potočnik</div></div>
+      <div class="pi-dur">48 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="1">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep31gs/160/116" alt="Ep. 31">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 31 · Okrogla miza</div><div class="pi-title">Kako nastaviti cene storitev — okrogla miza</div></div>
+      <div class="pi-dur">62 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="2">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep30gs/160/116" alt="Ep. 30">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 30 · Intervju</div><div class="pi-title">Prodaja brez pritiska — Tomaž Bregar</div></div>
+      <div class="pi-dur">41 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="3">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep29gs/160/116" alt="Ep. 29">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 29 · Solo</div><div class="pi-title">Zakaj večina freelancerjev ostane majhnih</div></div>
+      <div class="pi-dur">29 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="4">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep28gs/160/116" alt="Ep. 28">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 28 · Intervju</div><div class="pi-title">3 restavracije brez kredita — Jure Novak</div></div>
+      <div class="pi-dur">55 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="5">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep27gs/160/116" alt="Ep. 27">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 27 · Solo</div><div class="pi-title">Kaj sem se naučil v prvih 100 epizodah</div></div>
+      <div class="pi-dur">22 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="6">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep26gs/160/116" alt="Ep. 26">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 26 · Okrogla miza</div><div class="pi-title">LinkedIn strategija za podjetnike v 2025</div></div>
+      <div class="pi-dur">58 min</div>
+    </div>
+
+    <div class="pod-item" data-ep-idx="7">
+      <div class="pi-thumb">
+        <img src="https://picsum.photos/seed/ep25gs/160/116" alt="Ep. 25">
+        <div class="pi-thumb-play"><div class="pi-play-icon"><svg width="14" height="10" viewBox="0 0 14 10" fill="#fff"><path d="M5.5 7V3l4 2-4 2z"/></svg></div></div><span class="pi-yt-label">YouTube</span>
+      </div>
+      <div class="pi-info"><div class="pi-ep">Ep. 25 · Intervju</div><div class="pi-title">Iz korporacije v svobodo — Sara Hrovat</div></div>
+      <div class="pi-dur">44 min</div>
+    </div>
+
+  </div>
+
+  <div class="platforms">
+    <span class="platforms-label">Poslušaj na:</span>
+    <a href="#" class="platform-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="2" fill="currentColor"/><path d="M3 11c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Spotify
+    </a>
+    <a href="#" class="platform-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+      Apple Podcasts
+    </a>
+    <a href="#" class="platform-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 7l3-2v4L5 7z" fill="currentColor"/></svg>
+      YouTube
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Video player overlay -->
+<div class="pod-overlay" id="podOverlay">
+  <div class="pod-player" id="podPlayer">
+    <button class="pp-close" id="ppClose" aria-label="Zapri">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#ccc" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+    </button>
+
+    <div class="pp-video" id="ppVideo">
+      <img src="" alt="" id="ppThumb" class="pp-thumb">
+      <div class="pp-play-overlay dim" id="ppPlayOverlay">
+        <button class="pp-play-big" id="ppPlayBig">
+          <svg id="ppPlayBigIcon" width="22" height="24" viewBox="0 0 22 24" fill="#0A5C4A"><path d="M2 2l18 10L2 22V2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="pp-controls">
+      <div class="pp-meta">
+        <div class="pp-ep-lbl" id="ppEpLbl"></div>
+        <div class="pp-title-txt" id="ppTitleTxt"></div>
+      </div>
+
+      <div class="pp-prog-wrap" id="ppProgWrap">
+        <div class="pp-prog-fill" id="ppFill"></div>
+        <div class="pp-prog-thumb" id="ppProgThumb"></div>
+      </div>
+
+      <div class="pp-time-row">
+        <span id="ppCurrent">0:00</span>
+        <span id="ppTotal">0:00</span>
+      </div>
+
+      <div class="pp-btns">
+        <button class="pp-btn" id="ppBack10">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 3A5.5 5.5 0 1 0 12 7"/><path d="M9 1l2 2-2 2"/><text x="3" y="9.5" font-size="4" fill="currentColor" stroke="none" font-family="sans-serif">10</text></svg>
+          ← 10s
+        </button>
+        <button class="pp-btn pp-btn-play" id="ppPlayPause">▶ &nbsp;Play</button>
+        <button class="pp-btn" id="ppFwd10">
+          10s →
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3A5.5 5.5 0 1 1 2 7"/><path d="M5 1L3 3l2 2"/></svg>
+        </button>
+        <button class="pp-btn pp-vol" id="ppVol" title="Glasnost">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 5h2l3-3v10L4 9H2V5z"/><path d="M10 4.5c1 .8 1.5 1.5 1.5 2.5s-.5 1.7-1.5 2.5"/></svg>
+          100%
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const episodes = [
+  { ep:'Ep. 32 · Intervju', title:'Od 0 do 200k v 18 mesecih — Ana Potočnik', dur:2880, thumb:'https://picsum.photos/seed/ep32gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+32+Ana+Potočnik' },
+  { ep:'Ep. 31 · Okrogla miza', title:'Kako nastaviti cene storitev — okrogla miza', dur:3720, thumb:'https://picsum.photos/seed/ep31gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+31+cene+storitev' },
+  { ep:'Ep. 30 · Intervju', title:'Prodaja brez pritiska — Tomaž Bregar', dur:2460, thumb:'https://picsum.photos/seed/ep30gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+30+Tomaž+Bregar' },
+  { ep:'Ep. 29 · Solo', title:'Zakaj večina freelancerjev ostane majhnih', dur:1740, thumb:'https://picsum.photos/seed/ep29gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+29+freelancerji' },
+  { ep:'Ep. 28 · Intervju', title:'3 restavracije brez kredita — Jure Novak', dur:3300, thumb:'https://picsum.photos/seed/ep28gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+28+Jure+Novak' },
+  { ep:'Ep. 27 · Solo', title:'Kaj sem se naučil v prvih 100 epizodah', dur:1320, thumb:'https://picsum.photos/seed/ep27gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+27+100+epizod' },
+  { ep:'Ep. 26 · Okrogla miza', title:'LinkedIn strategija za podjetnike v 2025', dur:3480, thumb:'https://picsum.photos/seed/ep26gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+26+LinkedIn' },
+  { ep:'Ep. 25 · Intervju', title:'Iz korporacije v svobodo — Sara Hrovat', dur:2640, thumb:'https://picsum.photos/seed/ep25gs/800/450', yt:'https://www.youtube.com/results?search_query=GradimSe+Podcast+Ep+25+Sara+Hrovat' },
+];
+
+let ppEp = null, ppTime = 0, ppPlaying = false, ppTimer = null;
+
+const overlay  = document.getElementById('podOverlay');
+const ppFill   = document.getElementById('ppFill');
+const ppThumb  = document.getElementById('ppThumb');
+const ppCur    = document.getElementById('ppCurrent');
+const ppTot    = document.getElementById('ppTotal');
+const ppPlayBig   = document.getElementById('ppPlayBig');
+const ppPlayBigIcon = document.getElementById('ppPlayBigIcon');
+const ppPlayPause   = document.getElementById('ppPlayPause');
+const ppProgThumb   = document.getElementById('ppProgThumb');
+
+const iconPlay  = '<path d="M2 2l18 10L2 22V2z"/>';
+const iconPause = '<rect x="3" y="2" width="5" height="20" rx="1"/><rect x="14" y="2" width="5" height="20" rx="1"/>';
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return m + ':' + (sec<10?'0':'') + sec;
+}
+
+function ppUpdateBar() {
+  const pct = ppEp ? (ppTime/ppEp.dur)*100 : 0;
+  ppFill.style.width = Math.min(pct,100)+'%';
+  ppProgThumb.style.left = Math.min(pct,100)+'%';
+  ppCur.textContent = fmt(ppTime);
+}
+
+function ppSetPlaying(val) {
+  ppPlaying = val;
+  clearInterval(ppTimer);
+  if (val) {
+    ppTimer = setInterval(() => {
+      if (ppTime < ppEp.dur) { ppTime++; ppUpdateBar(); }
+      else ppSetPlaying(false);
+    }, 1000);
+    ppPlayBigIcon.innerHTML = iconPause;
+    ppPlayBig.classList.add('playing');
+    ppPlayPause.textContent = '⏸  Pause';
+  } else {
+    ppPlayBigIcon.innerHTML = iconPlay;
+    ppPlayBig.classList.remove('playing');
+    ppPlayPause.textContent = '▶  Play';
+  }
+}
+
+function openPlayer(idx) {
+  const ep = episodes[idx];
+  ppEp = ep; ppTime = 0;
+  ppSetPlaying(false);
+  ppThumb.src = ep.thumb;
+  document.getElementById('ppEpLbl').textContent = ep.ep;
+  document.getElementById('ppTitleTxt').textContent = ep.title;
+  ppTot.textContent = fmt(ep.dur);
+  ppUpdateBar();
+  overlay.classList.add('open');
+}
+
+function closePlayer() {
+  ppSetPlaying(false);
+  overlay.classList.remove('open');
+}
+
+document.querySelectorAll('.pod-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const ep = episodes[parseInt(item.dataset.epIdx)];
+    window.open(ep.yt, '_blank');
+  });
+});
+
+ppPlayBig.addEventListener('click', () => ppSetPlaying(!ppPlaying));
+document.getElementById('ppVideo').addEventListener('click', e => { if (e.target !== ppPlayBig) ppSetPlaying(!ppPlaying); });
+ppPlayPause.addEventListener('click', () => ppSetPlaying(!ppPlaying));
+
+document.getElementById('ppBack10').addEventListener('click', () => {
+  ppTime = Math.max(0, ppTime-10); ppUpdateBar();
+});
+document.getElementById('ppFwd10').addEventListener('click', () => {
+  ppTime = Math.min(ppEp ? ppEp.dur : 0, ppTime+10); ppUpdateBar();
+});
+
+document.getElementById('ppProgWrap').addEventListener('click', e => {
+  if (!ppEp) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  ppTime = Math.round(((e.clientX-r.left)/r.width) * ppEp.dur);
+  ppUpdateBar();
+});
+
+document.getElementById('ppClose').addEventListener('click', closePlayer);
+overlay.addEventListener('click', e => { if (e.target === overlay) closePlayer(); });
+
+document.addEventListener('keydown', e => { if (e.key==='Escape') closePlayer(); });
+</script>
+
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <div class="acct-loggedout" id="acctLoButtons">
+    <div class="acct-loggedout">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Pridruži se 240+ slovenskim podjetnikom.<br>Brezplačno, brez kreditne kartice.</p>
+      <div class="acct-lo-btns">
+        <a href="index.html" class="acct-lo-btn primary">Registracija</a>
+        <button class="acct-lo-btn ghost" id="acctOpenLogin">Prijava</button>
+      </div>
+    </div>
+  </div>
+  <div class="acct-login-wrap" id="acctLoginForm" style="display:none;">
+    <button class="acct-login-back" id="acctLoginBack">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7.5 1L2.5 5.5l5 4.5"/></svg>
+      Nazaj
+    </button>
+    <h3 class="acct-login-title">Prijava</h3>
+    <p class="acct-login-sub">Dobrodošli nazaj v skupnost.</p>
+    <div class="acct-field">
+      <label class="acct-label">E-pošta</label>
+      <input type="email" class="acct-inp" id="loginEmail" placeholder="vas@email.com" autocomplete="email">
+    </div>
+    <div class="acct-field">
+      <label class="acct-label">Geslo</label>
+      <input type="password" class="acct-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="acct-login-err" id="loginErr"></div>
+    <button class="acct-publish-btn" id="loginSubmitBtn" style="width:100%;justify-content:center;">Prijavi se</button>
+  </div>
+  <div id="acctLoggedIn" style="display:none;">
+    <div class="acct-loggedin-inner">
+      <div class="acct-user-info">
+        <div class="acct-avatar" id="acctAvatarInitials">GS</div>
+        <div>
+          <div class="acct-uname" id="acctDisplayName"></div>
+          <div class="acct-urole" id="acctDisplayRole">Član skupnosti</div>
+        </div>
+      </div>
+      <a href="index.html" class="acct-lo-btn primary" style="display:block;text-align:center;margin-top:1.25rem;text-decoration:none;">Odpri dashboard</a>
+      <button class="acct-logout-btn" id="acctLogoutBtn">Odjava</button>
+    </div>
+  </div>
+</div>
+</div><!-- /acct-overlay -->
+<script>
+(function(){
+  const overlay=document.getElementById('acctOverlay');
+  const btn=document.getElementById('accountBtn');
+  let loggedIn=false,currentUser={};
+  try{const s=localStorage.getItem('gs_user');if(s){currentUser=JSON.parse(s);loggedIn=true;}}catch(e){}
+  if(loggedIn)btn.classList.add('open');
+  function showState(){
+    if(loggedIn){
+      document.getElementById('acctLoButtons').style.display='none';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='';
+      const initials=(currentUser.name||'GS').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('acctAvatarInitials').textContent=initials;
+      document.getElementById('acctDisplayName').textContent=currentUser.name||'';
+      document.getElementById('acctDisplayRole').innerHTML=currentUser.isAdmin?'<span class="acct-admin-badge">Admin</span>':(currentUser.area||'Član skupnosti');
+    }else{
+      document.getElementById('acctLoButtons').style.display='';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='none';
+    }
+  }
+  btn.addEventListener('click',()=>{showState();overlay.classList.add('active');btn.classList.add('open');document.body.style.overflow='hidden';});
+  function close(){overlay.classList.remove('active');if(!loggedIn)btn.classList.remove('open');document.body.style.overflow='';}
+  overlay.addEventListener('click',e=>{if(e.target===overlay||!document.getElementById('acctPanel').contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  document.getElementById('acctOpenLogin').addEventListener('click',()=>{
+    document.getElementById('acctLoButtons').style.display='none';
+    document.getElementById('acctLoginForm').style.display='';
+    document.getElementById('loginEmail').focus();
+  });
+  document.getElementById('acctLoginBack').addEventListener('click',()=>{
+    document.getElementById('acctLoginForm').style.display='none';
+    document.getElementById('acctLoButtons').style.display='';
+  });
+  function doLogin(){
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPass').value;
+    const errEl=document.getElementById('loginErr');
+    if(!email){errEl.textContent='Vnesite e-poštni naslov.';return;}
+    if(!pass){errEl.textContent='Vnesite geslo.';return;}
+    errEl.textContent='';
+    const isAdmin=email.toLowerCase()==='domenavbelj01@gmail.com';
+    const name=isAdmin?'Domena Vbelj':email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    currentUser={name,email,area:isAdmin?'Admin · GradimSe':'Član skupnosti',isAdmin};
+    loggedIn=true;
+    try{localStorage.setItem('gs_user',JSON.stringify(currentUser));}catch(e){}
+    showState();btn.classList.add('open');
+  }
+  document.getElementById('loginSubmitBtn').addEventListener('click',doLogin);
+  document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('acctLogoutBtn').addEventListener('click',()=>{
+    loggedIn=false;currentUser={};
+    try{localStorage.removeItem('gs_user');}catch(e){}
+    btn.classList.remove('open');close();
+  });
+})();
+</script>
+
+<!-- ── COMING SOON OVERLAY ── -->
+<style>
+  .cs-full-overlay {
+    position: fixed; inset: 0; top: 60px; z-index: 500;
+    background: rgba(4,14,10,.9);
+    backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .cs-full-overlay::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(34,168,126,.055) 1px, transparent 1px);
+    background-size: 26px 26px;
+    pointer-events: none;
+  }
+  .cs-full-inner {
+    text-align: center; position: relative; z-index: 1;
+    max-width: 560px;
+    animation: fadeUp .7s cubic-bezier(.34,1.36,.64,1) both;
+  }
+  .cs-full-ring {
+    width: 96px; height: 96px; border-radius: 50%;
+    border: 1.5px solid rgba(34,168,126,.35);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 2.5rem; position: relative;
+  }
+  .cs-full-ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%; border: 1px solid rgba(34,168,126,.2); }
+  .cs-full-ring::after { content: ''; position: absolute; inset: -10px; border-radius: 50%; border: 1px dashed rgba(34,168,126,.15); animation: csRotate 18s linear infinite; }
+  @keyframes csRotate { to { transform: rotate(360deg); } }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform: translateY(0); } }
+  .cs-full-logo-inner { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; color: rgba(255,255,255,.85); letter-spacing: -.3px; }
+  .cs-full-logo-inner span { color: #22A87E; }
+  .cs-full-eyebrow { font-size: .62rem; font-weight: 500; text-transform: uppercase; letter-spacing: .22em; color: #22A87E; margin-bottom: 1.1rem; }
+  .cs-full-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(3rem, 10vw, 5.5rem); color: #fff; font-weight: 400; letter-spacing: -3px; line-height: .95; margin-bottom: .7rem; }
+  .cs-full-title em { font-style: italic; color: #22A87E; }
+  .cs-full-divider { display: flex; align-items: center; gap: 1rem; margin: 1.4rem auto; max-width: 280px; opacity: .35; }
+  .cs-full-divider::before, .cs-full-divider::after { content: ''; flex: 1; height: 1px; background: rgba(34,168,126,.6); }
+  .cs-full-divider span { font-size: .55rem; letter-spacing: .2em; color: #22A87E; text-transform: uppercase; white-space: nowrap; }
+  .cs-full-sub { font-family: 'DM Sans', system-ui, sans-serif; font-size: .92rem; color: rgba(255,255,255,.45); line-height: 1.75; margin-bottom: 2.25rem; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .cs-full-form { display: flex; gap: .5rem; max-width: 360px; margin: 0 auto 1rem; }
+  .cs-full-input { flex: 1; padding: .75rem 1.1rem; border: 1px solid rgba(34,168,126,.28); border-radius: 100px; background: rgba(255,255,255,.06); color: #fff; font-family: 'DM Sans', system-ui, sans-serif; font-size: .875rem; outline: none; transition: border-color .15s; }
+  .cs-full-input::placeholder { color: rgba(255,255,255,.28); }
+  .cs-full-input:focus { border-color: rgba(34,168,126,.55); }
+  .cs-full-btn { padding: .75rem 1.4rem; border-radius: 100px; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; border: none; font-family: 'DM Sans', system-ui, sans-serif; font-size: .875rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: opacity .2s; }
+  .cs-full-btn:hover { opacity: .88; }
+  .cs-full-success { font-size: .82rem; color: #22A87E; margin-top: .65rem; display: none; }
+  .cs-full-success.vis { display: block; }
+  .cs-full-hint { font-size: .7rem; color: rgba(255,255,255,.2); margin-top: 2rem; letter-spacing: .05em; }
+</style>
+
+<div class="cs-full-overlay" id="csFullOverlay">
+  <div class="cs-full-inner">
+    <div class="cs-full-ring">
+      <div class="cs-full-logo-inner">Gradim<span>Se</span></div>
+    </div>
+    <div class="cs-full-eyebrow">GradimSe · Podcast</div>
+    <h1 class="cs-full-title">Coming <em>Soon.</em></h1>
+    <div class="cs-full-divider"><span>pripravljamo</span></div>
+    <p class="cs-full-sub">Pripravljamo podcast epizode z najboljšimi slovenskimi podjetniki. Resnične zgodbe, brez filtrov.</p>
+    <div class="cs-full-form">
+      <input type="email" class="cs-full-input" id="csFullEmail" placeholder="tvoj@email.com">
+      <button class="cs-full-btn" id="csFullBtn">Obvesti me</button>
+    </div>
+    <div class="cs-full-success" id="csFullSuccess">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:.3rem;"><path d="M2 6l2.5 2.5 5.5-5"/></svg>
+      Odlično! Javimo se takoj, ko bo pripravljeno.
+    </div>
+    <div class="cs-full-hint">© 2026 GradimSe · Slovenska podjetniška skupnost</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  document.getElementById('csFullBtn').addEventListener('click', function() {
+    var email = document.getElementById('csFullEmail').value.trim();
+    if (!email || !email.includes('@')) { document.getElementById('csFullEmail').focus(); return; }
+    document.getElementById('csFullBtn').style.display = 'none';
+    document.getElementById('csFullEmail').style.display = 'none';
+    document.getElementById('csFullSuccess').classList.add('vis');
+  });
+  document.getElementById('csFullEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('csFullBtn').click();
+  });
+})();
+</script>
+</body>
+</html>

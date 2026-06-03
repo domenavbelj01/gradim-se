@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banner Kit — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11);
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; padding: 3rem 2rem 5rem; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+
+    .kit-header { margin-bottom: 3rem; }
+    .kit-back { font-size: .78rem; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; margin-bottom: 1.5rem; transition: color .15s; }
+    .kit-back:hover { color: var(--ink); }
+    .kit-logo { font-family: var(--serif); font-size: 1.4rem; color: var(--ink); letter-spacing: -.3px; margin-bottom: .4rem; }
+    .kit-logo span { color: var(--green); }
+    .kit-title { font-family: var(--serif); font-size: 2.2rem; font-weight: 400; letter-spacing: -1px; line-height: 1.1; margin-bottom: .5rem; }
+    .kit-title em { font-style: italic; color: var(--green); }
+    .kit-sub { font-size: .9rem; color: var(--muted); max-width: 500px; line-height: 1.65; }
+
+    .banner-block { margin-bottom: 3.5rem; }
+    .bb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: .5rem; }
+    .bb-info { display: flex; align-items: center; gap: .75rem; }
+    .bb-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); }
+    .bb-size { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); background: #fff; border: 1px solid var(--border); padding: .2rem .65rem; border-radius: 100px; }
+    .bb-dl { display: inline-flex; align-items: center; gap: .4rem; font-size: .78rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.22); padding-bottom: 1px; transition: border-color .15s; }
+    .bb-dl:hover { border-color: var(--green-dark); }
+
+    .bb-preview {
+      background: repeating-conic-gradient(#e8e5df 0% 25%, #f0ede7 0% 50%) 0 0 / 18px 18px;
+      border-radius: 14px; padding: 2rem; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .bb-preview.dark { background: #1a1a1a; }
+    .bb-preview img, .bb-preview object { display: block; max-width: 100%; }
+
+    .bb-specs { display: flex; gap: 1.5rem; margin-top: .85rem; flex-wrap: wrap; }
+    .bb-spec { font-size: .72rem; color: var(--muted); }
+    .bb-spec strong { color: var(--ink2); font-weight: 500; }
+
+    .usage-section { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 1.75rem 2rem; margin-top: 3rem; }
+    .usage-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: 1rem; }
+    .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .usage-item { font-size: .82rem; color: var(--ink2); padding: .65rem .9rem; background: var(--green-faint); border-radius: 8px; border: 1px solid rgba(10,92,74,.1); display: flex; align-items: center; gap: .6rem; }
+    .usage-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+    footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer p { font-size: .75rem; color: var(--muted); }
+    footer a { font-size: .75rem; color: var(--green-dark); text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kit-header">
+    <a href="../sponzorji.html" class="kit-back">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 6.5 8 10"/></svg>
+      Nazaj na Sponzorji
+    </a>
+    <div class="kit-logo">Gradim<span>Se</span></div>
+    <h1 class="kit-title">Banner <em>kit.</em></h1>
+    <p class="kit-sub">Vsi GradimSe sponzorski bannerji v SVG formatu. Primerni za spletne strani, newsletterje in digitalne oglase. Prenesite in vkomponujte z vašo kreativo.</p>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="banner-block">
+    <div class="bb-header">
+      <div class="bb-info">
+        <span class="bb-name">Leaderboard</span>
+        <span class="bb-size">728 × 90 px</span>
+      </div>
+      <a href="gs-leaderboard-728x90.svg" download class="bb-dl">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v6M4 6l2 2 2-2"/><path d="M2 10h8"/></svg>
+        Prenesi SVG
+      </a>
+    </div>
+    <div class="bb-preview">
+      <img src="gs-leaderboard-728x90.svg" alt="GradimSe Leaderboard 728x90" width="728" height="90">
+    </div>
+    <div class="bb-specs">
+      <span class="bb-spec"><strong>Format:</strong> SVG (vektorski)</span>
+      <span class="bb-spec"><strong>Dimenzije:</strong> 728 × 90 px</span>
+      <span class="bb-spec"><strong>Uporaba:</strong> Vrh strani, pod navigacijo</span>
+      <span class="bb-spec"><strong>Paket:</strong> Platinum</span>
+    </div>
+  </div>
+
+  <!-- Medium Rectangle -->
+  <div class="banner-block">
+    <div class="bb-header">
+      <div class="bb-info">
+        <span class="bb-name">Medium Rectangle</span>
+        <span class="bb-size">300 × 250 px</span>
+      </div>
+      <a href="gs-medium-rectangle-300x250.svg" download class="bb-dl">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v6M4 6l2 2 2-2"/><path d="M2 10h8"/></svg>
+        Prenesi SVG
+      </a>
+    </div>
+    <div class="bb-preview">
+      <img src="gs-medium-rectangle-300x250.svg" alt="GradimSe Medium Rectangle 300x250" width="300" height="250">
+    </div>
+    <div class="bb-specs">
+      <span class="bb-spec"><strong>Format:</strong> SVG (vektorski)</span>
+      <span class="bb-spec"><strong>Dimenzije:</strong> 300 × 250 px</span>
+      <span class="bb-spec"><strong>Uporaba:</strong> Sidebar, med vsebino</span>
+      <span class="bb-spec"><strong>Paket:</strong> Gold, Silver</span>
+    </div>
+  </div>
+
+  <!-- Square -->
+  <div class="banner-block">
+    <div class="bb-header">
+      <div class="bb-info">
+        <span class="bb-name">Square</span>
+        <span class="bb-size">250 × 250 px</span>
+      </div>
+      <a href="gs-square-250x250.svg" download class="bb-dl">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v6M4 6l2 2 2-2"/><path d="M2 10h8"/></svg>
+        Prenesi SVG
+      </a>
+    </div>
+    <div class="bb-preview">
+      <img src="gs-square-250x250.svg" alt="GradimSe Square 250x250" width="250" height="250">
+    </div>
+    <div class="bb-specs">
+      <span class="bb-spec"><strong>Format:</strong> SVG (vektorski)</span>
+      <span class="bb-spec"><strong>Dimenzije:</strong> 250 × 250 px</span>
+      <span class="bb-spec"><strong>Uporaba:</strong> Newsletter, kvadratni blok</span>
+      <span class="bb-spec"><strong>Paket:</strong> Gold, Silver</span>
+    </div>
+  </div>
+
+  <!-- Half Page -->
+  <div class="banner-block">
+    <div class="bb-header">
+      <div class="bb-info">
+        <span class="bb-name">Half Page</span>
+        <span class="bb-size">300 × 600 px</span>
+      </div>
+      <a href="gs-half-page-300x600.svg" download class="bb-dl">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v6M4 6l2 2 2-2"/><path d="M2 10h8"/></svg>
+        Prenesi SVG
+      </a>
+    </div>
+    <div class="bb-preview">
+      <img src="gs-half-page-300x600.svg" alt="GradimSe Half Page 300x600" width="300" height="600">
+    </div>
+    <div class="bb-specs">
+      <span class="bb-spec"><strong>Format:</strong> SVG (vektorski)</span>
+      <span class="bb-spec"><strong>Dimenzije:</strong> 300 × 600 px</span>
+      <span class="bb-spec"><strong>Uporaba:</strong> Desni sidebar, visok format</span>
+      <span class="bb-spec"><strong>Paket:</strong> Platinum, Gold</span>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="banner-block">
+    <div class="bb-header">
+      <div class="bb-info">
+        <span class="bb-name">Mobile Banner</span>
+        <span class="bb-size">320 × 50 px</span>
+      </div>
+      <a href="gs-mobile-320x50.svg" download class="bb-dl">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v6M4 6l2 2 2-2"/><path d="M2 10h8"/></svg>
+        Prenesi SVG
+      </a>
+    </div>
+    <div class="bb-preview">
+      <img src="gs-mobile-320x50.svg" alt="GradimSe Mobile 320x50" width="320" height="50">
+    </div>
+    <div class="bb-specs">
+      <span class="bb-spec"><strong>Format:</strong> SVG (vektorski)</span>
+      <span class="bb-spec"><strong>Dimenzije:</strong> 320 × 50 px</span>
+      <span class="bb-spec"><strong>Uporaba:</strong> Mobilni vrh/dno strani</span>
+      <span class="bb-spec"><strong>Paket:</strong> Vsi paketi</span>
+    </div>
+  </div>
+
+  <!-- Usage notes -->
+  <div class="usage-section">
+    <p class="usage-title">Kje se pojavljajo bannerji</p>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-dot"></span>Vrh vsebine na blogu in delavnicah</div>
+      <div class="usage-item"><span class="usage-dot"></span>Sidebar na vseh podstraneh</div>
+      <div class="usage-item"><span class="usage-dot"></span>Tedenski newsletter (1.800+ naročnikov)</div>
+      <div class="usage-item"><span class="usage-dot"></span>Med epizodami podcasta</div>
+      <div class="usage-item"><span class="usage-dot"></span>Naslovnica — platinum paket</div>
+      <div class="usage-item"><span class="usage-dot"></span>Skupnost stran — vsi paketi</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 GradimSe · Banner Kit v1.0</p>
+    <a href="../sponzorji.html">Nazaj na stran sponzorjev →</a>
+  </footer>
+
+</div>
+</body>
+</html>

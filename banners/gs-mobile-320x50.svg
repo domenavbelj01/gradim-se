@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="50" viewBox="0 0 320 50">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#063d2c"/>
+      <stop offset="50%" stop-color="#0A5C4A"/>
+      <stop offset="100%" stop-color="#22A87E"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="320" height="50"/></clipPath>
+  </defs>
+
+  <rect width="320" height="50" fill="url(#bg)"/>
+  <circle cx="300" cy="-10" r="55" fill="rgba(255,255,255,0.045)" clip-path="url(#clip)"/>
+
+  <!-- Logo -->
+  <text x="14" y="32" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" fill="rgba(255,255,255,0.95)" letter-spacing="-0.5">Gradim<tspan fill="rgba(255,255,255,0.4)">Se</tspan></text>
+
+  <!-- Divider -->
+  <line x1="104" y1="12" x2="104" y2="38" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+  <!-- Tagline -->
+  <text x="114" y="25" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Skupnost 240+ slovenskih podjetnikov</text>
+  <text x="114" y="39" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="rgba(255,255,255,0.45)">Live delavnice · Podcast · Blogi</text>
+
+  <!-- CTA -->
+  <rect x="222" y="13" width="86" height="26" rx="13" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+  <text x="265" y="30.5" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="white" text-anchor="middle">Pridruži se</text>
+</svg>

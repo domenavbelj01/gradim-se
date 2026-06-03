@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pogoji uporabe — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11);
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .page-hero { padding: 4rem 2rem 3rem; background: linear-gradient(148deg,#8cc4a8 0%,#c6dece 35%,#e6dfca 65%,#f8f7f3 100%); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .page-hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:40%; background:linear-gradient(to bottom,transparent,#f8f7f3); pointer-events:none; }
+    .page-hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-hero-label { font-size:.7rem; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--green-dark); margin-bottom:.9rem; display:block; }
+    .page-hero-title { font-family:var(--serif); font-size:clamp(2rem,4vw,2.8rem); font-weight:400; letter-spacing:-1px; line-height:1.1; color:var(--ink); }
+    .page-hero-title em { font-style:italic; color:var(--green-dark); }
+    .page-hero-sub { font-size:.92rem; color:var(--muted); margin-top:.85rem; max-width:460px; }
+    .legal-body { max-width: 760px; margin: 0 auto; padding: 3.5rem 2rem 5rem; flex: 1; }
+    .legal-section { margin-bottom: 2.5rem; }
+    .legal-section h2 { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; color: var(--ink); margin-bottom: .75rem; letter-spacing: -.2px; }
+    .legal-section p { font-size: .9rem; color: var(--ink2); line-height: 1.78; margin-bottom: .8rem; }
+    .legal-section ul { padding-left: 1.4rem; margin-bottom: .8rem; }
+    .legal-section li { font-size: .9rem; color: var(--ink2); line-height: 1.78; margin-bottom: .35rem; }
+    .legal-section a { color: var(--green-dark); text-decoration: underline; }
+    .legal-updated { font-size: .78rem; color: var(--muted); margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    footer { border-top: 1px solid var(--border); background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+    @media (max-width: 680px) { .nav-links { display: none; } .footer-inner { grid-template-columns: 1fr; gap: 2rem; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Pravno</span>
+    <h1 class="page-hero-title">Pogoji <em>uporabe.</em></h1>
+    <p class="page-hero-sub">Pravila in pogoji za uporabo platforme GradimSe.</p>
+  </div>
+</div>
+<div class="legal-body">
+  <p class="legal-updated">Zadnja posodobitev: maj 2026</p>
+  <div class="legal-section">
+    <h2>1. Sprejem pogojev</h2>
+    <p>Z dostopom do platforme GradimSe in njeno uporabo se strinjate s temi pogoji uporabe. Če se s pogoji ne strinjate, platforme ne smete uporabljati.</p>
+  </div>
+  <div class="legal-section">
+    <h2>2. Opis storitve</h2>
+    <p>GradimSe je slovenska podjetniška skupnost, ki ponuja dostop do blogov, podcastov, delavnic in mreže podjetnikov. Platforma je namenjena izključno poslovnim in izobraževalnim namenom.</p>
+  </div>
+  <div class="legal-section">
+    <h2>3. Registracija in račun</h2>
+    <p>Za dostop do nekaterih vsebin je potrebna registracija. Odgovorni ste za:</p>
+    <ul>
+      <li>točnost podatkov, ki jih vpišete ob registraciji</li>
+      <li>varovanje gesla in zaupnost svojega računa</li>
+      <li>vse aktivnosti, ki potekajo prek vašega računa</li>
+    </ul>
+    <p>Ob sumu zlorabe nas nemudoma obvestite na <a href="mailto:info@gradimse.si">info@gradimse.si</a>.</p>
+  </div>
+  <div class="legal-section">
+    <h2>4. Objava vsebin</h2>
+    <p>Člani skupnosti lahko objavljajo bloge in predlagajo podcast epizode. Z objavo zagotavljate, da:</p>
+    <ul>
+      <li>ste avtor vsebine ali imate ustrezna dovoljenja</li>
+      <li>vsebina ne krši avtorskih pravic tretjih oseb</li>
+      <li>vsebina ni žaljiva, diskriminatorna ali zavajujoča</li>
+    </ul>
+    <p>Podcast epizode pred objavo pregledamo in odobrimo. Blogov ne moderiramo vnaprej, a si pridržujemo pravico do odstranitve vsebine, ki krši ta pravila.</p>
+  </div>
+  <div class="legal-section">
+    <h2>5. Prepovedi</h2>
+    <p>Na platformi je prepovedano:</p>
+    <ul>
+      <li>objavljanje lažnih ali zavajajočih informacij</li>
+      <li>oglaševanje brez predhodnega dogovora</li>
+      <li>zbiranje osebnih podatkov drugih članov</li>
+      <li>vsakršna oblika nadlegovanja ali sovražnega govora</li>
+    </ul>
+  </div>
+  <div class="legal-section">
+    <h2>6. Omejitev odgovornosti</h2>
+    <p>GradimSe ne prevzema odgovornosti za vsebino, ki jo objavljajo člani, niti za poslovne odločitve sprejete na podlagi vsebin na platformi. Vse vsebine so informativne narave.</p>
+  </div>
+  <div class="legal-section">
+    <h2>7. Spremembe pogojev</h2>
+    <p>Pridržujemo si pravico do spremembe teh pogojev. O bistvenih spremembah vas obvestimo prek e-pošte. Nadaljevanje uporabe platforme po spremembi pomeni sprejetje novih pogojev.</p>
+  </div>
+  <div class="legal-section">
+    <h2>8. Kontakt</h2>
+    <p>Za vprašanja v zvezi s pogoji nas kontaktirajte na <a href="mailto:info@gradimse.si">info@gradimse.si</a> ali prek <a href="kontakt.html">kontaktnega obrazca</a>.</p>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg></a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg></a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

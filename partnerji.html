@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Naši partnerji — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#606968;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s, box-shadow .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes scaleIn { from{opacity:0;transform:scale(.96) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+    /* Hero */
+    .page-hero { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3.5rem; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(10,92,74,.06) 1.2px, transparent 1.2px); background-size: 22px 22px; pointer-events: none; z-index: 0; }
+    .page-hero-inner { max-width: 920px; margin: 0 auto; position: relative; z-index: 1; animation: fadeUp .45s ease both; }
+    .page-hero-label { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1rem; display: block; }
+    .page-hero-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; line-height: 1.1; color: var(--ink); }
+    .page-hero-title em { font-style: italic; color: var(--green-dark); }
+    .page-hero-sub { font-size: .95rem; color: var(--muted); margin-top: 1rem; font-weight: 300; max-width: 520px; }
+
+    /* Partners grid */
+    .partners-wrap { max-width: 920px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .partners-eyebrow { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 2rem; }
+    .partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+
+    /* Partner card */
+    .partner-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 22px;
+      padding: 2rem 1.75rem 1.75rem;
+      cursor: pointer;
+      transition: box-shadow .22s, transform .22s, border-color .22s;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .partner-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.1), 0 3px 12px rgba(0,0,0,.06); transform: translateY(-3px); border-color: rgba(10,92,74,.18); }
+    .partner-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; opacity: .06; pointer-events: none; }
+
+    .partner-card.tier-platinum::before { background: var(--green-dark); }
+    .partner-card.tier-gold::before { background: #c8922a; }
+    .partner-card.tier-silver::before { background: #4a90c4; }
+
+    .partner-tier { font-size: .58rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: .2rem .65rem; border-radius: 100px; display: inline-block; margin-bottom: 1.5rem; }
+    .tier-platinum .partner-tier { background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; }
+    .tier-gold .partner-tier { background: linear-gradient(135deg,#7a5f18,#c8922a); color: #fff; }
+    .tier-silver .partner-tier { background: linear-gradient(135deg,#2c4f6a,#4a90c4); color: #fff; }
+
+    .partner-logo {
+      width: 72px; height: 72px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 1.8rem; font-weight: 400; color: #fff;
+      margin-bottom: 1.25rem; letter-spacing: -.5px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.18);
+    }
+    .partner-name { font-family: var(--serif); font-size: 1.35rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; margin-bottom: .4rem; }
+    .partner-tagline { font-size: .82rem; color: var(--muted); line-height: 1.6; flex: 1; }
+    .partner-cta {
+      margin-top: 1.4rem; display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .78rem; font-weight: 500; color: var(--green-dark);
+      background: var(--green-faint); padding: .45rem .9rem; border-radius: 100px;
+      border: 1px solid var(--border); transition: background .15s;
+    }
+    .partner-card:hover .partner-cta { background: var(--green-light); }
+
+    /* Sponsor overlay */
+    .sp-overlay {
+      position: fixed; inset: 0; z-index: 800;
+      background: rgba(6,14,10,.88);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .22s ease;
+    }
+    .sp-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .sp-modal {
+      background: #fff; border-radius: 28px;
+      width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 40px 100px rgba(0,0,0,.5), 0 8px 30px rgba(0,0,0,.2);
+      transform: scale(.95) translateY(18px);
+      transition: transform .32s cubic-bezier(.34,1.36,.64,1);
+    }
+    .sp-overlay.active .sp-modal { transform: scale(1) translateY(0); animation: scaleIn .32s cubic-bezier(.34,1.36,.64,1) both; }
+
+    .sp-modal-head {
+      padding: 2.5rem 2.5rem 2rem;
+      display: flex; align-items: flex-start; gap: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .sp-modal-logo {
+      width: 88px; height: 88px; border-radius: 22px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 2.2rem; color: #fff;
+      box-shadow: 0 8px 28px rgba(0,0,0,.22);
+    }
+    .sp-modal-head-info { flex: 1; padding-top: .2rem; }
+    .sp-modal-tier { font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: .2rem .65rem; border-radius: 100px; display: inline-block; margin-bottom: .65rem; }
+    .sp-modal-name { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--ink); letter-spacing: -.5px; line-height: 1.1; margin-bottom: .4rem; }
+    .sp-modal-tagline { font-size: .9rem; color: var(--muted); font-style: italic; line-height: 1.5; }
+    .sp-close {
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--green-faint); border: 1px solid var(--border);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: background .15s, color .15s;
+    }
+    .sp-close:hover { background: var(--green-light); color: var(--green-dark); }
+
+    .sp-modal-body { padding: 2rem 2.5rem 2.5rem; }
+
+    .sp-desc { font-size: .92rem; color: var(--ink2); line-height: 1.78; margin-bottom: 1.75rem; }
+
+    .sp-section-label { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: .85rem; display: flex; align-items: center; gap: .5rem; }
+    .sp-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .sp-services { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.75rem; }
+    .sp-service-tag { font-size: .78rem; padding: .3rem .8rem; border-radius: 100px; background: var(--green-faint); border: 1px solid var(--border); color: var(--ink2); }
+
+    .sp-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.75rem; }
+    .sp-info-item { background: #f8f7f3; border-radius: 12px; padding: .85rem 1rem; }
+    .sp-info-label { font-size: .62rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .22rem; }
+    .sp-info-val { font-size: .88rem; color: var(--ink2); font-weight: 500; }
+
+    .sp-contact-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .sp-contact-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .84rem; font-weight: 500; color: var(--green-dark);
+      text-decoration: none; border: 1.5px solid rgba(10,92,74,.22);
+      padding: .55rem 1.1rem; border-radius: 100px; background: #fff;
+      transition: background .15s, border-color .15s;
+    }
+    .sp-contact-btn:hover { background: var(--green-faint); border-color: rgba(10,92,74,.4); }
+    .sp-contact-btn.primary { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+    .sp-contact-btn.primary:hover { background: var(--green-mid); opacity: 1; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); background: #f8f7f3; padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; display: block; margin-bottom: .75rem; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .82rem; color: var(--muted); line-height: 1.65; max-width: 240px; margin-bottom: 1.1rem; }
+    .footer-col { display: flex; flex-direction: column; gap: .5rem; }
+    .footer-col-title { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--ink2); margin-bottom: .35rem; }
+    .footer-col a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-col a:hover { color: var(--ink); }
+    .footer-bottom { max-width: 920px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+
+    @media (max-width: 680px) {
+      .partners-grid { grid-template-columns: 1fr; }
+      .sp-modal-head { flex-direction: column; gap: 1rem; }
+      .sp-info-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+    <li><a href="partnerji.html" class="active">Partnerji</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="5.5" r="3.5"/><path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/></svg>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Skupnost · Naši partnerji</span>
+    <h1 class="page-hero-title">Podjetja, ki <em>gradijo z nami.</em></h1>
+    <p class="page-hero-sub">Spoznajte partnerje in sponzorje skupnosti GradimSe — podjetja, ki podpirajo slovensko podjetništvo in verjamejo v skupnost.</p>
+  </div>
+</div>
+
+<!-- ── PARTNERS ── -->
+<div class="partners-wrap">
+  <p class="partners-eyebrow">Vsi aktivni partnerji · 3 sponzorji</p>
+  <div class="partners-grid" id="partnersGrid"></div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="forum.html">Forum</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="partnerji.html">Partnerji</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── SPONSOR DETAIL OVERLAY ── -->
+<div class="sp-overlay" id="spOverlay">
+  <div class="sp-modal" id="spModal">
+    <div class="sp-modal-head">
+      <div class="sp-modal-logo" id="spLogo"></div>
+      <div class="sp-modal-head-info">
+        <div class="sp-modal-tier" id="spTierBadge"></div>
+        <div class="sp-modal-name" id="spName"></div>
+        <div class="sp-modal-tagline" id="spTagline"></div>
+      </div>
+      <button class="sp-close" id="spClose" aria-label="Zapri">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+      </button>
+    </div>
+    <div class="sp-modal-body">
+      <p class="sp-desc" id="spDesc"></p>
+      <div class="sp-section-label">Storitve</div>
+      <div class="sp-services" id="spServices"></div>
+      <div class="sp-section-label">Podatki o podjetju</div>
+      <div class="sp-info-grid" id="spInfoGrid"></div>
+      <div class="sp-section-label">Kontakt</div>
+      <div class="sp-contact-row" id="spContacts"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SPONSORS = [
+  {
+    id: 'finance-pro',
+    monogram: 'Fi',
+    name: 'FinancePro',
+    tier: 'Platinum',
+    tierGradient: 'linear-gradient(135deg,#0A5C4A,#22A87E)',
+    tierBadgeStyle: 'background:linear-gradient(135deg,#0A5C4A,#22A87E);color:#fff;',
+    tagline: 'Pametne finančne rešitve za rastoča podjetja.',
+    desc: 'FinancePro je vodilna platforma za upravljanje financ malih in srednje velikih podjetij v Sloveniji. Zagotavljamo celovite rešitve za računovodstvo, davčno optimizacijo in finančno načrtovanje — vse na enem mestu, brez nepotrebne kompleksnosti.',
+    services: ['Računovodstvo', 'Davčno svetovanje', 'Finančno načrtovanje', 'Plačilni sistemi', 'Poročanje & analitika'],
+    info: { 'Lokacija': 'Ljubljana, Slovenija', 'Zaposleni': '25–50', 'Ustanovljeno': '2018', 'Panoga': 'Finance & FinTech' },
+    website: 'www.financepro.si',
+    email: 'info@financepro.si',
+    phone: '+386 1 234 5678'
+  },
+  {
+    id: 'znamka-studio',
+    monogram: 'Zn',
+    name: 'ZnamkaStudio',
+    tier: 'Gold',
+    tierGradient: 'linear-gradient(135deg,#7a5f18,#c8922a)',
+    tierBadgeStyle: 'background:linear-gradient(135deg,#7a5f18,#c8922a);color:#fff;',
+    tagline: 'Blagovna znamka, ki te naredi neizogibnega.',
+    desc: 'ZnamkaStudio je boutique agencija za oblikovanje vizualne identitete in digitalni branding. Pomagamo podjetjem zgraditi prepoznavno in profesionalno blagovno znamko — od prvega logotipa do celostne grafične podobe in spletnega nastopa, ki dela vtis.',
+    services: ['Logo dizajn', 'Celostna grafična podoba', 'Spletne strani', 'Digitalni marketing', 'Fotografija & video'],
+    info: { 'Lokacija': 'Ljubljana, Slovenija', 'Zaposleni': '5–15', 'Ustanovljeno': '2020', 'Panoga': 'Oblikovanje & Branding' },
+    website: 'www.znamkastudio.si',
+    email: 'info@znamkastudio.si',
+    phone: '+386 40 123 456'
+  },
+  {
+    id: 'pro-najemnik',
+    monogram: 'Pr',
+    name: 'ProNajemnik',
+    tier: 'Silver',
+    tierGradient: 'linear-gradient(135deg,#2c4f6a,#4a90c4)',
+    tierBadgeStyle: 'background:linear-gradient(135deg,#2c4f6a,#4a90c4);color:#fff;',
+    tagline: 'Poslovni prostori brez stresa. Najemi pametno.',
+    desc: 'ProNajemnik je digitalna platforma, ki poveže podjetnike z lastniki poslovnih prostorov po vsej Sloveniji. Poenostavimo iskanje, pogajanja in upravljanje najemnih pogodb za podjetja vseh velikosti — od freelancerjev do rastočih ekip.',
+    services: ['Iskanje poslovnih prostorov', 'Najemne pogodbe', 'Upravljanje nepremičnin', 'Coworking spaces', 'Pravno svetovanje'],
+    info: { 'Lokacija': 'Ljubljana & Maribor', 'Zaposleni': '10–25', 'Ustanovljeno': '2021', 'Panoga': 'Nepremičnine & PropTech' },
+    website: 'www.pronajemnik.si',
+    email: 'info@pronajemnik.si',
+    phone: '+386 51 987 654'
+  }
+];
+
+// Render cards
+document.getElementById('partnersGrid').innerHTML = SPONSORS.map((s, i) => `
+  <div class="partner-card tier-${s.tier.toLowerCase()}" onclick="openSponsor('${s.id}')" style="animation:fadeUp .4s ease ${i * .1}s both;">
+    <span class="partner-tier">${s.tier}</span>
+    <div class="partner-logo" style="background:${s.tierGradient};">${s.monogram}</div>
+    <div class="partner-name">${s.name}</div>
+    <div class="partner-tagline">${s.tagline}</div>
+    <div class="partner-cta">
+      Oglejte si profil
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 5h6M5.5 2.5l3 2.5-3 2.5"/></svg>
+    </div>
+  </div>`).join('');
+
+// Open overlay
+function openSponsor(id) {
+  const s = SPONSORS.find(x => x.id === id);
+  if (!s) return;
+
+  document.getElementById('spLogo').style.background = s.tierGradient;
+  document.getElementById('spLogo').textContent = s.monogram;
+  document.getElementById('spTierBadge').setAttribute('style', s.tierBadgeStyle);
+  document.getElementById('spTierBadge').textContent = s.tier;
+  document.getElementById('spName').textContent = s.name;
+  document.getElementById('spTagline').textContent = s.tagline;
+  document.getElementById('spDesc').textContent = s.desc;
+
+  document.getElementById('spServices').innerHTML = s.services.map(sv =>
+    `<span class="sp-service-tag">${sv}</span>`).join('');
+
+  document.getElementById('spInfoGrid').innerHTML = Object.entries(s.info).map(([k, v]) =>
+    `<div class="sp-info-item"><div class="sp-info-label">${k}</div><div class="sp-info-val">${v}</div></div>`).join('');
+
+  document.getElementById('spContacts').innerHTML = `
+    <a href="https://${s.website}" class="sp-contact-btn primary" target="_blank" rel="noopener">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M5.5 1.5c-1.5 1-2.5 2.3-2.5 4s1 3 2.5 4"/><path d="M5.5 1.5c1.5 1 2.5 2.3 2.5 4s-1 3-2.5 4"/><path d="M1.5 5.5h8"/></svg>
+      ${s.website}
+    </a>
+    <a href="mailto:${s.email}" class="sp-contact-btn">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2.5" width="9" height="6" rx="1"/><path d="M1 2.5l4.5 3.5 4.5-3.5"/></svg>
+      ${s.email}
+    </a>
+    <a href="tel:${s.phone.replace(/\s/g,'')}" class="sp-contact-btn">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.5 1H2C1.45 1 1 1.45 1 2c0 4.97 4.03 9 9 9 .55 0 1-.45 1-1V8.5l-2-.7-.6 1.3C7 8.6 4.4 6 3.9 4.6l1.3-.6L4.5 2 3.5 1z"/></svg>
+      ${s.phone}
+    </a>`;
+
+  document.getElementById('spOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSponsor() {
+  document.getElementById('spOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('spClose').addEventListener('click', closeSponsor);
+document.getElementById('spOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSponsor();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('spOverlay').classList.contains('active')) closeSponsor();
+});
+</script>
+</body>
+</html>

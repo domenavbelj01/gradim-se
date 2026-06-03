@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Podjetnik meseca — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s, box-shadow .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    .nav-account-btn.open { border-color: var(--green-dark); background: var(--green-faint); }
+
+    /* PAGE HERO */
+    .page-hero { border-bottom: 1px solid var(--border); padding: 4rem 2rem 3.5rem; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; animation: fadeUp .45s ease both; }
+    .page-hero-label { font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1rem; display: block; }
+    .page-hero-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -1px; line-height: 1.1; color: var(--ink); }
+    .page-hero-title em { font-style: italic; color: var(--green-dark); }
+    .page-hero-sub { font-size: .95rem; color: var(--muted); margin-top: 1rem; font-weight: 300; max-width: 480px; }
+
+    .page-content { max-width: 860px; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+
+    /* ── SPOTLIGHT MAIN ── */
+    .spotlight-main {
+      border-radius: 24px; overflow: hidden;
+      border: 1px solid rgba(10,92,74,.1);
+      display: grid; grid-template-columns: 38% 62%;
+      box-shadow: 0 8px 40px rgba(0,0,0,.1), 0 2px 10px rgba(0,0,0,.05);
+      margin-bottom: 4.5rem; cursor: pointer;
+      transition: box-shadow .28s, transform .28s;
+    }
+    .sp-why-panel { padding: 1.85rem 2rem !important; justify-content: space-between !important; overflow-y: auto; }
+    .sp-why-intro { margin-bottom: .9rem; }
+    .sp-why-intro .sp-desc { margin-bottom: .9rem; font-size: .86rem; }
+    .sp-why-intro .sp-stats { margin-bottom: 0; }
+    .sp-why-split { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin: .9rem 0; }
+    .sp-why-bottom { border-top: 1px solid rgba(0,0,0,.07); padding-top: .9rem; display: flex; flex-direction: column; gap: .55rem; }
+    .spotlight-main:hover { box-shadow: 0 14px 50px rgba(0,0,0,.14), 0 3px 14px rgba(0,0,0,.07); transform: translateY(-2px); }
+
+    .sp-photo { position: relative; overflow: hidden; min-height: 480px; }
+    .sp-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .5s ease; }
+    .spotlight-main:hover .sp-photo img { transform: scale(1.03); }
+    .sp-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,20,13,.78) 0%, rgba(4,20,13,.2) 50%, transparent 75%); }
+    .sp-photo-badge { position: absolute; top: 1.25rem; left: 1.25rem; display: inline-flex; align-items: center; gap: .4rem; font-size: .62rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.9); background: rgba(34,168,126,.7); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2); padding: .32rem .75rem; border-radius: 100px; }
+    .sp-photo-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: blink 2s ease infinite; }
+    .sp-photo-foot { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.75rem 1.75rem 1.5rem; }
+    .sp-photo-period { font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.55); margin-bottom: .45rem; }
+    .sp-photo-name { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: #fff; letter-spacing: -.5px; line-height: 1.1; margin-bottom: .2rem; }
+    .sp-photo-role { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.65); }
+    .sp-photo-company { font-size: .6rem; color: rgba(255,255,255,.42); letter-spacing: .08em; margin-top: .12rem; }
+
+    .sp-info { padding: 2.75rem; background: #fff; display: flex; flex-direction: column; justify-content: center; }
+    .sp-eyebrow { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); margin-bottom: 1.25rem; display: flex; align-items: center; gap: .5rem; }
+    .sp-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--green-dark); display: block; }
+    .sp-headline { font-family: var(--serif); font-size: 1.7rem; font-weight: 400; color: var(--ink); letter-spacing: -.5px; line-height: 1.18; margin-bottom: 1.1rem; }
+    .sp-headline em { font-style: italic; color: var(--green); }
+    .sp-desc { font-size: .9rem; color: var(--ink2); line-height: 1.78; margin-bottom: 1.75rem; }
+
+    .sp-stats { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.75rem; }
+    .sp-stat { flex: 1; padding: 1rem .75rem; text-align: center; border-right: 1px solid var(--border); }
+    .sp-stat:last-child { border-right: none; }
+    .sp-stat-n { font-family: var(--serif); font-size: 1.35rem; color: var(--green); font-style: italic; display: block; line-height: 1; margin-bottom: .22rem; }
+    .sp-stat-l { font-size: .6rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+
+    .sp-cta { display: inline-flex; align-items: center; gap: .5rem; font-size: .85rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.28); padding-bottom: 1px; transition: gap .2s, border-color .2s; }
+    .sp-cta:hover { gap: .9rem; border-color: var(--green-dark); }
+
+    /* ── ARCHIVE SECTION ── */
+    .archive-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; }
+    .archive-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; }
+    .archive-title em { font-style: italic; color: var(--green); }
+    .archive-count { font-size: .75rem; color: var(--muted); }
+
+    .archive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .archive-card {
+      border: 1px solid var(--border); border-radius: 20px; overflow: hidden; background: #fff;
+      cursor: pointer; transition: transform .22s ease, box-shadow .22s ease;
+      box-shadow: 0 1px 5px rgba(0,0,0,.04);
+    }
+    .archive-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+    .ac-photo { position: relative; height: 200px; overflow: hidden; }
+    .ac-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .38s ease; }
+    .archive-card:hover .ac-photo img { transform: scale(1.05); }
+    .ac-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,20,13,.55) 0%, transparent 55%); }
+    .ac-hover-cta { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+    .archive-card:hover .ac-hover-cta { opacity: 1; }
+    .ac-hover-cta span { font-size: .75rem; font-weight: 500; color: #fff; border: 1px solid rgba(255,255,255,.6); padding: .45rem 1.1rem; border-radius: 100px; backdrop-filter: blur(4px); background: rgba(0,0,0,.2); }
+    .ac-period-badge { position: absolute; top: .85rem; left: .85rem; font-size: .58rem; font-weight: 500; text-transform: uppercase; letter-spacing: .09em; color: rgba(255,255,255,.85); background: rgba(0,0,0,.35); backdrop-filter: blur(4px); padding: .2rem .6rem; border-radius: 100px; }
+    .ac-body { padding: 1.25rem 1.4rem 1.5rem; }
+    .ac-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .75rem; }
+    .ac-tag { font-size: .6rem; font-weight: 500; color: var(--green-dark); background: var(--green-faint); border: 1px solid rgba(10,92,74,.1); padding: .17rem .55rem; border-radius: 100px; }
+    .ac-name { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--ink); margin-bottom: .2rem; }
+    .ac-role { font-size: .67rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .2rem; }
+    .ac-company { font-size: .63rem; color: var(--green-dark); font-weight: 500; letter-spacing: .04em; margin-bottom: .55rem; opacity: .75; }
+    .ac-desc { font-size: .8rem; color: var(--ink2); line-height: 1.68; }
+    .ac-stat-row { display: flex; gap: 1.25rem; margin-top: .85rem; padding-top: .85rem; border-top: 1px solid var(--border); }
+    .ac-stat { }
+    .ac-stat-n { font-family: var(--serif); font-size: 1rem; color: var(--green); font-style: italic; display: block; line-height: 1; }
+    .ac-stat-l { font-size: .58rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+    /* ── PROFILE OVERLAY ── */
+    .profile-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(245,242,237,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .profile-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .profile-panel {
+      background: #fff; border-radius: 24px;
+      width: 100%; max-width: 880px;
+      max-height: calc(100vh - 2.5rem);
+      display: grid; grid-template-columns: 300px 1fr;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0,0,0,.5), 0 8px 32px rgba(0,0,0,.2);
+      position: relative;
+      transform: translateY(22px) scale(.97);
+      transition: transform .32s cubic-bezier(.22,.68,0,1.12);
+    }
+    .profile-overlay.active .profile-panel { transform: translateY(0) scale(1); }
+
+    .profile-close {
+      position: absolute; top: 1rem; right: 1rem; z-index: 20;
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(6px);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,.18);
+      transition: background .15s, transform .15s;
+    }
+    .profile-close:hover { background: #fff; transform: scale(1.08); }
+
+    .pp-photo-col { position: relative; overflow: hidden; }
+    .pp-photo-col img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .pp-photo-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,15,11,.88) 0%, rgba(6,15,11,.3) 45%, transparent 70%); }
+    .pp-photo-foot { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.6rem; }
+    .pp-photo-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: .65rem; }
+    .pp-photo-tag { font-size: .58rem; font-weight: 500; color: rgba(255,255,255,.85); background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); padding: .17rem .6rem; border-radius: 100px; letter-spacing: .03em; }
+    .pp-photo-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; color: #fff; letter-spacing: -.5px; line-height: 1.1; margin-bottom: .25rem; }
+    .pp-photo-role { font-size: .67rem; color: rgba(255,255,255,.68); text-transform: uppercase; letter-spacing: .08em; }
+
+    .pp-info-col { overflow-y: auto; padding: 2rem 2.25rem 2rem 1.75rem; display: flex; flex-direction: column; gap: 1.4rem; }
+    .pp-section-label { font-size: .62rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .55rem; }
+    .pp-bio { font-size: .9rem; color: var(--ink2); line-height: 1.82; margin-bottom: .65rem; }
+    .pp-bio-ext { font-size: .84rem; color: var(--muted); line-height: 1.8; }
+    .pp-stats { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .pp-stat { flex: 1; padding: 1rem .85rem; text-align: center; border-right: 1px solid var(--border); }
+    .pp-stat:last-child { border-right: none; }
+    .pp-stat-n { font-family: var(--serif); font-size: 1.2rem; color: var(--green); font-style: italic; line-height: 1; display: block; margin-bottom: .22rem; }
+    .pp-stat-l { font-size: .58rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; line-height: 1.3; }
+    .pp-quote { font-size: .86rem; color: var(--ink2); font-style: italic; line-height: 1.72; padding: .95rem 1.1rem .95rem 1.2rem; background: var(--green-faint); border-left: 3px solid var(--green-light); border-radius: 0 12px 12px 0; }
+    .pp-contacts { display: flex; flex-direction: column; gap: .45rem; }
+    .pp-contact { display: flex; align-items: center; gap: .65rem; font-size: .83rem; color: var(--ink2); text-decoration: none; padding: .62rem .9rem; border-radius: 10px; border: 1px solid var(--border); background: #fafafa; transition: border-color .15s, background .15s; }
+    .pp-contact:hover { border-color: rgba(10,92,74,.25); background: var(--green-faint); color: var(--green-dark); }
+    .pp-contact svg { flex-shrink: 0; color: var(--muted); }
+
+    /* ── ACCOUNT PANEL ── */
+    .acct-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(22,25,23,.42); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .acct-overlay.active { opacity: 1; pointer-events: auto; }
+    .acct-panel { position: fixed; top: 68px; right: 2rem; z-index: 401; background: #fff; border-radius: 22px; width: calc(100vw - 4rem); max-width: 540px; box-shadow: 0 20px 60px rgba(0,0,0,.22), 0 4px 16px rgba(0,0,0,.1); overflow: hidden; transform: translateY(-10px) scale(.97); transition: transform .28s cubic-bezier(.22,.68,0,1.12); opacity: 0; pointer-events: none; }
+    .acct-overlay.active .acct-panel { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-panel.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-loggedout { padding: 2.25rem 2rem; text-align: center; }
+    .acct-lo-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 1.25rem; display: block; }
+    .acct-lo-logo span { color: var(--green); }
+    .acct-lo-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; letter-spacing: -.3px; }
+    .acct-lo-sub { font-size: .84rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.55; }
+    .acct-lo-btns { display: flex; gap: .7rem; justify-content: center; }
+    .acct-lo-btn { padding: .65rem 1.5rem; border-radius: 100px; font-size: .85rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all .15s; }
+    .acct-lo-btn.primary { background: linear-gradient(135deg, #0A5C4A, #22A87E); color: #fff; border: none; }
+    .acct-lo-btn.primary:hover { opacity: .9; }
+    .acct-lo-btn.ghost { background: none; color: var(--green-dark); border: 1.5px solid rgba(10,92,74,.22); }
+    .acct-lo-btn.ghost:hover { border-color: var(--green-dark); background: var(--green-faint); }
+
+footer { border-top: 1px solid var(--border); background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-brand {}
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; line-height: 1.5; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+    @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } .footer-tagline { max-width: 100%; } }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .spotlight-main { grid-template-columns: 1fr; }
+      .sp-why-split { grid-template-columns: 1fr; }
+      .sp-photo { min-height: 280px; }
+      .archive-grid { grid-template-columns: 1fr; }
+      .profile-panel { grid-template-columns: 1fr; max-height: calc(100vh - 1.5rem); }
+      .pp-photo-col { height: 260px; }
+      .pp-info-col { padding: 1.5rem; }
+    }
+
+    .acct-login-wrap { padding: 1.75rem 2rem 2rem; }
+    .acct-login-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .3rem; letter-spacing: -.3px; }
+    .acct-login-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-login-back { background: none; border: none; color: var(--muted); font-size: .8rem; cursor: pointer; padding: 0; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .35rem; font-family: var(--sans); transition: color .15s; }
+    .acct-login-back:hover { color: var(--green); }
+    .acct-login-err { font-size: .79rem; color: #c0392b; margin: -.1rem 0 .8rem; min-height: 1.1rem; }
+    .acct-loggedin-inner { padding: 1.75rem 2rem 2rem; }
+    .acct-logout-btn { background: none; border: 1px solid rgba(14,90,66,.18); color: var(--muted); font-size: .78rem; padding: .4rem 1rem; border-radius: 100px; cursor: pointer; font-family: var(--sans); transition: all .15s; margin-top: .75rem; width: 100%; }
+    .acct-logout-btn:hover { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+    .acct-admin-badge { font-size: .68rem; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; padding: .18rem .55rem; border-radius: 100px; letter-spacing: .03em; font-weight: 500; }
+
+    /* ── ZAKAJ PANEL (spotlight) ── */
+    .why-panel { background: #FAF9F6; border: 1px solid rgba(0,0,0,.07); border-radius: 20px; padding: 2.25rem 2.5rem; margin-bottom: 4.5rem; }
+    .why-panel-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(0,0,0,.06); }
+    .why-panel-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; }
+    .why-panel-title em { font-style: italic; color: var(--green); }
+    .why-panel-period { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .why-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+    .why-col-title { font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin-bottom: .9rem; }
+    .why-achievements { display: flex; flex-direction: column; gap: .55rem; }
+    .why-ach { display: flex; align-items: center; gap: .7rem; padding: .6rem .8rem; background: #fff; border-radius: 10px; border: 1px solid rgba(0,0,0,.06); }
+    .why-ach-icon { width: 30px; height: 30px; border-radius: 8px; background: rgba(29,158,117,.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #1D9E75; }
+    .why-ach-label { font-size: .63rem; color: var(--muted); line-height: 1; margin-bottom: .2rem; }
+    .why-ach-val { font-family: var(--serif); font-size: .92rem; font-style: italic; color: var(--ink); line-height: 1; }
+    .why-quotes { display: flex; flex-direction: column; gap: .55rem; }
+    .why-quote { background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 10px; padding: .75rem .9rem; }
+    .why-quote-text { font-size: .77rem; color: var(--ink2); line-height: 1.62; font-style: italic; margin-bottom: .5rem; }
+    .why-quote-author { display: flex; align-items: center; gap: .45rem; }
+    .why-quote-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+    .why-quote-name { font-size: .62rem; font-weight: 500; color: var(--muted); }
+    .why-badges { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.5rem; }
+    .why-badge { font-size: .63rem; font-weight: 500; color: #1D9E75; background: rgba(29,158,117,.09); border: 1px solid rgba(29,158,117,.2); padding: .28rem .75rem; border-radius: 100px; white-space: nowrap; }
+    .why-nominate-btn { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; font-weight: 500; color: #fff; background: linear-gradient(135deg,var(--green-dark),var(--green)); border: none; border-radius: 100px; padding: .62rem 1.35rem; cursor: pointer; font-family: var(--sans); transition: opacity .18s, box-shadow .18s; box-shadow: 0 3px 12px rgba(10,92,74,.25); }
+    .why-nominate-btn:hover { opacity: .88; box-shadow: 0 5px 18px rgba(10,92,74,.32); }
+
+    /* ── ARCHIVE CARD WRAP + ZAKAJ accordion ── */
+    .archive-card-wrap { display: flex; flex-direction: column; }
+    .ac-why-btn { display: inline-flex; align-items: center; gap: .35rem; font-size: .64rem; font-weight: 500; color: #1D9E75; background: rgba(29,158,117,.08); border: 1px solid rgba(29,158,117,.2); border-radius: 100px; padding: .22rem .7rem; cursor: pointer; font-family: var(--sans); margin-top: .85rem; transition: background .15s; width: fit-content; }
+    .ac-why-btn:hover { background: rgba(29,158,117,.16); }
+    .ac-why-btn svg { transition: transform .22s; }
+    .ac-why-btn.open svg { transform: rotate(180deg); }
+    .ac-why-panel { max-height: 0; overflow: hidden; transition: max-height .38s ease, opacity .3s ease; opacity: 0; }
+    .ac-why-panel.open { max-height: 260px; opacity: 1; }
+    .ac-why-inner { background: #FAF9F6; border: 1px solid rgba(0,0,0,.07); border-top: none; border-radius: 0 0 14px 14px; padding: 1rem 1.4rem 1.25rem; }
+    .ac-why-reason { font-size: .78rem; color: var(--ink2); line-height: 1.65; margin-bottom: .8rem; font-style: italic; }
+    .ac-why-badges { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .ac-why-badge { font-size: .6rem; font-weight: 500; color: #1D9E75; background: rgba(29,158,117,.09); border: 1px solid rgba(29,158,117,.18); padding: .2rem .6rem; border-radius: 100px; }
+
+    /* ── NOMINATION MODAL ── */
+    .nom-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.45); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; padding: 1.25rem; opacity: 0; pointer-events: none; transition: opacity .22s; }
+    .nom-overlay.active { opacity: 1; pointer-events: all; }
+    .nom-modal { background: #fff; border-radius: 22px; width: 100%; max-width: 480px; padding: 2.25rem 2.5rem; box-shadow: 0 24px 80px rgba(0,0,0,.22); transform: translateY(16px) scale(.97); transition: transform .25s cubic-bezier(.34,1.36,.64,1); position: relative; }
+    .nom-overlay.active .nom-modal { transform: translateY(0) scale(1); }
+    .nom-eyebrow { font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: .16em; color: #1D9E75; margin-bottom: .6rem; }
+    .nom-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; margin-bottom: .4rem; }
+    .nom-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.55; }
+    .nom-field { margin-bottom: .9rem; }
+    .nom-label { font-size: .68rem; font-weight: 500; color: var(--ink2); display: block; margin-bottom: .3rem; }
+    .nom-inp { width: 100%; padding: .6rem .85rem; border: 1.5px solid rgba(0,0,0,.1); border-radius: 10px; font-size: .88rem; font-family: var(--sans); color: var(--ink); transition: border-color .15s; outline: none; background: #fff; }
+    .nom-inp:focus { border-color: #1D9E75; }
+    textarea.nom-inp { height: 90px; resize: none; }
+    .nom-submit { width: 100%; padding: .75rem; background: linear-gradient(135deg,var(--green-dark),var(--green)); color: #fff; border: none; border-radius: 100px; font-size: .88rem; font-weight: 500; font-family: var(--sans); cursor: pointer; margin-top: .4rem; transition: opacity .18s; box-shadow: 0 3px 14px rgba(10,92,74,.28); }
+    .nom-submit:hover { opacity: .88; }
+    .nom-close { position: absolute; top: 1.1rem; right: 1.1rem; width: 30px; height: 30px; border-radius: 50%; border: none; background: #f0f0ef; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .nom-close:hover { background: #e4e4e2; }
+    .nom-success { text-align: center; padding: .5rem 0 1rem; display: none; }
+    .nom-success-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(29,158,117,.12); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem; color: #1D9E75; }
+    .nom-success-title { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: .4rem; letter-spacing: -.2px; }
+    .nom-success-sub { font-size: .83rem; color: var(--muted); line-height: 1.55; }
+
+    @media (max-width: 640px) { .why-cols { grid-template-columns: 1fr; gap: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html" class="active">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="5.5" r="3.5"/>
+      <path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+    </svg>
+  </button>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="page-hero-label">Podjetnik meseca</span>
+    <h1 class="page-hero-title">Zgodba, ki <em>navdihuje.</em></h1>
+    <p class="page-hero-sub">Vsak mesec izpostavimo podjetnika, katerega pot je vredna pozornosti. Resnična zgodba, resnični rezultati.</p>
+    <p style="font-size:.72rem;color:var(--muted);margin-top:.9rem;font-style:italic;font-weight:300;max-width:500px;line-height:1.65;border-top:1px solid rgba(10,92,74,.12);padding-top:.75rem;opacity:.85;">Opomba: prikazani podatki o izpostavljenih podjetnikih niso uradno preverljivi in temeljijo izključno na glasovanju ter prepričanju članov skupnosti GradimSe. Namen izpostavitve je navdih skupnosti — ne jamstvo ali potrditev točnosti poslovnih podatkov.</p>
+  </div>
+</div>
+
+<div class="page-content">
+
+  <!-- Spotlight: May 2026 Ana Potočnik -->
+  <div class="spotlight-main" data-person-id="ap">
+    <div class="sp-photo">
+      <img src="https://i.pravatar.cc/300?img=49" alt="Ana Potočnik">
+      <div class="sp-photo-overlay"></div>
+      <div class="sp-photo-badge"><span class="sp-photo-badge-dot"></span> Podjetnik meseca</div>
+      <div class="sp-photo-foot">
+        <p class="sp-photo-period">Maj 2026</p>
+        <h2 class="sp-photo-name">Ana Potočnik</h2>
+        <p class="sp-photo-role">E-commerce · Ustanoviteljica</p>
+        <p class="sp-photo-company">Potočnik Shop</p>
+      </div>
+    </div>
+    <div class="sp-info sp-why-panel">
+      <div class="sp-why-intro">
+        <p class="sp-eyebrow">Zakaj Ana?</p>
+        <h3 class="sp-headline">Iz računovodje do<br><em>200k letnega prometa.</em></h3>
+        <p class="sp-desc">Pri 38 zgradila e-commerce podjetje z 200k € letnega prometa — brez kredita, brez investitorja, brez izkušenj.</p>
+        <div class="sp-stats">
+          <div class="sp-stat"><span class="sp-stat-n">200k €</span><span class="sp-stat-l">Letni promet</span></div>
+          <div class="sp-stat"><span class="sp-stat-n">3 leta</span><span class="sp-stat-l">Do uspeha</span></div>
+          <div class="sp-stat"><span class="sp-stat-n">0 €</span><span class="sp-stat-l">Investicij</span></div>
+        </div>
+      </div>
+
+      <div class="sp-why-split">
+        <div>
+          <p class="why-col-title">Dosežki tega meseca</p>
+          <div class="why-achievements">
+            <div class="why-ach">
+              <div class="why-ach-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1,9 5,5 8,7 13,2"/></svg></div>
+              <div><p class="why-ach-label">Napredek MoM</p><p class="why-ach-val">+40 %</p></div>
+            </div>
+            <div class="why-ach">
+              <div class="why-ach-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h10M2 7h7M2 11h5"/></svg></div>
+              <div><p class="why-ach-label">Nove objave</p><p class="why-ach-val">8 objav</p></div>
+            </div>
+            <div class="why-ach">
+              <div class="why-ach-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7c0-1.4 1.1-2.5 2.5-2.5S9.5 5.6 9.5 7s-1.1 2.5-2.5 2.5"/></svg></div>
+              <div><p class="why-ach-label">Ogledi skupnosti</p><p class="why-ach-val">1.240</p></div>
+            </div>
+            <div class="why-ach">
+              <div class="why-ach-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 11V3.5C2 2.67 2.67 2 3.5 2h7c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5H4L2 11z"/></svg></div>
+              <div><p class="why-ach-label">Povpraševanja</p><p class="why-ach-val">23</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="why-col-title">Skupnost pravi</p>
+          <div class="why-quotes">
+            <div class="why-quote">
+              <p class="why-quote-text">"Ana nas je navdihovala z vztrajnostjo — vsak mesec naprej, brez izgovorov."</p>
+              <div class="why-quote-author">
+                <img src="https://i.pravatar.cc/300?img=11" alt="Marko Kovač" class="why-quote-avatar">
+                <span class="why-quote-name">Marko Kovač</span>
+              </div>
+            </div>
+            <div class="why-quote">
+              <p class="why-quote-text">"Njena zgodba dokazuje, da je starost pri podjetništvu popolnoma nepomembna."</p>
+              <div class="why-quote-author">
+                <img src="https://i.pravatar.cc/300?img=43" alt="Sara Hrovat" class="why-quote-avatar">
+                <span class="why-quote-name">Sara Hrovat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-why-bottom">
+        <div class="why-badges">
+          <span class="why-badge">Rast meseca</span>
+          <span class="why-badge">Največ objav</span>
+          <span class="why-badge">Navdihujoča zgodba</span>
+          <span class="why-badge">200k € brez investitorja</span>
+        </div>
+        <button class="why-nominate-btn" id="openNomModal">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 1.5l1.5 3 3.5.5-2.5 2.4.6 3.4-3.1-1.6-3.1 1.6.6-3.4L1.5 5l3.5-.5z"/></svg>
+          Nominiraj naslednjega
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archive -->
+  <div class="archive-header">
+    <h2 class="archive-title">Prejšnji <em>podjetniki meseca</em></h2>
+    <span class="archive-count">6 zgodb</span>
+  </div>
+
+  <div class="archive-grid">
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="tb">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=15" alt="Tomaž Bregar">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">April 2026</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">SaaS</span><span class="ac-tag">Bootstrapped</span><span class="ac-tag">B2B</span></div>
+          <p class="ac-name">Tomaž Bregar</p>
+          <p class="ac-role">SaaS · B2B</p>
+          <p class="ac-company">BregarTech</p>
+          <p class="ac-desc">Inženir, ki je zgradil B2B SaaS samo s pogovori s strankami. 50.000 € letnega prihodka brez vlagateljev.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">50k €</span><span class="ac-stat-l">Letni prihodek</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">0 €</span><span class="ac-stat-l">Vlagatelji</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="tb"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-tb">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Zgradil SaaS brez vlagateljev z izjemno retencijo strank — vsaka stranka plačuje v povprečju 2+ leti."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Bootstrapped zmagovalec</span><span class="ac-why-badge">Dolgoročne stranke</span><span class="ac-why-badge">Tehnični podjetnik</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="kl">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=25" alt="Kaja Lebar">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">Marec 2026</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">Agencija</span><span class="ac-tag">Branding</span></div>
+          <p class="ac-name">Kaja Lebar</p>
+          <p class="ac-role">Marketing · Agencija</p>
+          <p class="ac-company">Lebar Marketing</p>
+          <p class="ac-desc">Freelancerka iz dnevne sobe, ki je zgradila boutique agencijo z ekipo 6 in 40+ aktivnimi strankami.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">40+</span><span class="ac-stat-l">Strank</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">6</span><span class="ac-stat-l">Članov ekipe</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="kl"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-kl">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Pokazala, kako se skalira iz freelancerja v agencijo brez kredita — z vztrajnostjo in pravimi strankami."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Freelance → agencija</span><span class="ac-why-badge">Rast ekipe</span><span class="ac-why-badge">Niche branding</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="jn">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=68" alt="Jure Novak">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">Februar 2026</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">Gostinstvo</span><span class="ac-tag">Brez kredita</span></div>
+          <p class="ac-name">Jure Novak</p>
+          <p class="ac-role">Gostinstvo · Lastnik</p>
+          <p class="ac-company">Novak Bistro</p>
+          <p class="ac-desc">Pet let, trije lokali, nič posojil. Vsak korak premišljen, vsak lokal profitabilen od prvega dne.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">3</span><span class="ac-stat-l">Restavracije</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">14</span><span class="ac-stat-l">Zaposlenih</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="jn"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-jn">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Vsak lokal profitabilen od prvega dne — to je v gostinstvu izjemno redko."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Brez kredita</span><span class="ac-why-badge">Profitabilnost od prvega dne</span><span class="ac-why-badge">Vztrajnost</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="mk">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=11" alt="Marko Kovač">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">Januar 2026</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">SaaS</span><span class="ac-tag">12k MRR</span><span class="ac-tag">Podcast gost</span></div>
+          <p class="ac-name">Marko Kovač</p>
+          <p class="ac-role">SaaS · Startup</p>
+          <p class="ac-company">KovačSaaS</p>
+          <p class="ac-desc">Zapustil korporativni svet pri 31 in zgradil SaaS z 12.000 € mesečnega prihodka — brez ekipe in investitorja.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">12k €</span><span class="ac-stat-l">Mes. prihodek</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">0 €</span><span class="ac-stat-l">Kapital</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="mk"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-mk">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Dokazal, da en sam razvijalec brez investitorja in ekipe lahko zgradi resen SaaS produkt."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Solopodjetnik</span><span class="ac-why-badge">Visok MRR</span><span class="ac-why-badge">Bootstrapped SaaS</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="sh">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=43" alt="Sara Hrovat">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">December 2025</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">Coaching</span><span class="ac-tag">100+ klientov</span></div>
+          <p class="ac-name">Sara Hrovat</p>
+          <p class="ac-role">Life Coaching · Ustanoviteljica</p>
+          <p class="ac-company">Hrovat Coaching</p>
+          <p class="ac-desc">Zapustila direktorski položaj pri 41 in začela znova. Danes pomaga 100+ klientom najti pravo smer.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">100+</span><span class="ac-stat-l">Klientov</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">5★</span><span class="ac-stat-l">Povpr. ocena</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="sh"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-sh">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Njeno pogumno dejanje pri 41 je navdihnilo desine članov skupnosti — in jim dalo pogum narediti lastni korak."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Transformacijska zgodba</span><span class="ac-why-badge">Korporacija → svoboda</span><span class="ac-why-badge">5★ ocene</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-card-wrap">
+      <div class="archive-card" data-person-id="lj">
+        <div class="ac-photo">
+          <img src="https://i.pravatar.cc/300?img=50" alt="Luka Jeglič">
+          <div class="ac-photo-overlay"></div>
+          <span class="ac-period-badge">November 2025</span>
+          <div class="ac-hover-cta"><span>Odpri profil</span></div>
+        </div>
+        <div class="ac-body">
+          <div class="ac-tags"><span class="ac-tag">LinkedIn</span><span class="ac-tag">8k sledilcev</span></div>
+          <p class="ac-name">Luka Jeglič</p>
+          <p class="ac-role">LinkedIn · Marketing</p>
+          <p class="ac-company">Jeglič Consulting</p>
+          <p class="ac-desc">Od 0 do 8.000 sledilcev v 6 mesecih brez enega evra oglasov. Pomaga podjetnikom postati vidni.</p>
+          <div class="ac-stat-row">
+            <div class="ac-stat"><span class="ac-stat-n">8.000</span><span class="ac-stat-l">Sledilcev</span></div>
+            <div class="ac-stat"><span class="ac-stat-n">0 €</span><span class="ac-stat-l">Oglasi</span></div>
+          </div>
+          <button class="ac-why-btn" data-why="lj"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 9V5M5 1v.5"/><circle cx="5" cy="2.5" r=".5" fill="currentColor" stroke="none"/></svg>Zakaj podjetnik meseca?<svg class="ac-why-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3l2.5 2.5L7 3"/></svg></button>
+        </div>
+      </div>
+      <div class="ac-why-panel" id="ac-why-lj">
+        <div class="ac-why-inner">
+          <p class="ac-why-reason">"Podelil vso svojo LinkedIn strategijo brezplačno skupnosti — in skupnost mu je nagradila z zaupanjem."</p>
+          <div class="ac-why-badges"><span class="ac-why-badge">Organska rast</span><span class="ac-why-badge">LinkedIn ekspert</span><span class="ac-why-badge">Pomoč skupnosti</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── NOMINATION MODAL ── -->
+<div class="nom-overlay" id="nomOverlay">
+  <div class="nom-modal">
+    <button class="nom-close" id="nomClose">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+    </button>
+    <div id="nomForm">
+      <p class="nom-eyebrow">Skupnost GradimSe</p>
+      <h3 class="nom-title">Nominiraj naslednjega</h3>
+      <p class="nom-sub">Poznate podjetnika, katerega zgodba si zasluži pozornost? Pošljite nominacijo.</p>
+      <div class="nom-field">
+        <label class="nom-label">Ime nominiranca</label>
+        <input type="text" class="nom-inp" id="nomName" placeholder="npr. Janez Novak">
+      </div>
+      <div class="nom-field">
+        <label class="nom-label">Zakaj si zasluži biti podjetnik meseca?</label>
+        <textarea class="nom-inp nom-textarea" id="nomReason" placeholder="Opišite dosežke, zgodbo ali vpliv na skupnost..."></textarea>
+      </div>
+      <div class="nom-field">
+        <label class="nom-label">Vaše ime (neobvezno)</label>
+        <input type="text" class="nom-inp" id="nomFrom" placeholder="npr. Sara Kovač">
+      </div>
+      <button class="nom-submit" id="nomSubmit">Pošlji nominacijo →</button>
+    </div>
+    <div class="nom-success" id="nomSuccess" style="display:none;">
+      <div class="nom-success-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 11l5 5 9-9"/></svg>
+      </div>
+      <h3 class="nom-success-title">Nominacija prejeta!</h3>
+      <p class="nom-success-sub">Hvala. Vaša nominacija bo obravnavana pri izboru podjetnika naslednjega meseca.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROFILE OVERLAY ── -->
+<div class="profile-overlay" id="profileOverlay">
+  <div class="profile-panel" id="profilePanel">
+    <button class="profile-close" id="profileClose" aria-label="Zapri">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#161917" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+    </button>
+    <div class="pp-photo-col">
+      <img src="" alt="" id="ppImg">
+      <div class="pp-photo-grad"></div>
+      <div class="pp-photo-foot">
+        <div class="pp-photo-tags" id="ppTags"></div>
+        <div class="pp-photo-name" id="ppName"></div>
+        <div class="pp-photo-role" id="ppRole"></div>
+        <div class="pp-photo-company" id="ppCompany" style="font-size:.62rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin-top:.15rem;"></div>
+      </div>
+    </div>
+    <div class="pp-info-col">
+      <div>
+        <p class="pp-section-label">O meni</p>
+        <p class="pp-bio" id="ppBio"></p>
+        <p class="pp-bio-ext" id="ppBioExt"></p>
+      </div>
+      <div class="pp-stats" id="ppStats"></div>
+      <blockquote class="pp-quote" id="ppQuote"></blockquote>
+      <div>
+        <p class="pp-section-label">Kontakt</p>
+        <div class="pp-contacts">
+          <a href="#" class="pp-contact" id="ppPhone">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M5 1.5H2.5C1.95 1.5 1.5 1.95 1.5 2.5c0 5.8 4.2 10 10 10 .55 0 1-.45 1-1V9l-2.5-.8-.7 1.5C8.1 9.2 4.8 5.9 4.3 4.7L5.8 4 5 1.5z"/></svg>
+            <span id="ppPhoneText"></span>
+          </a>
+          <a href="#" class="pp-contact" id="ppEmail">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="3.5" width="12" height="7.5" rx="1.3"/><path d="M1 3.5l6 4.5 6-4.5"/></svg>
+            <span id="ppEmailText"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ACCOUNT OVERLAY ── -->
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <div id="acctLoButtons">
+    <div class="acct-loggedout">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Pridruži se 240+ slovenskim podjetnikom.<br>Brezplačno, brez kreditne kartice.</p>
+      <div class="acct-lo-btns">
+        <button class="acct-lo-btn primary" id="acctOpenRegister">Registracija</button>
+        <button class="acct-lo-btn ghost" id="acctOpenLogin">Prijava</button>
+      </div>
+    </div>
+  </div>
+  <div class="acct-login-wrap" id="acctLoginForm" style="display:none;">
+    <button class="acct-login-back" id="acctLoginBack">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7.5 1L2.5 5.5l5 4.5"/></svg>
+      Nazaj
+    </button>
+    <h3 class="acct-login-title">Prijava</h3>
+    <p class="acct-login-sub">Dobrodošli nazaj v skupnost.</p>
+    <div class="acct-field"><label class="acct-label">E-pošta</label><input type="email" class="acct-inp" id="loginEmail" placeholder="vas@email.com" autocomplete="email"></div>
+    <div class="acct-field"><label class="acct-label">Geslo</label><input type="password" class="acct-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <div class="acct-login-err" id="loginErr"></div>
+    <button class="acct-publish-btn" id="loginSubmitBtn" style="width:100%;justify-content:center;">Prijavi se</button>
+  </div>
+  <div id="acctLoggedIn" style="display:none;">
+    <div class="acct-loggedin-inner">
+      <div class="acct-user-info">
+        <div class="acct-avatar" id="acctAvatarInitials">GS</div>
+        <div><div class="acct-uname" id="acctDisplayName"></div><div class="acct-urole" id="acctDisplayRole">Član skupnosti</div></div>
+      </div>
+      <a href="index.html" class="acct-lo-btn primary" style="display:block;text-align:center;margin-top:1.25rem;text-decoration:none;">Odpri dashboard</a>
+      <button class="acct-logout-btn" id="acctLogoutBtn">Odjava</button>
+    </div>
+  </div>
+</div>
+</div><!-- /acct-overlay -->
+
+<script>
+const personData = {
+  ap: {
+    name: 'Ana Potočnik', company: 'Potočnik Shop', role: 'E-commerce · Ustanoviteljica',
+    photo: 'https://i.pravatar.cc/300?img=49',
+    tags: ['200k €/let', 'Podjetnik meseca', 'Brez investitorja', 'E-commerce'],
+    bio: 'Začela pri 38, brez investitorja. V treh letih zgradila e-commerce podjetje z 200.000 € letnega prometa.',
+    bioExt: 'Pri 38 je Ana zaprla Excelov list za vedno in odprla spletno trgovino za ročno delo. Ni vedela, kaj je CRM, ni imela spletnih tečajev — imela je samo navdušenje in pripravljenost učiti se sproti. Danes vodi podjetje, ki raste 40% letno. Njen nasvet vsem: začnite majhno, a začnite danes.',
+    stats: [{n:'200k €', l:'Letni promet'}, {n:'+40%', l:'Letna rast'}, {n:'0 €', l:'Investicij'}],
+    phone: '+386 40 234 567', email: 'ana.potocnik@shop.si',
+    quote: '"Najboljši čas za začetek je bil včeraj. Drugi najboljši čas je danes."'
+  },
+  tb: {
+    name: 'Tomaž Bregar', company: 'BregarTech', role: 'SaaS · B2B',
+    photo: 'https://i.pravatar.cc/300?img=15',
+    tags: ['50k €/let', 'Bootstrapped', 'B2B SaaS'],
+    bio: 'Bootstrapped SaaS za B2B trg. 50.000 € letnega prihodka brez vlagateljev — samo fokus in dolgotrajne stranke.',
+    bioExt: 'Tomaž je bil inženir, ki ni maral prodaje. Zato je zgradil B2B SaaS, ki prodaja sam. V prvih 6 mesecih ni imel niti enega plačevalnega kupca — potem se je lotil pravih pogovorov s pravimi strankami. Danes ima 50k letnega prihodka, vsaka stranka plačuje več kot 2 leti in skoraj nobena ne odhaja.',
+    stats: [{n:'50.000 €', l:'Letni prihodek'}, {n:'3 leta', l:'Do profitabilnosti'}, {n:'0 €', l:'Vlagatelji'}],
+    phone: '+386 70 567 890', email: 'tomaz@bregartech.si',
+    quote: '"Počasi gre, ampak ko pride — ostane. Stranka ki ti zaupa, ti plačuje leta."'
+  },
+  kl: {
+    name: 'Kaja Lebar', company: 'Lebar Marketing', role: 'Marketing · Agencija',
+    photo: 'https://i.pravatar.cc/300?img=25',
+    tags: ['40+ strank', 'Freelance → agencija', 'Branding', 'Marketing'],
+    bio: 'Začela kot freelancerka iz dnevne sobe. Danes vodi boutique agencijo z ekipo 6 ljudi in 40+ aktivnimi strankami.',
+    bioExt: 'Kaja je začela freelanceriti med porodniškim dopustom — "samo za en mesec", pravi danes s smehom. Pet let pozneje vodi boutique agencijo, ki skrbi za branding in marketing 40+ podjetij. Ekipa šestih, nobena ne sedi v pisarni vsak dan, vsi so izjemno motivirani.',
+    stats: [{n:'40+', l:'Aktivnih strank'}, {n:'6', l:'Članov ekipe'}, {n:'5 let', l:'Agencija'}],
+    phone: '+386 41 456 789', email: 'kaja@lebarmarketing.si',
+    quote: '"Dober branding te ne dela večjega — dela te prepričljivejšega."'
+  },
+  jn: {
+    name: 'Jure Novak', company: 'Novak Bistro', role: 'Gostinstvo · Lastnik',
+    photo: 'https://i.pravatar.cc/300?img=68',
+    tags: ['3 restavracije', 'Brez kredita', '5 let', 'Gostinstvo'],
+    bio: 'Pet let, trije lokali, nič kredita. Zgrajeno postopoma — s potrpežljivostjo in fokusiranim konceptom.',
+    bioExt: 'Jure je odprl svojo prvo picerijo s 7.000 € prihrankov in brez poslovnega načrta. Pet let pozneje ima tri uspešne restavracije in ekipo 14 ljudi. Skrivnost? Osredotočenost na kakovost in vztrajnost pri konceptu.',
+    stats: [{n:'3', l:'Restavracije'}, {n:'14', l:'Zaposlenih'}, {n:'0 €', l:'Posojil'}],
+    phone: '+386 51 345 678', email: 'jure.novak@novakbistro.si',
+    quote: '"Vsak gost je priložnost za odnos, ne samo za transakcijo."'
+  },
+  mk: {
+    name: 'Marko Kovač', company: 'KovačSaaS', role: 'SaaS · Startup · Ustanovitelj',
+    photo: 'https://i.pravatar.cc/300?img=11',
+    tags: ['SaaS', 'Podcast gost', '12k MRR', 'Bootstrapped'],
+    bio: 'Od razvijalca do ustanovitelja — v 3 letih zgradil SaaS produkt z 12.000 € mesečnega prihodka, brez vlagateljev in brez ekipe.',
+    bioExt: 'Marko je zapustil korporativni svet pri 31 letih z eno idejo: rešiti problem, ki ga je sam doživljal vsak dan. Brez investitorja, brez ekipe — samo laptop in volja. Danes njegovo orodje uporablja 240+ podjetij mesečno.',
+    stats: [{n:'12.000 €', l:'Mes. prihodek'}, {n:'3 leta', l:'Do profitabilnosti'}, {n:'0 €', l:'Zunanji kapital'}],
+    phone: '+386 41 123 456', email: 'marko.kovac@gradimse.si',
+    quote: '"Uspeh ni v ideji. Je v tisočih malih odločitvah po tem, ko si idejo povedal glasno."'
+  },
+  sh: {
+    name: 'Sara Hrovat', company: 'Hrovat Coaching', role: 'Life Coaching · Ustanoviteljica',
+    photo: 'https://i.pravatar.cc/300?img=43',
+    tags: ['100+ klientov', 'Korporacija → svoboda', 'Coaching'],
+    bio: 'Zapustila direktorski položaj in začela znova. Danes pomaga 100+ klientom najti pravo smer v karieri in poslu.',
+    bioExt: 'Sara je bila direktorica z visoko plačo in stalnim občutkom, da dela napačno stvar. Pri 41 je dala odpoved in se usmerila v coaching. Danes pomaga 100+ klientom, ki točno vedo zakaj so pri njej.',
+    stats: [{n:'100+', l:'Klientov'}, {n:'4+ leta', l:'Praksa'}, {n:'5★', l:'Povprečna ocena'}],
+    phone: '+386 40 678 901', email: 'sara@hrovatcoaching.si',
+    quote: '"Strah pred spremembo je manjši od obžalovanja, da spremembe nisi naredila."'
+  },
+  lj: {
+    name: 'Luka Jeglič', company: 'Jeglič Consulting', role: 'LinkedIn · Marketing',
+    photo: 'https://i.pravatar.cc/300?img=50',
+    tags: ['8k sledilcev', 'Organsko', '6 mesecev', 'LinkedIn'],
+    bio: '8.000 sledilcev v 6 mesecih brez enega evra oglasov. Pomaga podjetnikom, da postanejo vidni na LinkedInu.',
+    bioExt: 'Luka ni bil "influencer tip". Bil je freelancer, ki ni vedel, kako razložiti, kaj počne. Potem je začel pisati na LinkedInu — brez strategije, samo iskreno. V 6 mesecih je zbral 8.000 sledilcev in 15 novih strank direktno prek platforme.',
+    stats: [{n:'8.000', l:'Sledilcev'}, {n:'6 mes.', l:'Do rasti'}, {n:'0 €', l:'Oglasi'}],
+    phone: '+386 51 789 012', email: 'luka@jeglic.si',
+    quote: '"LinkedIn ni življenjepis. Je tvoj glas — in vsak dan imaš priložnost, da ga uporabiš."'
+  }
+};
+
+const profileOverlay = document.getElementById('profileOverlay');
+
+function openProfile(id) {
+  const d = personData[id];
+  if (!d) return;
+  document.getElementById('ppImg').src = d.photo;
+  document.getElementById('ppImg').alt = d.name;
+  document.getElementById('ppName').textContent = d.name;
+  document.getElementById('ppRole').textContent = d.role;
+  const compEl = document.getElementById('ppCompany');
+  if(compEl){ compEl.textContent = d.company || ''; compEl.style.display = d.company ? 'block' : 'none'; }
+  document.getElementById('ppBio').textContent = d.bio;
+  document.getElementById('ppBioExt').textContent = d.bioExt;
+  document.getElementById('ppQuote').textContent = d.quote;
+  document.getElementById('ppTags').innerHTML = d.tags.map(t => `<span class="pp-photo-tag">${t}</span>`).join('');
+  document.getElementById('ppStats').innerHTML = d.stats.map(s => `<div class="pp-stat"><span class="pp-stat-n">${s.n}</span><span class="pp-stat-l">${s.l}</span></div>`).join('');
+  const ph = document.getElementById('ppPhone');
+  ph.href = 'tel:' + d.phone.replace(/\s/g, '');
+  document.getElementById('ppPhoneText').textContent = d.phone;
+  const em = document.getElementById('ppEmail');
+  em.href = 'mailto:' + d.email;
+  document.getElementById('ppEmailText').textContent = d.email;
+  profileOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfile() {
+  profileOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-person-id]').forEach(card => {
+  card.addEventListener('click', () => openProfile(card.dataset.personId));
+});
+
+// Archive "Zakaj podjetnik meseca?" accordion
+document.querySelectorAll('.ac-why-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const key = btn.dataset.why;
+    const panel = document.getElementById('ac-why-' + key);
+    const isOpen = panel.classList.contains('open');
+    document.querySelectorAll('.ac-why-panel').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.ac-why-btn').forEach(b => b.classList.remove('open'));
+    if (!isOpen) { panel.classList.add('open'); btn.classList.add('open'); }
+  });
+});
+
+// Nomination modal
+(function(){
+  const nomOverlay = document.getElementById('nomOverlay');
+  const openBtn = document.getElementById('openNomModal');
+  if (!nomOverlay || !openBtn) return;
+
+  function openNom() {
+    document.getElementById('nomForm').style.display = '';
+    document.getElementById('nomSuccess').style.display = 'none';
+    document.getElementById('nomName').value = '';
+    document.getElementById('nomReason').value = '';
+    document.getElementById('nomFrom').value = '';
+    nomOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNom() {
+    nomOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openNom);
+  document.getElementById('nomClose').addEventListener('click', closeNom);
+  nomOverlay.addEventListener('click', e => { if (e.target === nomOverlay) closeNom(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && nomOverlay.classList.contains('active')) closeNom(); });
+
+  document.getElementById('nomSubmit').addEventListener('click', () => {
+    const name = document.getElementById('nomName').value.trim();
+    const reason = document.getElementById('nomReason').value.trim();
+    if (!name || !reason) {
+      document.getElementById('nomName').style.borderColor = name ? '' : '#E53E3E';
+      document.getElementById('nomReason').style.borderColor = reason ? '' : '#E53E3E';
+      return;
+    }
+    document.getElementById('nomForm').style.display = 'none';
+    document.getElementById('nomSuccess').style.display = 'block';
+  });
+})();
+
+document.getElementById('profileClose').addEventListener('click', closeProfile);
+profileOverlay.addEventListener('click', e => { if (e.target === profileOverlay) closeProfile(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfile(); });
+
+// Account panel
+(function() {
+  const overlay = document.getElementById('acctOverlay');
+  const btn     = document.getElementById('accountBtn');
+  btn.addEventListener('click', () => { overlay.classList.add('active'); btn.classList.add('open'); document.body.style.overflow = 'hidden'; });
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay || !document.getElementById('acctPanel').contains(e.target)) {
+      overlay.classList.remove('active'); btn.classList.remove('open'); document.body.style.overflow = '';
+    }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { overlay.classList.remove('active'); btn.classList.remove('open'); document.body.style.overflow = ''; } });
+})();
+
+// ── Account panel ──
+(function(){
+  const overlay=document.getElementById('acctOverlay');
+  const btn=document.getElementById('accountBtn');
+  let loggedIn=false,currentUser={};
+  try{const s=localStorage.getItem('gs_user');if(s){currentUser=JSON.parse(s);loggedIn=true;}}catch(e){}
+  if(loggedIn)btn.classList.add('open');
+  function showState(){
+    if(loggedIn){
+      document.getElementById('acctLoButtons').style.display='none';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='';
+      const initials=(currentUser.name||'GS').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('acctAvatarInitials').textContent=initials;
+      document.getElementById('acctDisplayName').textContent=currentUser.name||'';
+      document.getElementById('acctDisplayRole').innerHTML=currentUser.isAdmin?'<span class="acct-admin-badge">Admin</span>':(currentUser.area||'Član skupnosti');
+    }else{
+      document.getElementById('acctLoButtons').style.display='';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='none';
+    }
+  }
+  btn.addEventListener('click',()=>{showState();overlay.classList.add('active');btn.classList.add('open');document.body.style.overflow='hidden';});
+  function close(){overlay.classList.remove('active');if(!loggedIn)btn.classList.remove('open');document.body.style.overflow='';}
+  overlay.addEventListener('click',e=>{if(e.target===overlay||!document.getElementById('acctPanel').contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  document.getElementById('acctOpenLogin').addEventListener('click',()=>{document.getElementById('acctLoButtons').style.display='none';document.getElementById('acctLoginForm').style.display='';document.getElementById('loginEmail').focus();});
+  document.getElementById('acctLoginBack').addEventListener('click',()=>{document.getElementById('acctLoginForm').style.display='none';document.getElementById('acctLoButtons').style.display='';});
+  function doLogin(){
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPass').value;
+    const errEl=document.getElementById('loginErr');
+    if(!email){errEl.textContent='Vnesite e-poštni naslov.';return;}
+    if(!pass){errEl.textContent='Vnesite geslo.';return;}
+    errEl.textContent='';
+    const isAdmin=email.toLowerCase()==='domenavbelj01@gmail.com';
+    const name=isAdmin?'Domena Vbelj':email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    currentUser={name,email,area:isAdmin?'Admin · GradimSe':'Clan skupnosti',isAdmin};
+    loggedIn=true;
+    try{localStorage.setItem('gs_user',JSON.stringify(currentUser));}catch(e){}
+    showState();btn.classList.add('open');
+  }
+  document.getElementById('loginSubmitBtn').addEventListener('click',doLogin);
+  document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('acctLogoutBtn').addEventListener('click',()=>{loggedIn=false;currentUser={};try{localStorage.removeItem('gs_user');}catch(e){}btn.classList.remove('open');close();});
+  // Wire register button to join modal if it exists
+  const regBtn=document.getElementById('acctOpenRegister');
+  if(regBtn){regBtn.addEventListener('click',()=>{
+    const jo=document.getElementById('joinOverlay');
+    if(jo){close();jo.classList.add('active');document.body.style.overflow='hidden';['joinStep1','joinStep2','joinLogin','joinSuccess'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.add('hidden');});const j1=document.getElementById('joinStep1');if(j1)j1.classList.remove('hidden');}
+    else{window.location.href='index.html';}
+  });}
+})();
+</script>
+</body>
+</html>

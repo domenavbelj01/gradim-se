@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sponzorji — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── Nav ── */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-cta { font-size: .8rem; font-weight: 500; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; transition: opacity .2s; }
+    .nav-cta:hover { opacity: .7; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 5.5rem 2rem 4.5rem;
+      text-align: center;
+      background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp .45s ease both;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(10,92,74,.07) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to bottom, transparent, #f8f7f3);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: .64rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--green-dark);
+      background: rgba(34,168,126,.1);
+      border: 1px solid rgba(34,168,126,.2);
+      padding: .3rem .9rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 400;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+      line-height: 1.08;
+      margin-bottom: .9rem;
+    }
+    .hero-title em { font-style: italic; color: var(--green-dark); }
+    .hero-sub {
+      font-size: .96rem;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.72;
+    }
+
+    /* ── Ornament divider ── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 2.5rem;
+    }
+    .ornament-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(10,92,74,.18), transparent); }
+    .ornament-center { display: flex; align-items: center; gap: .5rem; }
+    .ornament-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--green); opacity: .6; }
+    .ornament-diamond { width: 7px; height: 7px; border: 1.5px solid rgba(34,168,126,.5); transform: rotate(45deg); }
+
+    /* ── Sponsors grid ── */
+    .sponsors-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem 2rem;
+    }
+    .sponsors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    /* ── Sponsor card ── */
+    .sp-card {
+      background: #fff;
+      border: 1px solid rgba(14,90,66,.09);
+      border-radius: 26px;
+      padding: 2.75rem 1.5rem 2.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .95rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s cubic-bezier(.34,1.36,.64,1), box-shadow .24s, border-color .24s;
+      animation: fadeUp .55s ease both;
+    }
+    .sp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--card-accent, linear-gradient(90deg, var(--green-dark), var(--green)));
+      opacity: 0;
+      transition: opacity .22s;
+    }
+    .sp-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(34,168,126,.04) 0%, rgba(240,250,245,.6) 100%);
+      opacity: 0;
+      transition: opacity .22s;
+      pointer-events: none;
+    }
+    .sp-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(10,92,74,.13); border-color: rgba(34,168,126,.28); }
+    .sp-card:hover::before { opacity: 1; }
+    .sp-card:hover::after { opacity: 1; }
+
+    .sp-card-logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 2.1rem;
+      color: #fff;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      letter-spacing: -.04em;
+      flex-shrink: 0;
+    }
+    .sp-card-tier {
+      font-size: .53rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      padding: .2rem .7rem;
+      border-radius: 100px;
+      position: relative;
+      z-index: 1;
+    }
+    .sp-card-name {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -.3px;
+      text-align: center;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+    .sp-card-industry {
+      font-size: .7rem;
+      color: var(--muted);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-top: -.3rem;
+      line-height: 1.4;
+    }
+    .sp-card-hint {
+      font-size: .68rem;
+      font-weight: 500;
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity .2s, transform .2s;
+    }
+    .sp-card:hover .sp-card-hint { opacity: 1; transform: translateY(0); }
+
+    /* ── Section divider ── */
+    .section-break {
+      max-width: 860px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+    }
+    .section-break-inner {
+      border-top: 1px solid var(--border);
+      padding-top: 4rem;
+    }
+    .section-eyebrow {
+      font-size: .64rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--green-dark);
+      display: block;
+      margin-bottom: .85rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+      font-weight: 400;
+      letter-spacing: -.6px;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: .6rem;
+    }
+    .section-title em { font-style: italic; color: var(--green); }
+    .section-sub {
+      font-size: .88rem;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 480px;
+      line-height: 1.72;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Package cards ── */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 5rem;
+    }
+
+    .pkg {
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .22s, box-shadow .22s;
+    }
+    .pkg:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,.1); }
+
+    /* Silver */
+    .pkg-silver {
+      background: #fff;
+      border: 1.5px solid rgba(140,150,160,.18);
+    }
+    .pkg-silver .pkg-head {
+      background: linear-gradient(135deg, #e8edf2 0%, #d4dce6 100%);
+      border-bottom: 1px solid rgba(140,150,160,.15);
+    }
+    .pkg-silver .pkg-tier-label { color: #4a5568; }
+    .pkg-silver .pkg-name { color: #2d3748; }
+    .pkg-silver .pkg-dot { background: rgba(74,85,104,.15); }
+    .pkg-silver .pkg-dot.on { background: #4a9bb5; }
+    .pkg-silver .pkg-dot.on svg { stroke: #fff; }
+    .pkg-silver .pkg-cta-btn { border-color: rgba(74,85,104,.25); color: #4a5568; }
+    .pkg-silver .pkg-cta-btn:hover { background: rgba(74,85,104,.06); }
+
+    /* Gold */
+    .pkg-gold {
+      background: #fff;
+      border: 2px solid rgba(200,146,42,.3);
+      box-shadow: 0 0 0 4px rgba(200,146,42,.07);
+    }
+    .pkg-gold .pkg-head {
+      background: linear-gradient(135deg, #7a5f18 0%, #c8922a 100%);
+      border-bottom: none;
+    }
+    .pkg-gold .pkg-tier-label { color: rgba(255,255,255,.75); }
+    .pkg-gold .pkg-name { color: #fff; }
+    .pkg-gold .pkg-dot { background: rgba(200,146,42,.15); }
+    .pkg-gold .pkg-dot.on { background: rgba(200,146,42,.85); }
+    .pkg-gold .pkg-dot.on svg { stroke: #fff; }
+    .pkg-gold .pkg-cta-btn { border-color: rgba(200,146,42,.35); color: #8a5e0a; background: rgba(200,146,42,.08); }
+    .pkg-gold .pkg-cta-btn:hover { background: rgba(200,146,42,.15); }
+
+    /* Platinum */
+    .pkg-platinum {
+      background: #17201C;
+      border: 1.5px solid rgba(34,168,126,.22);
+      box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    }
+    .pkg-platinum .pkg-head {
+      background: linear-gradient(135deg, #0A5C4A 0%, #22A87E 100%);
+      border-bottom: 1px solid rgba(34,168,126,.2);
+    }
+    .pkg-platinum .pkg-tier-label { color: rgba(255,255,255,.75); }
+    .pkg-platinum .pkg-name { color: #fff; }
+    .pkg-platinum .pkg-feature-text { color: rgba(255,255,255,.75); }
+    .pkg-platinum .pkg-dot { background: rgba(255,255,255,.07); }
+    .pkg-platinum .pkg-dot.on { background: rgba(34,168,126,.7); }
+    .pkg-platinum .pkg-dot.on svg { stroke: #fff; }
+    .pkg-platinum .pkg-cta-btn {
+      border-color: rgba(34,168,126,.3);
+      color: #22A87E;
+      background: rgba(34,168,126,.1);
+    }
+    .pkg-platinum .pkg-cta-btn:hover { background: rgba(34,168,126,.2); }
+    .pkg-platinum .pkg-divider { border-color: rgba(255,255,255,.07); }
+
+    .pkg-head {
+      padding: 1.85rem 1.75rem 1.6rem;
+      position: relative;
+    }
+    .pkg-popular-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: .5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      padding: .18rem .6rem;
+      border-radius: 100px;
+    }
+    .pkg-tier-label {
+      font-size: .58rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      margin-bottom: .6rem;
+      display: block;
+    }
+    .pkg-name {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      letter-spacing: -.4px;
+      line-height: 1.1;
+      margin-bottom: .35rem;
+    }
+    .pkg-price-line {
+      font-size: .78rem;
+      color: rgba(255,255,255,.6);
+      font-weight: 300;
+      margin-top: .15rem;
+    }
+    .pkg-silver .pkg-price-line { color: var(--muted); }
+
+    .pkg-body {
+      padding: 1.6rem 1.75rem 1.85rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .pkg-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      flex: 1;
+    }
+    .pkg-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: .65rem;
+      font-size: .82rem;
+      line-height: 1.45;
+    }
+    .pkg-feature-text { color: var(--ink2); }
+    .pkg-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: .08rem;
+    }
+    .pkg-feature.dim .pkg-feature-text { color: var(--muted); }
+    .pkg-platinum .pkg-feature.dim .pkg-feature-text { color: rgba(255,255,255,.3); }
+
+    .pkg-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.4rem 0 1.4rem;
+    }
+    .pkg-cta-btn {
+      display: block;
+      width: 100%;
+      padding: .72rem;
+      border-radius: 100px;
+      border: 1.5px solid;
+      background: transparent;
+      font-size: .84rem;
+      font-weight: 500;
+      font-family: var(--sans);
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .18s;
+    }
+
+    /* ── Full-screen overlay ── */
+    .sp-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s;
+    }
+    .sp-overlay.active { opacity: 1; pointer-events: all; }
+    .sp-overlay-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 9, 6, .78);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      cursor: pointer;
+    }
+    .sp-panel {
+      position: relative;
+      z-index: 1;
+      background: #fff;
+      border-radius: 32px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 48px 120px rgba(0,0,0,.38);
+      overflow: hidden;
+      transform: translateY(22px) scale(.95);
+      transition: transform .34s cubic-bezier(.34,1.36,.64,1);
+    }
+    .sp-overlay.active .sp-panel { transform: translateY(0) scale(1); }
+    .sp-panel-hero {
+      height: 230px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+    }
+    .sp-panel-logo {
+      width: 116px;
+      height: 116px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 2.7rem;
+      color: #fff;
+      font-style: italic;
+      box-shadow: 0 14px 44px rgba(0,0,0,.32);
+      letter-spacing: -.05em;
+    }
+    .sp-panel-tier {
+      font-size: .54rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.26);
+      padding: .22rem .85rem;
+      border-radius: 100px;
+    }
+    .sp-close {
+      position: absolute;
+      top: 1.1rem; right: 1.1rem;
+      width: 34px; height: 34px;
+      border-radius: 50%; border: none;
+      background: rgba(255,255,255,.15);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.9);
+      transition: background .15s; z-index: 2;
+    }
+    .sp-close:hover { background: rgba(255,255,255,.28); }
+    .sp-panel-body { padding: 2.1rem 2.5rem 2.75rem; text-align: center; }
+    .sp-panel-name {
+      font-family: var(--serif);
+      font-size: 2rem; font-weight: 400; color: var(--ink);
+      letter-spacing: -.6px; margin-bottom: .35rem; line-height: 1.1;
+    }
+    .sp-panel-industry {
+      font-size: .72rem; color: var(--green-dark); font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1.4rem;
+    }
+    .sp-panel-divider {
+      width: 36px; height: 1.5px;
+      background: linear-gradient(90deg, var(--green-dark), var(--green));
+      margin: 0 auto 1.4rem; border-radius: 2px;
+    }
+    .sp-panel-desc { font-size: .925rem; color: var(--ink2); line-height: 1.8; font-weight: 300; }
+    .sp-panel-cta {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: 1.9rem; padding: .8rem 2.1rem; border-radius: 100px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: #fff; font-size: .875rem; font-weight: 500;
+      text-decoration: none;
+      box-shadow: 0 5px 20px rgba(10,92,74,.3);
+      transition: opacity .18s, transform .18s;
+      border: none; cursor: pointer; font-family: var(--sans);
+    }
+    .sp-panel-cta:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); background: #fff; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; line-height: 1.5; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .sponsors-grid { grid-template-columns: 1fr 1fr; }
+      .packages-grid { grid-template-columns: 1fr; }
+      .sp-panel { border-radius: 24px; }
+      .sp-panel-body { padding: 1.5rem 1.75rem 2.25rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-tagline { max-width: 100%; }
+    }
+    @media (max-width: 400px) {
+      .sponsors-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html" class="active">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="5.5" r="3.5"/>
+      <path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Podpirajo skupnost GradimSe</span>
+    <h1 class="hero-title">Naši <em>sponzorji</em></h1>
+    <p class="hero-sub">Podjetja, ki verjamejo v slovensko podjetniško skupnost in jo aktivno podpirajo.</p>
+  </div>
+</div>
+
+<!-- ── ORNAMENT ── -->
+<div class="ornament">
+  <div class="ornament-line"></div>
+  <div class="ornament-center">
+    <div class="ornament-dot"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-dot"></div>
+  </div>
+  <div class="ornament-line"></div>
+</div>
+
+<!-- ── SPONSORS GRID ── -->
+<div class="sponsors-wrap">
+  <div class="sponsors-grid" id="sponsorsGrid"></div>
+</div>
+
+
+<!-- ── SPONSOR OVERLAY ── -->
+<div class="sp-overlay" id="spOverlay">
+  <div class="sp-overlay-bg" id="spBg"></div>
+  <div class="sp-panel">
+    <div class="sp-panel-hero" id="spHero">
+      <button class="sp-close" id="spClose" aria-label="Zapri">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+      </button>
+      <div class="sp-panel-logo" id="spLogo"></div>
+      <span class="sp-panel-tier" id="spTier"></span>
+    </div>
+    <div class="sp-panel-body">
+      <h2 class="sp-panel-name" id="spName"></h2>
+      <div class="sp-panel-industry" id="spIndustry"></div>
+      <div class="sp-panel-divider"></div>
+      <p class="sp-panel-desc" id="spDesc"></p>
+      <a href="#" class="sp-panel-cta" id="spCta" target="_blank" rel="noopener">
+        Obiščite spletno stran
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5h8M6.5 3l4 3.5-4 3.5"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SPONSORS = [
+  {
+    id: 'financepro',
+    logo: `<svg width="58" height="58" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 5L8 12V26C8 37 17 46 26 49C35 46 44 37 44 26V12Z" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linejoin="round" fill="rgba(255,255,255,.1)"/><polyline points="14,35 21,25 27,30 34,19 40,17" stroke="rgba(255,255,255,.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="17" r="2.5" fill="rgba(255,255,255,.95)"/></svg>`,
+    name: 'FinancePro',
+    tier: 'Platinum',
+    industry: 'Finance & Računovodstvo',
+    gradient: 'linear-gradient(135deg,#0A5C4A 0%,#22A87E 100%)',
+    cardTierStyle: 'background:rgba(196,163,90,.14);border:1px solid rgba(196,163,90,.32);color:#9a7a1a',
+    desc: 'Digitalna računovodska pisarna za slovenskega podjetnika. Pametna avtomatizacija, jasni finančni izvidi in osebni računovodja — vse brez nepotrebne birokracije. FinancePro je zaupanja vreden partner za startupi, s.p.-je in rastoča podjetja po vsej Sloveniji.',
+    website: '#'
+  },
+  {
+    id: 'znamkastudio',
+    logo: `<svg width="58" height="58" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 5L47 26L26 47L5 26Z" stroke="rgba(255,255,255,.88)" stroke-width="2.2" stroke-linejoin="round" fill="rgba(255,255,255,.1)"/><path d="M19 19H33L19 33H33" stroke="rgba(255,255,255,.95)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    name: 'ZnamkaStudio',
+    tier: 'Gold',
+    industry: 'Branding & Vizualna identiteta',
+    gradient: 'linear-gradient(135deg,#7a5f18 0%,#c8922a 100%)',
+    cardTierStyle: 'background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.24);color:#7a5208',
+    desc: 'Oblikujemo blagovne znamke, ki jih trg prepozna in si jih zapomni. Od logotipa do celostne grafične podobe — za podjetja, ki ne kompromisirajo pri videzu. ZnamkaStudio je vaš strateški partner pri gradnji identitete, ki ostaja v spominu.',
+    website: '#'
+  },
+  {
+    id: 'pronajemnik',
+    logo: `<svg width="58" height="58" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 44V22L26 8L42 22V44Z" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="rgba(255,255,255,.1)"/><line x1="6" y1="44" x2="46" y2="44" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/><rect x="17" y="26" width="6" height="5" rx="1" stroke="rgba(255,255,255,.85)" stroke-width="1.7" fill="rgba(255,255,255,.18)"/><rect x="29" y="26" width="6" height="5" rx="1" stroke="rgba(255,255,255,.85)" stroke-width="1.7" fill="rgba(255,255,255,.18)"/><rect x="17" y="35" width="6" height="5" rx="1" stroke="rgba(255,255,255,.85)" stroke-width="1.7" fill="rgba(255,255,255,.18)"/><rect x="29" y="35" width="6" height="5" rx="1" stroke="rgba(255,255,255,.85)" stroke-width="1.7" fill="rgba(255,255,255,.18)"/></svg>`,
+    name: 'ProNajemnik',
+    tier: 'Gold',
+    industry: 'Pisarniški prostori & Coworking',
+    gradient: 'linear-gradient(135deg,#1e3a5f 0%,#3a7bd5 100%)',
+    cardTierStyle: 'background:rgba(58,123,213,.12);border:1px solid rgba(58,123,213,.24);color:#1e3a5f',
+    desc: 'Fleksibilni pisarniški prostori v Ljubljani in Mariboru za startupi in rastoča podjetja — brez dolgoročnih obveznosti. Moderni coworking prostori, sejne sobe in zasebne pisarne, ki navdihujejo produktivnost in spodbujajo stike med podjetniki.',
+    website: '#'
+  }
+];
+
+function renderCards() {
+  const grid = document.getElementById('sponsorsGrid');
+  grid.innerHTML = SPONSORS.map((s, i) => `
+    <div class="sp-card" onclick="openSponsor('${s.id}')" style="animation-delay:${i * 0.1}s">
+      <div class="sp-card-logo" style="background:${s.gradient}">${s.logo}</div>
+      <span class="sp-card-tier" style="${s.cardTierStyle}">${s.tier}</span>
+      <div class="sp-card-name">${s.name}</div>
+      <div class="sp-card-industry">${s.industry}</div>
+      <span class="sp-card-hint">
+        Oglejte si profil
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 5h6M5 2.5l3 2.5L5 7.5"/></svg>
+      </span>
+    </div>
+  `).join('');
+}
+
+function openSponsor(id) {
+  const s = SPONSORS.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('spHero').style.background = s.gradient;
+  document.getElementById('spLogo').innerHTML = s.logo;
+  document.getElementById('spTier').textContent = s.tier + ' sponzor';
+  document.getElementById('spName').textContent = s.name;
+  document.getElementById('spIndustry').textContent = s.industry;
+  document.getElementById('spDesc').textContent = s.desc;
+  document.getElementById('spCta').href = s.website;
+  document.getElementById('spOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOverlay() {
+  document.getElementById('spOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('spClose').addEventListener('click', closeOverlay);
+document.getElementById('spBg').addEventListener('click', closeOverlay);
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeOverlay();
+});
+
+renderCards();
+</script>
+</body>
+</html>

@@ -3,833 +3,1385 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GradimSe — Platforma za podjetniške bloge in učenje</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --g800: #085041;
-      --g600: #0e7a5e;
-      --g500: #1D9E75;
-      --g100: #eaf5ef;
-      --ink:  #111916;
-      --ink2: #3d4d45;
-      --ink3: #7a8a82;
-      --bg:   #ffffff;
-      --bg2:  #f6f8f6;
-      --line: #e6ebe7;
-      --r: cubic-bezier(0.16,1,0.3,1);
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Outfit', system-ui, sans-serif;
-      background: var(--bg); color: var(--ink);
-      -webkit-font-smoothing: antialiased;
-      font-size: 15px; line-height: 1.6;
-    }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.3} }
-    @keyframes float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-    @keyframes dash   { to{stroke-dashoffset:-20} }
-    .a1{animation:fadeUp .5s var(--r) .05s both}
-    .a2{animation:fadeUp .5s var(--r) .15s both}
-    .a3{animation:fadeUp .5s var(--r) .25s both}
-    .a4{animation:fadeUp .5s var(--r) .35s both}
+  <title>GradimSe — Zgodbe, znanje, skupnost</title>
 
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      height: 56px; background: rgba(255,255,255,.96);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--line);
-      display: flex; align-items: center; padding: 0 40px;
-    }
-    .logo { font-size: 16px; font-weight: 800; color: var(--g800); letter-spacing: -.3px; text-decoration: none; margin-right: auto; }
-    .logo span { color: var(--g500); }
-    .nav-mid { display: flex; gap: 2px; position: absolute; left: 50%; transform: translateX(-50%); }
-    .nav-mid a { font-size: 14px; font-weight: 400; color: var(--ink3); text-decoration: none; padding: 6px 12px; border-radius: 7px; transition: color .15s, background .15s; }
-    .nav-mid a:hover { color: var(--ink); background: var(--bg2); }
-    .nav-right { display: flex; gap: 8px; }
-    .btn-ghost { font-size: 13px; font-weight: 500; color: var(--ink2); text-decoration: none; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); transition: border-color .15s; }
-    .btn-ghost:hover { border-color: var(--g500); }
-    .btn-primary { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: white; background: var(--g800); text-decoration: none; padding: 7px 16px; border-radius: 8px; transition: background .15s; }
-    .btn-primary:hover { background: var(--g600); }
+  <!-- ── SEO ── -->
+  <meta name="description" content="GradimSe je slovenska podjetniška skupnost kjer izkušeni podjetniki delijo svoje zgodbe, znanje in izkušnje. Blogi, live delavnice, podcast in skupnost 240+ podjetnikov."/>
+  <meta name="keywords" content="podjetništvo, slovenska skupnost, podjetniki, delavnice, podcast, blogi, mentorstvo, startup, s.p., d.o.o."/>
+  <meta name="author" content="GradimSe"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://www.gradimse.si/"/><!-- TODO: zamenjaj z dejanskim URL-jem po objavi -->
 
-    /* HERO WRAP — dot grid background */
-    .hero-wrap {
-      border-bottom: 1px solid var(--line);
-      background-color: #fff;
-      background-image: radial-gradient(circle, rgba(8,80,65,.09) 1.5px, transparent 1.5px);
-      background-size: 26px 26px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to right, #fff 0%, rgba(255,255,255,.7) 45%, rgba(255,255,255,.05) 100%),
-        linear-gradient(to bottom, #fff 0%, transparent 18%, transparent 82%, #fff 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
+  <!-- ── Open Graph (Facebook, LinkedIn, deljenje) ── -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://www.gradimse.si/"/><!-- TODO: zamenjaj z dejanskim URL-jem -->
+  <meta property="og:title" content="GradimSe — Slovenska podjetniška skupnost"/>
+  <meta property="og:description" content="Zgodbe, znanje in skupnost 240+ slovenskih podjetnikov. Blogi iz prakse, live delavnice, podcast in mentorstvo — vse na enem mestu."/>
+  <meta property="og:image" content="https://www.gradimse.si/slike/og-image.jpg"/><!-- TODO: dodaj OG sliko (1200×630px) -->
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:site_name" content="GradimSe"/>
+  <meta property="og:locale" content="sl_SI"/>
 
-    /* HERO inner — split grid */
-    .hero {
-      padding: 72px 40px 64px;
-      max-width: 1160px; margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 64px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@gradimse"/>
+  <meta name="twitter:title" content="GradimSe — Slovenska podjetniška skupnost"/>
+  <meta name="twitter:description" content="Zgodbe, znanje in skupnost 240+ slovenskih podjetnikov. Blogi iz prakse, live delavnice, podcast in mentorstvo."/>
+  <meta name="twitter:image" content="https://www.gradimse.si/slike/og-image.jpg"/><!-- TODO: ista slika kot OG -->
 
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-size: 12px; font-weight: 500; color: var(--g500);
-      border: 1px solid #c4e6d4; background: var(--g100);
-      padding: 4px 12px; border-radius: 20px; margin-bottom: 24px;
-    }
-    .hero h1 {
-      font-size: 52px; font-weight: 800; color: var(--ink);
-      letter-spacing: -2px; line-height: 1.05; margin-bottom: 20px;
-      max-width: 580px;
-    }
-    .hero h1 em { font-style: normal; color: var(--g500); }
-    .hero-sub { font-size: 17px; color: var(--ink3); line-height: 1.65; max-width: 480px; margin-bottom: 36px; }
-    .hero-btns { display: flex; gap: 10px; align-items: center; margin-bottom: 44px; flex-wrap: wrap; }
-    .btn-hero {
-      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; color: white;
-      background: var(--g800); text-decoration: none; padding: 13px 26px; border-radius: 9px;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: background .15s, transform .1s;
-    }
-    .btn-hero:hover { background: var(--g600); transform: translateY(-1px); }
-    .btn-hero-2 {
-      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink2);
-      background: white; border: 1px solid var(--line); text-decoration: none;
-      padding: 13px 24px; border-radius: 9px;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: border-color .15s, color .15s;
-    }
-    .btn-hero-2:hover { border-color: var(--g500); color: var(--g800); }
+  <!-- ── Structured Data — Organization ── -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"GradimSe","url":"https://www.gradimse.si","logo":"https://www.gradimse.si/slike/logo.png","description":"Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje. Blogi, delavnice, podcast in mentorstvo.","foundingDate":"2023","inLanguage":"sl","sameAs":["https://www.youtube.com/@gradimse","https://www.instagram.com/gradimse","https://www.facebook.com/gradimse"],"contactPoint":{"@type":"ContactPoint","email":"info@gradimse.si","contactType":"customer support","availableLanguage":"Slovenian"}}</script>
 
-    /* FIRM LOGOS STRIP */
-    .firms-strip {
-      display: flex; align-items: center;
-      padding-top: 32px; border-top: 1px solid var(--line);
-      flex-wrap: wrap; gap: 10px;
-    }
-    .fs-label { font-size: 12px; color: var(--ink3); margin-right: 4px; white-space: nowrap; }
-    .firm-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(255,255,255,.9); border: 1px solid var(--line);
-      border-radius: 8px; padding: 6px 12px;
-      font-size: 13px; font-weight: 500; color: var(--ink2);
-      text-decoration: none; transition: border-color .15s, color .15s;
-    }
-    .firm-badge:hover { border-color: var(--g500); color: var(--g800); }
-    .firm-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-    /* HERO VISUAL — right side illustration */
-    .hero-visual {
-      position: relative;
-      height: 390px;
-    }
-
-    /* Connection lines SVG */
-    .hv-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-    }
-    .hv-svg line {
-      animation: dash 3s linear infinite;
-    }
-
-    /* Central blog card */
-    .hv-post {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 20px;
-      width: 210px;
-      box-shadow: 0 12px 40px rgba(8,80,65,.10), 0 2px 8px rgba(8,80,65,.05);
-      z-index: 10;
-      animation: float 7s ease-in-out infinite;
-    }
-    .hv-post-top {
-      display: flex; align-items: center; gap: 6px;
-      margin-bottom: 10px;
-    }
-    .hv-dot-sm { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .hv-firm-name { font-size: 11px; font-weight: 700; color: var(--ink2); }
-    .hv-cat { font-size: 10px; font-weight: 600; color: #0C447C; margin-left: auto; text-transform: uppercase; letter-spacing: .3px; }
-    .hv-post-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 12px; }
-    .hv-lines { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-    .hv-line { height: 3px; background: var(--bg2); border-radius: 2px; }
-    .hv-post-meta { display: flex; align-items: center; gap: 7px; }
-    .hv-av { width: 20px; height: 20px; border-radius: 50%; font-size: 7px; font-weight: 700; color: white; display: inline-flex; align-items: center; justify-content: center; }
-
-    /* Reader avatars */
-    .hv-reader {
-      position: absolute;
-      z-index: 5;
-    }
-    .hv-av-lg {
-      width: 40px; height: 40px; border-radius: 50%;
-      font-size: 11px; font-weight: 700; color: white;
-      display: flex; align-items: center; justify-content: center;
-      border: 2.5px solid white;
-      box-shadow: 0 3px 12px rgba(0,0,0,.15);
-    }
-
-    /* Floating stat badges */
-    .hv-badge-views {
-      position: absolute;
-      top: 28px; right: 12px;
-      background: var(--g800);
-      border-radius: 10px;
-      padding: 8px 13px;
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.9);
-      box-shadow: 0 4px 16px rgba(8,80,65,.25);
-      z-index: 20;
-      animation: floatB 5s ease-in-out .8s infinite;
-    }
-    .hv-badge-growth {
-      position: absolute;
-      bottom: 52px; right: 4px;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px 13px;
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 600; color: var(--ink2);
-      box-shadow: 0 4px 20px rgba(8,80,65,.09);
-      z-index: 20;
-      animation: floatB 5s ease-in-out 1.5s infinite;
-    }
-    .hv-badge-growth span { color: var(--g500); }
-
-    /* 3 PILLARS */
-    .pillars {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      display: grid; grid-template-columns: repeat(3, 1fr);
-    }
-    .pillar {
-      padding: 40px 40px;
-      border-right: 1px solid var(--line);
-      text-decoration: none; color: inherit;
-      transition: background .15s;
-    }
-    .pillar:last-child { border-right: none; }
-    .pillar:hover { background: var(--bg2); }
-    .pillar-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px;
-    }
-    .pillar-num { font-size: 11px; font-weight: 700; color: var(--ink3); letter-spacing: .8px; margin-bottom: 8px; text-transform: uppercase; }
-    .pillar h3 { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; margin-bottom: 8px; }
-    .pillar p { font-size: 14px; color: var(--ink3); line-height: 1.6; }
-
-    /* MAIN LAYOUT */
-    .page { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; }
-    .main-col { border-right: 1px solid var(--line); padding: 48px 48px 48px 40px; }
-    .side-col { padding: 48px 40px; }
-
-    .s-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-    .s-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--ink3); }
-    .s-lnk { font-size: 12px; font-weight: 500; color: var(--g500); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: gap .2s var(--r), color .15s; }
-    .s-lnk:hover { color: var(--g800); gap: 7px; }
-
-    /* BLOG FEED */
-    .blog-item {
-      padding: 22px 0; border-bottom: 1px solid var(--line);
-      text-decoration: none; color: inherit; display: block;
-    }
-    .blog-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .blog-item:hover .bi-title { color: var(--g800); }
-    .bi-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .bi-firm {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--bg2); border: 1px solid var(--line);
-      border-radius: 6px; padding: 3px 8px;
-      font-size: 11px; font-weight: 600; color: var(--ink2);
-    }
-    .bi-firm-dot { width: 7px; height: 7px; border-radius: 50%; }
-    .bi-cat { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
-    .c-m { color: #0C447C; } .c-f { color: #BA7517; } .c-ms { color: var(--g800); } .c-s { color: #534AB7; }
-    .bi-title { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.35; letter-spacing: -.2px; margin-bottom: 10px; transition: color .15s; }
-    .bi-excerpt { font-size: 13px; color: var(--ink3); line-height: 1.55; margin-bottom: 10px; }
-    .bi-meta { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink3); }
-    .av { width: 20px; height: 20px; border-radius: 50%; font-size: 8px; font-weight: 700; color: white; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .dot { color: var(--line); }
-
-    /* SIDEBAR */
-    .side-block { margin-bottom: 36px; }
-    .side-block:last-child { margin-bottom: 0; }
-
-    .write-card {
-      background: var(--g800); border-radius: 14px; padding: 24px;
-    }
-    .write-card h4 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 8px; letter-spacing: -.2px; }
-    .write-card p { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 18px; }
-    .write-steps { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-    .write-step { display: flex; align-items: center; gap: 9px; font-size: 13px; color: rgba(255,255,255,.75); }
-    .ws-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: 10px; font-weight: 700; color: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .btn-write {
-      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
-      color: var(--g800); background: white; text-decoration: none;
-      padding: 10px 16px; border-radius: 8px; display: block; text-align: center;
-      transition: transform .1s;
-    }
-    .btn-write:hover { transform: translateY(-1px); }
-
-    .live-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
-    .live-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: var(--ink3); margin-bottom: 10px; }
-    .ldot { width: 6px; height: 6px; border-radius: 50%; background: #FF5C5C; animation: pulse 1.4s ease-in-out infinite; }
-    .live-card h4 { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.35; margin-bottom: 6px; }
-    .live-who { font-size: 12px; color: var(--ink3); margin-bottom: 14px; }
-    .btn-live-sm {
-      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: white;
-      background: var(--g800); text-decoration: none; padding: 9px 14px; border-radius: 7px;
-      display: inline-block; transition: background .15s;
-    }
-    .btn-live-sm:hover { background: var(--g600); }
-    .live-free { font-size: 11px; color: var(--ink3); margin-top: 6px; }
-
-    .pod-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
-    .pod-item:last-child { border-bottom: none; }
-    .pod-item:hover .pi-title { color: var(--g800); }
-    .pi-play { width: 30px; height: 30px; border-radius: 50%; background: var(--g100); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--g800); transition: background .15s, color .15s; }
-    .pod-item:hover .pi-play { background: var(--g800); color: white; }
-    .pi-ep { font-size: 10px; color: var(--ink3); margin-bottom: 2px; }
-    .pi-title { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.3; transition: color .15s; }
-    .pi-dur { font-size: 11px; color: var(--ink3); margin-left: auto; flex-shrink: 0; }
-
-    /* Stats bar */
-    .stats-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
-      margin-bottom: 36px;
-    }
-    .stat-item { padding: 16px 18px; border-right: 1px solid var(--line); text-align: center; }
-    .stat-item:last-child { border-right: none; }
-    .stat-n { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -1px; }
-    .stat-l { font-size: 11px; color: var(--ink3); margin-top: 2px; }
-
-    /* KAKO DELUJE */
-    .how-section {
-      background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-      padding: 56px 40px;
-    }
-    .how-inner { max-width: 1160px; margin: 0 auto; }
-    .how-header { text-align: center; margin-bottom: 48px; }
-    .how-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); margin-bottom: 8px; }
-    .how-title { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: -.5px; }
-    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border-radius: 14px; overflow: hidden; }
-    .how-step { background: white; padding: 32px 30px; }
-    .hs-num { font-size: 11px; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px; }
-    .hs-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--g100); display: flex; align-items: center; justify-content: center; color: var(--g800); margin-bottom: 14px; }
-    .how-step h4 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; letter-spacing: -.2px; }
-    .how-step p { font-size: 13px; color: var(--ink3); line-height: 1.6; }
-
-    /* JOIN BAND */
-    .join-band {
-      border-top: 1px solid var(--line);
-      padding: 56px 40px;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: center;
-      max-width: 1160px; margin: 0 auto;
-    }
-    .join-band h2 { font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -.6px; margin-bottom: 10px; }
-    .join-band h2 em { font-style: normal; color: var(--g500); }
-    .join-band p { font-size: 15px; color: var(--ink3); line-height: 1.65; max-width: 380px; }
-    .join-box {
-      background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
-      padding: 28px 28px 24px;
-    }
-    .join-box-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-    .join-box-sub { font-size: 13px; color: var(--ink3); margin-bottom: 20px; }
-    .join-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-    .join-opt {
-      display: flex; align-items: center; gap: 12px;
-      background: white; border: 1px solid var(--line); border-radius: 10px;
-      padding: 14px 16px; text-decoration: none; color: inherit;
-      transition: border-color .15s, transform .1s;
-    }
-    .join-opt:hover { border-color: var(--g500); transform: translateY(-1px); }
-    .jo-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .jo-name { font-size: 14px; font-weight: 600; color: var(--ink); }
-    .jo-desc { font-size: 12px; color: var(--ink3); }
-    .jo-arr { margin-left: auto; color: var(--ink3); }
-    .join-note { font-size: 12px; color: var(--ink3); text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
-    .join-note svg { color: var(--g500); }
-
-    /* FOOTER */
-    .footer-wrap { border-top: 1px solid var(--line); max-width: 1160px; margin: 0 auto; }
-    footer { padding: 44px 40px 28px; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
-    .f-logo { font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
-    .f-logo span { color: var(--g500); }
-    .f-sub { font-size: 13px; color: var(--ink3); line-height: 1.6; max-width: 180px; }
-    .fc h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--ink3); margin-bottom: 12px; }
-    .fc a { display: block; font-size: 13px; color: var(--ink3); text-decoration: none; margin-bottom: 8px; transition: color .15s; }
-    .fc a:hover { color: var(--ink); }
-    .footer-bot { padding: 16px 40px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 12px; color: var(--ink3); flex-wrap: wrap; gap: 8px; }
-    .footer-bot a { color: var(--ink3); text-decoration: none; margin-left: 16px; transition: color .15s; }
-    .footer-bot a:hover { color: var(--ink); }
-
-    /* RESPONSIVE */
-    @media (max-width: 960px) {
-      nav { padding: 0 24px; }
-      .nav-mid { display: none; }
-      .hero { grid-template-columns: 1fr; padding: 56px 24px 48px; gap: 0; }
-      .hero-visual { display: none; }
-      .hero h1 { font-size: 36px; }
-      .pillars { grid-template-columns: 1fr; }
-      .pillar { border-right: none; border-bottom: 1px solid var(--line); }
-      .pillar:last-child { border-bottom: none; }
-      .page { grid-template-columns: 1fr; }
-      .main-col { border-right: none; border-bottom: 1px solid var(--line); padding: 32px 24px; }
-      .side-col { padding: 32px 24px; }
-      .how-section { padding: 44px 24px; }
-      .how-grid { grid-template-columns: 1fr; }
-      .join-band { grid-template-columns: 1fr; gap: 40px; padding: 44px 24px; }
-      .stats-bar { grid-template-columns: 1fr 1fr; }
-      .stats-bar .stat-item:nth-child(2) { border-right: none; }
-      .stats-bar .stat-item:nth-child(3) { border-top: 1px solid var(--line); }
-      .stats-bar .stat-item:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
-      footer { grid-template-columns: 1fr 1fr; gap: 28px; padding: 32px 24px 24px; }
-      .footer-bot { padding: 16px 24px; }
-    }
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 30px; }
-      .hero { padding: 44px 20px 40px; }
-      .pillars { display: flex; flex-direction: column; }
-      footer { grid-template-columns: 1fr; }
-      .nav-right .btn-ghost { display: none; }
-    }
-  </style>
+  <meta name="theme-color" content="#22A87E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
+<a href="#main-content" class="skip-link">Preskoči na vsebino</a>
+
+<!-- ── NAV ── -->
+<nav role="navigation" aria-label="Glavna navigacija">
   <a href="#" class="logo">Gradim<span>Se</span></a>
-  <div class="nav-mid">
-    <a href="#">Blogi</a>
-    <a href="#">Podcast</a>
-    <a href="#">Mentorstvo</a>
-    <a href="#">Live</a>
-    <a href="#">Skupnost</a>
-    <a href="#">Mapa</a>
-  </div>
-  <div class="nav-right">
-    <a href="#" class="btn-ghost">Prijava</a>
-    <a href="#" class="btn-primary">Objavi blog za firmo →</a>
+  <ul class="nav-links">
+    <li><a href="blogi.html">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:.5rem;">
+    <button class="nav-hamburger" id="navHamburger" aria-label="Meni" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8.5" cy="5.5" r="3.5"/>
+        <path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero-wrap">
-<div class="hero">
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="blogi.html">Blogi</a>
+  <a href="delavnice.html">Delavnice</a>
+  <a href="podcast.html">Podcast</a>
+  <a href="skupnost.html">Skupnost</a>
+  <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+  <a href="sponzorji.html">Sponzorji</a>
+  <a href="oglasi.html">Oglasi</a>
+  <a href="forum.html">Forum</a>
+</div>
 
-  <!-- LEFT: TEXT -->
-  <div>
-    <div class="hero-eyebrow a1">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M4 2V1M8 2V1M1 5h10"/></svg>
-      Slovenska platforma za podjetniške bloge
+<!-- ── HERO ── -->
+<div class="hero-wrap" id="main-content">
+  <div class="hero-cloud hc-1"></div>
+  <div class="hero-cloud hc-2"></div>
+  <div class="hero-cloud hc-3"></div>
+  <div class="hero-cloud hc-4"></div>
+  <div class="hero">
+    <div class="hero-tag"><span class="hero-dot"></span> Slovenska podjetniška skupnost</div>
+    <h1>Zgodbe, ki <em>navdihujejo.</em><br>Znanje, ki gradi.</h1>
+    <p class="hero-sub">Platforma kjer izkušeni podjetniki delijo svojo pot — od prvih korakov do uspeha. Blogi, delavnice, skupnost.</p>
+    <div class="hero-search-wrap">
+      <div class="hero-search">
+        <svg class="hs-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5l3 3"/></svg>
+        <input type="text" class="hs-input" id="heroSearch" placeholder="Išči osebo, podjetje ali podcast…" autocomplete="off">
+        <button class="hs-clear" id="hsClr" aria-label="Počisti iskanje">×</button>
+      </div>
+      <div class="search-dropdown" id="searchDropdown"></div>
     </div>
-    <h1 class="a2">Promoviraj firmo.<br/>Deli znanje.<br/><em>Pridobi bralce.</em></h1>
-    <p class="hero-sub a3">Objavi blog v imenu svoje firme — skupnost 240+ podjetnikov te bo brala, delila in kontaktirala. Brezplačno.</p>
-    <div class="hero-btns a4">
-      <a href="#" class="btn-hero">
-        Objavi blog za svojo firmo
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>
-      </a>
-      <a href="#" class="btn-hero-2">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M5.5 5l4 2-4 2V5z" fill="currentColor" stroke="none"/></svg>
-        Poglej obstoječe bloge
-      </a>
+    <div class="hero-sponsors-bar">
+      <div class="hsb-title-row">
+        <span class="hsb-line"></span>
+        <span class="hsb-title">Naši sponzorji</span>
+        <span class="hsb-line"></span>
+      </div>
+      <div class="hsb-track-wrap">
+        <div class="hsb-track">
+          <!-- Set 1 -->
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#0A5C4A,#22A87E);">Fi</div>
+            <span class="hsb-name">FinancePro</span>
+          </a>
+          <span class="hsb-sep"></span>
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#7a5f18,#c8922a);">Zn</div>
+            <span class="hsb-name">ZnamkaStudio</span>
+          </a>
+          <span class="hsb-sep"></span>
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#2c4f6a,#4a90c4);">Pr</div>
+            <span class="hsb-name">ProNajemnik</span>
+          </a>
+          <span class="hsb-sep"></span>
+          <!-- Set 2 (seamless loop) -->
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#0A5C4A,#22A87E);">Fi</div>
+            <span class="hsb-name">FinancePro</span>
+          </a>
+          <span class="hsb-sep"></span>
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#7a5f18,#c8922a);">Zn</div>
+            <span class="hsb-name">ZnamkaStudio</span>
+          </a>
+          <span class="hsb-sep"></span>
+          <a href="oglasi.html" class="hsb-item">
+            <div class="hsb-logo" style="background:linear-gradient(135deg,#2c4f6a,#4a90c4);">Pr</div>
+            <span class="hsb-name">ProNajemnik</span>
+          </a>
+          <span class="hsb-sep"></span>
+        </div>
+      </div>
     </div>
-    <div class="firms-strip a4">
-      <span class="fs-label">Pišejo z nami:</span>
-      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#085041"></span>Kovač Consulting</a>
-      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#534AB7"></span>Novak Finance</a>
-      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#0C447C"></span>Digital Jeglič</a>
-      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#BA7517"></span>MindGrowth</a>
-      <a href="#" class="firm-badge"><span class="firm-dot" style="background:#1D9E75"></span>RusMedia</a>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats">
+  <div class="stat"><span class="stat-n" data-count="240" data-suffix="+">240+</span><span class="stat-l">Podjetnikov</span></div>
+  <div class="stat"><span class="stat-n" data-count="48">48</span><span class="stat-l">Blogov</span></div>
+  <div class="stat"><span class="stat-n" data-count="32">32</span><span class="stat-l">Podcast ep.</span></div>
+  <div class="stat"><span class="stat-n" data-count="18">18</span><span class="stat-l">Live seij</span></div>
+</div>
+
+<!-- ── QUOTE ── -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <span class="quote-mark">"</span>
+    <p class="quote-text">Ne le sanjati — začeti. Spustiti perfekcionizem. Ne ozirati se na mnenja drugih. Najti svoje pleme. To je lepota podjetništva.</p>
+    <p class="quote-author">— <strong>Marko Kovač</strong>, ustanovitelj &amp; prvi avtor GradimSe</p>
+  </div>
+</div>
+
+<!-- ── BLOGI + PODJETNIK MESECA ── -->
+<div class="page-with-sidebar">
+
+  <div class="page-main">
+    <section id="blogi">
+      <p class="eyebrow">Zadnje zgodbe</p>
+      <div class="blog-grid">
+
+        <!-- Featured editorial card -->
+        <a class="blog-card featured" href="#">
+          <div class="feat-cover"></div>
+          <div class="card-inner">
+            <div class="feat-editorial">
+              <div class="feat-editorial-top">
+                <span class="feat-issue-num">01</span>
+                <span class="feat-cat-pill">Zgodba ustanovitelja</span>
+              </div>
+              <h2 class="feat-editorial-title">5 napak ki sem jih naredil v prvem letu posla — in kako jih ti ne boš</h2>
+              <p class="feat-editorial-excerpt">Preden sem razumel, kdo je sploh moja stranka, sem zapravil 3 mesece in 1.800 € na oglasih. Vodič za tiste, ki šele začenjajo.</p>
+              <div class="feat-editorial-meta">
+                <span class="av" style="background:#e1f5ee;color:#085041;width:24px;height:24px;font-size:9px;">MK</span>
+                Marko Kovač · 5 min branja
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Blog row cards -->
+        <a class="blog-card" href="#">
+          <div class="blog-card-row">
+            <span class="blog-row-num">02</span>
+            <span class="blog-cat-dot cat-finance"></span>
+            <div class="blog-row-body">
+              <div class="blog-row-cat">Finance</div>
+              <div class="blog-row-title">Kako urediti računovodstvo za s.p. brez računovodje</div>
+              <div class="blog-row-meta">
+                <span class="av" style="background:#eeedfe;color:#3c3489;width:20px;height:20px;font-size:8px;">AN</span>
+                Ana Novak
+              </div>
+            </div>
+            <span class="blog-row-time">8 min</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="#">
+          <div class="blog-card-row">
+            <span class="blog-row-num">03</span>
+            <span class="blog-cat-dot cat-mindset"></span>
+            <div class="blog-row-body">
+              <div class="blog-row-cat">Mindset</div>
+              <div class="blog-row-title">Strah pred neuspehom me je zaustavil 2 leti</div>
+              <div class="blog-row-meta">
+                <span class="av" style="background:#faeeda;color:#854f0b;width:20px;height:20px;font-size:8px;">TH</span>
+                Tim Horvat
+              </div>
+            </div>
+            <span class="blog-row-time">4 min</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="#">
+          <div class="blog-card-row">
+            <span class="blog-row-num">04</span>
+            <span class="blog-cat-dot cat-prodaja"></span>
+            <div class="blog-row-body">
+              <div class="blog-row-cat">Prodaja</div>
+              <div class="blog-row-title">Kako sem dobila prvih 10 strank brez omrežja in oglasov</div>
+              <div class="blog-row-meta">
+                <span class="av" style="background:#e1f5ee;color:#0f6e56;width:20px;height:20px;font-size:8px;">KR</span>
+                Katja Rus
+              </div>
+            </div>
+            <span class="blog-row-time">6 min</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="#">
+          <div class="blog-card-row">
+            <span class="blog-row-num">05</span>
+            <span class="blog-cat-dot cat-marketing"></span>
+            <div class="blog-row-body">
+              <div class="blog-row-cat">Marketing</div>
+              <div class="blog-row-title">LinkedIn strategija za freelancerje — kaj deluje v 2026</div>
+              <div class="blog-row-meta">
+                <span class="av" style="background:#e6f1fb;color:#185fa5;width:20px;height:20px;font-size:8px;">LJ</span>
+                Luka Jeglič
+              </div>
+            </div>
+            <span class="blog-row-time">7 min</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="#">
+          <div class="blog-card-row">
+            <span class="blog-row-num">06</span>
+            <span class="blog-cat-dot cat-rast"></span>
+            <div class="blog-row-body">
+              <div class="blog-row-cat">Rast</div>
+              <div class="blog-row-title">Od 0 do prvih 50.000 € prihodka — kaj sem se naučil</div>
+              <div class="blog-row-meta">
+                <span class="av" style="background:#eeedfe;color:#3c3489;width:20px;height:20px;font-size:8px;">TB</span>
+                Tomaž Bregar
+              </div>
+            </div>
+            <span class="blog-row-time">9 min</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </div>
+
+  <aside class="page-sidebar">
+    <div id="mesec" class="sidebar-spotlight">
+      <div class="ss-visual">
+        <!-- <img src="slike/ana-potocnik.jpg" alt="Ana Potočnik" loading="lazy"> -->
+        <span class="ss-initials">AP</span>
+      </div>
+      <div class="ss-body">
+        <span class="ss-eyebrow">Podjetnik meseca</span>
+        <span class="ss-best">Najboljše</span>
+        <span class="ss-firm">Potočnik Shop</span>
+        <span class="ss-period">Maj 2026</span>
+        <h2 class="ss-name">Ana Potočnik</h2>
+        <p class="ss-desc">Iz računovodje do lastnice e-commerce podjetja z 200k letnim prometom. Začela pri 38, brez investitorja.</p>
+        <a href="#" class="ss-lnk">Preberi njeno zgodbo →</a>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+
+<!-- ── SKUPNOST ── -->
+<div id="skupnost" class="skupnost-wrap">
+  <div class="skupnost-inner">
+
+    <div class="sk-header">
+      <p class="eyebrow">Skupnost</p>
+      <h2 class="section-title" style="margin-bottom:.65rem;">240+ podjetnikov.<br><em>Ena skupnost.</em></h2>
+      <div class="sk-live-pill"><span class="sk-live-dot"></span>&nbsp;+12 novih članov ta mesec</div>
+    </div>
+
+    <div class="member-grid">
+
+      <a href="#" class="member-card" data-member-id="mk">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=11" alt="Marko Kovač" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Marko Kovač</p><p class="member-field">SaaS · Startup</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="ap">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=49" alt="Ana Potočnik" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Ana Potočnik</p><p class="member-field">E-commerce</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="jn">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=68" alt="Jure Novak" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Jure Novak</p><p class="member-field">Gostinstvo</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="kl">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=25" alt="Kaja Lebar" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Kaja Lebar</p><p class="member-field">Marketing</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="tb">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=15" alt="Tomaž Bregar" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Tomaž Bregar</p><p class="member-field">SaaS · B2B</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="sh">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=43" alt="Sara Hrovat" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Sara Hrovat</p><p class="member-field">Life Coaching</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="lj">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=50" alt="Luka Jeglič" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Luka Jeglič</p><p class="member-field">LinkedIn · Marketing</p></div>
+      </a>
+
+      <a href="#" class="member-card" data-member-id="pk">
+        <div class="member-photo"><img src="https://i.pravatar.cc/300?img=3" alt="Peter Kranjc" loading="lazy"></div>
+        <div class="member-info"><p class="member-name">Peter Kranjc</p><p class="member-field">Spletni razvoj</p></div>
+      </a>
+
+    </div>
+
+    <div class="sk-cta">
+      <div>
+        <p class="sk-cta-text">Imaš zgodbo za povedati?</p>
+        <p class="sk-cta-sub">Pridruži se 240+ slovenskim podjetnikom in deli svojo izkušnjo.</p>
+      </div>
+      <a href="#" class="sk-cta-lnk">Pridruži se skupnosti →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PODCAST ── -->
+<section id="podcast">
+
+  <!-- Coming Soon overlay -->
+  <div class="pod-cs-overlay">
+    <div class="pod-cs-inner">
+      <div class="pod-cs-ring">
+        <div class="pod-cs-logo">Gradim<span>Se</span></div>
+      </div>
+      <div class="pod-cs-eyebrow">GradimSe · Podcast</div>
+      <h2 class="pod-cs-title">Coming <em>Soon.</em></h2>
+      <div class="pod-cs-divider"><span>pripravljamo</span></div>
+      <p class="pod-cs-sub">Pripravljamo podcast z resničnimi zgodbami slovenskih podjetnikov. Intervjuji, okrogle mize, lekcije iz prakse. Kmalu na voljo.</p>
+      <div class="pod-cs-form">
+        <input type="email" class="pod-cs-input" id="podCsEmail" placeholder="tvoj@email.com">
+        <button class="pod-cs-btn" id="podCsBtn">Obvesti me</button>
+      </div>
+      <div class="pod-cs-success" id="podCsSuccess">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-right:.3rem;"><path d="M2 6l2.5 2.5 5.5-5"/></svg>
+        Odlično! Javimo se takoj, ko bo pripravljeno.
+      </div>
+      <div class="pod-cs-hint">© 2026 GradimSe · Slovenska podjetniška skupnost</div>
     </div>
   </div>
 
-  <!-- RIGHT: VISUAL ILLUSTRATION -->
-  <div class="hero-visual a3">
+  <div class="pod-inner">
+    <p class="eyebrow">Podcast</p>
+    <p class="section-title">Poslušaj <em>zgodbe.</em></p>
+    <div class="pod-grid">
 
-    <!-- Animated dashed connection lines -->
-    <svg class="hv-svg" viewBox="0 0 420 390" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Lines from center card outward to readers -->
-      <line x1="210" y1="195" x2="68"  y2="82"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0"/>
-      <line x1="210" y1="195" x2="358" y2="96"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:.4s"/>
-      <line x1="210" y1="195" x2="44"  y2="302" stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:.8s"/>
-      <line x1="210" y1="195" x2="376" y2="298" stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:1.2s"/>
-      <line x1="210" y1="195" x2="210" y2="24"  stroke="#c8ddd6" stroke-width="1.5" stroke-dasharray="6 5" stroke-dashoffset="0" style="animation-delay:1.6s"/>
-    </svg>
+      <a href="#" class="pod-card">
+        <div class="pod-card-art">
+          <img src="https://picsum.photos/seed/pod32/600/320" alt="Ep. 32" loading="lazy">
+          <div class="pod-card-art-overlay"></div>
+          <div class="pod-card-play">
+            <svg width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M1 1.5l11 6-11 6V1.5z"/></svg>
+          </div>
+          <div class="pod-card-dur">48 min</div>
+        </div>
+        <div class="pod-card-body">
+          <div class="pod-card-ep">Ep. 32 · Intervju</div>
+          <div class="pod-card-title">Od 0 do 200k v 18 mesecih — Ana Potočnik</div>
+          <div class="pod-card-meta">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 1.5"/></svg>
+            48 min · Maj 2026
+          </div>
+        </div>
+      </a>
 
-    <!-- Central blog post card -->
-    <div class="hv-post">
-      <div class="hv-post-top">
-        <span class="hv-dot-sm" style="background:#085041"></span>
-        <span class="hv-firm-name">Kovač Consulting</span>
-        <span class="hv-cat">Marketing</span>
-      </div>
-      <div class="hv-post-title">5 napak prvega leta posla — vodič za začetnike</div>
-      <div class="hv-lines">
-        <div class="hv-line" style="width:100%"></div>
-        <div class="hv-line" style="width:82%"></div>
-        <div class="hv-line" style="width:64%"></div>
-      </div>
-      <div class="hv-post-meta">
-        <div class="hv-av" style="background:#085041">MK</div>
-        <span style="font-size:11px;color:var(--ink3)">5 min branja · danes</span>
-      </div>
-    </div>
+      <a href="#" class="pod-card">
+        <div class="pod-card-art">
+          <img src="https://picsum.photos/seed/pod31/600/320" alt="Ep. 31" loading="lazy">
+          <div class="pod-card-art-overlay"></div>
+          <div class="pod-card-play">
+            <svg width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M1 1.5l11 6-11 6V1.5z"/></svg>
+          </div>
+          <div class="pod-card-dur">62 min</div>
+        </div>
+        <div class="pod-card-body">
+          <div class="pod-card-ep">Ep. 31 · Okrogla miza</div>
+          <div class="pod-card-title">Kako nastaviti cene storitev brez da izgubiš stranke</div>
+          <div class="pod-card-meta">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 1.5"/></svg>
+            62 min · Apr 2026
+          </div>
+        </div>
+      </a>
 
-    <!-- Reader avatars positioned around the card -->
-    <div class="hv-reader" style="top:54px; left:42px">
-      <div class="hv-av-lg" style="background:#534AB7">AN</div>
-    </div>
-    <div class="hv-reader" style="top:68px; right:42px">
-      <div class="hv-av-lg" style="background:#0C447C">LJ</div>
-    </div>
-    <div class="hv-reader" style="bottom:72px; left:22px">
-      <div class="hv-av-lg" style="background:#BA7517">TH</div>
-    </div>
-    <div class="hv-reader" style="bottom:64px; right:26px">
-      <div class="hv-av-lg" style="background:#1D9E75">KR</div>
-    </div>
-    <div class="hv-reader" style="top:6px; left:50%; margin-left:-20px">
-      <div class="hv-av-lg" style="background:#791F1F">PB</div>
-    </div>
+      <a href="#" class="pod-card">
+        <div class="pod-card-art">
+          <img src="https://picsum.photos/seed/pod30/600/320" alt="Ep. 30" loading="lazy">
+          <div class="pod-card-art-overlay"></div>
+          <div class="pod-card-play">
+            <svg width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M1 1.5l11 6-11 6V1.5z"/></svg>
+          </div>
+          <div class="pod-card-dur">41 min</div>
+        </div>
+        <div class="pod-card-body">
+          <div class="pod-card-ep">Ep. 30 · Intervju</div>
+          <div class="pod-card-title">Prodaja brez pritiska — Tomaž Bregar o zaupanju in odnosih</div>
+          <div class="pod-card-meta">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 1.5"/></svg>
+            41 min · Mar 2026
+          </div>
+        </div>
+      </a>
 
-    <!-- Views badge (dark green pill, top right) -->
-    <div class="hv-badge-views">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linecap="round"><path d="M1 6.5c2-4 9-4 11 0C10 10.5 3 10.5 1 6.5z"/><circle cx="6.5" cy="6.5" r="1.8" fill="rgba(255,255,255,.85)" stroke="none"/></svg>
-      214 ogledov
-    </div>
+      <a href="#" class="pod-card">
+        <div class="pod-card-art">
+          <img src="https://picsum.photos/seed/pod29/600/320" alt="Ep. 29" loading="lazy">
+          <div class="pod-card-art-overlay"></div>
+          <div class="pod-card-play">
+            <svg width="13" height="15" viewBox="0 0 13 15" fill="white"><path d="M1 1.5l11 6-11 6V1.5z"/></svg>
+          </div>
+          <div class="pod-card-dur">29 min</div>
+        </div>
+        <div class="pod-card-body">
+          <div class="pod-card-ep">Ep. 29 · Solo</div>
+          <div class="pod-card-title">Zakaj večina freelancerjev ostane majhnih — in kako iz tega</div>
+          <div class="pod-card-meta">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 1.5"/></svg>
+            29 min · Feb 2026
+          </div>
+        </div>
+      </a>
 
-    <!-- Growth badge (white pill, bottom right) -->
-    <div class="hv-badge-growth">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"><path d="M1 11l3.5-5L8 9l2.5-4L13 8"/></svg>
-      <span>+47</span> novih bralcev
     </div>
-
+    <a href="podcast.html" class="pod-view-all">
+      Vse epizode podcasta
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 6.5h7M7 4l3 2.5L7 9"/></svg>
+    </a>
   </div>
+</section>
 
-</div>
-</div>
+<!-- ── KAKO DELUJE ── -->
+<section id="kako-deluje" class="how-section">
+  <div class="how-wrap">
+    <p class="eyebrow">Kako deluje</p>
+    <h2 class="section-title">Tvoja pot <em>na GradimSe.</em></h2>
 
-<!-- 3 PILLARS -->
-<div class="pillars">
-  <a href="#" class="pillar">
-    <div class="pillar-icon" style="background:#eaf5ef">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M3 5h14M3 9h10M3 13h7"/><path d="M15 13l2 2-2 2"/></svg>
-    </div>
-    <div class="pillar-num">01 — Pisanje</div>
-    <h3>Napiši blog za svojo firmo</h3>
-    <p>Registriraj firmo in začni objavljati. Vsaka objava nosi ime in logo tvoje firme — vidnost, ki gradi ugled.</p>
-  </a>
-  <a href="#" class="pillar">
-    <div class="pillar-icon" style="background:#eaf5ef">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/><circle cx="10" cy="10" r="2" fill="#085041"/></svg>
-    </div>
-    <div class="pillar-num">02 — Promocija</div>
-    <h3>Skupnost te bere in deli</h3>
-    <p>Tvoji blogi dosežejo 240+ podjetnikov direktno. Več bralcev, več zaupanja, več povpraševanj za tvojo firmo.</p>
-  </a>
-  <a href="#" class="pillar">
-    <div class="pillar-icon" style="background:#eaf5ef">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M10 3l2 5h5l-4 3 1.5 5L10 13.5 5.5 16 7 11 3 8h5z"/></svg>
-    </div>
-    <div class="pillar-num">03 — Učenje</div>
-    <h3>Uči se od najboljših</h3>
-    <p>Podcast, live seije in mentorstvo — vsebina ki jo ustvarjajo firme, pomaga vsem v skupnosti rasti hitreje.</p>
-  </a>
-</div>
+    <div class="how-steps">
 
-<!-- KAKO DELUJE -->
-<div class="how-section">
-  <div class="how-inner">
-    <div class="how-header">
-      <div class="how-label">Kako deluje</div>
-      <div class="how-title">Od registracije do bralcev v 10 minutah</div>
-    </div>
-    <div class="how-grid">
       <div class="how-step">
-        <div class="hs-num">Korak 1</div>
-        <div class="hs-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
+        <div class="how-step-icon-ring">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="7" r="4"/><path d="M3 19c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
         </div>
-        <h4>Registriraj firmo</h4>
-        <p>Ustvari profil firme z logom, opisom in področjem delovanja. Brezplačno, v 2 minutah.</p>
+        <p class="how-step-title">Odpri račun</p>
+        <p class="how-step-desc">60 sekund. Brez kreditne kartice. Takoj dostop do vseh vsebin.</p>
       </div>
+
       <div class="how-step">
-        <div class="hs-num">Korak 2</div>
-        <div class="hs-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l3-3 3 3 3-5 3 5"/><rect x="2" y="3" width="16" height="14" rx="2"/></svg>
+        <div class="how-step-icon-ring">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h14M4 10h14M4 14h9"/><circle cx="17" cy="16" r="3"/><path d="M15.8 15.8l2.4 2.4"/></svg>
         </div>
-        <h4>Napiši in objavi</h4>
-        <p>Napiši blog iz svojih izkušenj. Objava se pojavi pod imenom firme — s kontaktom in linkom na vaš profil.</p>
+        <p class="how-step-title">Beri in poslušaj</p>
+        <p class="how-step-desc">48 blogov, 32 podcastov. Filtriraj po temi — finance, mindset, prodaja.</p>
       </div>
+
       <div class="how-step">
-        <div class="hs-num">Korak 3</div>
-        <div class="hs-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 17l4-8 4 4 3-5 3 9"/><circle cx="5" cy="8" r="2" fill="currentColor" stroke="none"/></svg>
+        <div class="how-step-icon-ring">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M8 11l10-6-6 10-1.5-4L8 11z"/></svg>
         </div>
-        <h4>Rast in povpraševanja</h4>
-        <p>Skupnost bere, komentira in kontaktira. Vsak blog je oglas ki ne izgleda kot oglas.</p>
+        <p class="how-step-title">Pridruži se live</p>
+        <p class="how-step-desc">Vsak teden v živo. Vprašaj, nauči se, poveži z drugimi podjetniki.</p>
       </div>
+
+      <div class="how-step">
+        <div class="how-step-icon-ring">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M4 17l4-1 9-9-3-3-9 9-1 4z"/><path d="M14 4l3 3"/></svg>
+        </div>
+        <p class="how-step-title">Deli svojo zgodbo</p>
+        <p class="how-step-desc">Objavi blog. Tvoja izkušnja je nekomu drugemu pot naprej.</p>
+      </div>
+
+      <div class="how-step">
+        <div class="how-step-icon-ring">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M11 2l2 4.2 4.6.7-3.3 3.2.8 4.6L11 12.3 6.9 14.7l.8-4.6L4.4 6.9l4.6-.7L11 2z"/></svg>
+        </div>
+        <p class="how-step-title">Pro · 9 € / mes.</p>
+        <p class="how-step-desc">Mentorstvo 1:1, napredne delavnice, direkten dostop.</p>
+        <span class="how-pro-tag">Pro · 9 € / mesec</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── USTANOVITELJ ── -->
+<section id="ustanovitelj" class="founder-section">
+  <div class="founder-wrap">
+
+    <div class="founder-panel-left">
+      <div class="founder-left-inner">
+        <div class="founder-left-eyebrow">Zakaj GradimSe</div>
+        <div class="founder-left-name">Marko<br>Kovač</div>
+        <div class="founder-left-role">Ustanovitelj &amp; prvi avtor · od 2023</div>
+        <div class="founder-left-stats">
+          <div class="founder-left-stat">
+            <span class="founder-left-stat-n">240+</span>
+            <span class="founder-left-stat-l">podjetnikov</span>
+          </div>
+          <div class="founder-left-stat">
+            <span class="founder-left-stat-n">48</span>
+            <span class="founder-left-stat-l">objavljenih blogov</span>
+          </div>
+          <div class="founder-left-stat">
+            <span class="founder-left-stat-n">32</span>
+            <span class="founder-left-stat-l">podcast epizod</span>
+          </div>
+          <div class="founder-left-stat">
+            <span class="founder-left-stat-n">2023</span>
+            <span class="founder-left-stat-l">leto ustanovitve</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="founder-panel-right">
+      <div class="founder-right-inner">
+        <h2 class="founder-headline">Zgradil sem GradimSe,<br><em>ker te strani ni bilo.</em></h2>
+        <div class="founder-text">
+          <p>Ko sem pred leti iskal slovenskega podjetnika, ki bi mi povedal, kako je res — ne kako bi moralo biti — nisem našel ničesar. Forumi zastareli. Blogi opuščeni. Skupnosti razpršene po Facebook skupinah, ki jih nihče ne bere.</p>
+          <p>Imel sem idejo, imel sem voljo. Manjkala mi je skupnost. Nekdo, ki bi rekel: »Tudi meni je šlo narobe. Takole sem to rešil.«</p>
+          <p>GradimSe sem zgradil kot prostor za resnične zgodbe — uspehe in napake. Za znanje, ki pride iz izkušnje, ne iz učbenika. Za podjetnike, ki vedo, da nobena pot ni ravna. Če si tu, ker gradiš — si prišel prav.</p>
+          <div class="founder-pillars">
+            <span>Blogi iz prakse</span>
+            <span>Live delavnice</span>
+            <span>Podcast</span>
+            <span>Skupnost 240+</span>
+            <span>Mentorstvo</span>
+            <span>Brezplačen dostop</span>
+          </div>
+          <div class="founder-sig">
+            <span class="founder-sig-name">Marko Kovač</span>
+            <span class="founder-sig-role">Ustanovitelj &amp; prvi avtor · GradimSe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+
+<div class="pod-mini" id="podMini">
+  <img class="pm-thumb" id="pmThumb" src="" alt="">
+  <div class="pm-info">
+    <div class="pm-ep" id="pmEp">Podcast</div>
+    <div class="pm-title" id="pmTitle">–</div>
+    <div class="pm-bar-wrap"><div class="pm-bar-fill" id="pmFill"></div></div>
+  </div>
+  <span class="pm-dot"></span>
+  <button class="pm-close-btn" id="pmClose" aria-label="Zapri">×</button>
+</div>
+
+<!-- ── JOIN MODAL ── -->
+<div class="join-overlay" id="joinOverlay">
+  <div class="join-modal">
+    <button class="join-close" id="joinClose" aria-label="Zapri">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#2E3830" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+    </button>
+
+    <!-- Left brand panel -->
+    <div class="join-left">
+      <span class="jl-logo">Gradim<span>Se</span></span>
+      <h2 class="jl-headline">Skupnost <em>pravih</em> podjetnikov.</h2>
+      <p class="jl-sub">Vstopi med 240+ slovenskimi podjetniki, ki resnično gradijo — brez nepotrebnih tečajev in praznih obljub.</p>
+      <ul class="jl-perks">
+        <li class="jl-perk">
+          <span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>
+          Live delavnice vsak teden
+        </li>
+        <li class="jl-perk">
+          <span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>
+          Objavi svojo zgodbo brez posrednikov
+        </li>
+        <li class="jl-perk">
+          <span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>
+          Direkten dostop do mentorjev
+        </li>
+        <li class="jl-perk">
+          <span class="jl-perk-dot"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4.5l2 2 4-4"/></svg></span>
+          Podcast, blog in skupnost na enem mestu
+        </li>
+      </ul>
+      <div class="jl-stats">
+        <div class="jl-stat"><span class="jl-stat-n">240+</span><span class="jl-stat-l">Članov</span></div>
+        <div class="jl-stat"><span class="jl-stat-n">12</span><span class="jl-stat-l">Delavnic/mes.</span></div>
+        <div class="jl-stat"><span class="jl-stat-n">€2M+</span><span class="jl-stat-l">Skupen promet</span></div>
+      </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="join-right">
+
+      <!-- Step 1: Account -->
+      <div class="join-step" id="joinStep1">
+        <div class="join-progress">
+          <div class="join-prog-bar fill" id="bar1a"></div>
+          <div class="join-prog-bar" id="bar1b"></div>
+          <span class="join-prog-label">Korak 1 / 2</span>
+        </div>
+        <h3 class="join-step-title">Ustvari račun</h3>
+        <p class="join-step-sub">Brezplačno. Brez kreditne kartice.</p>
+        <div class="join-field" id="f-name">
+          <label class="join-label">Ime in priimek</label>
+          <input type="text" class="join-input" id="jName" placeholder="Jana Novak" autocomplete="name">
+          <p class="join-err-msg">Prosimo vnesite vaše ime.</p>
+        </div>
+        <div class="join-field" id="f-email">
+          <label class="join-label">Email naslov</label>
+          <input type="email" class="join-input" id="jEmail" placeholder="jana@podjetje.si" autocomplete="email">
+          <p class="join-err-msg">Prosimo vnesite veljaven email naslov.</p>
+        </div>
+        <div class="join-field" id="f-pass">
+          <label class="join-label">Geslo</label>
+          <input type="password" class="join-input" id="jPass" placeholder="najmanj 8 znakov" autocomplete="new-password">
+          <p class="join-err-msg">Geslo mora imeti vsaj 8 znakov.</p>
+        </div>
+        <button class="join-btn" id="joinNext">
+          Naprej
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h7M7 4l3 2.5L7 9"/></svg>
+        </button>
+        <p class="join-fine">Z registracijo sprejemate <a href="#">Pogoje uporabe</a> in <a href="#">Politiko zasebnosti</a>.</p>
+        <p class="join-toggle">Že imate račun? <a href="#" id="showLogin">Prijavite se</a></p>
+      </div>
+
+      <!-- Step 2: Profile -->
+      <div class="join-step hidden" id="joinStep2">
+        <button class="join-back-btn" id="joinBack">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 6.5 8 10"/></svg>
+          Nazaj
+        </button>
+        <div class="join-progress">
+          <div class="join-prog-bar fill"></div>
+          <div class="join-prog-bar fill"></div>
+          <span class="join-prog-label">Korak 2 / 2</span>
+        </div>
+        <h3 class="join-step-title">Tvoj profil</h3>
+        <p class="join-step-sub">Skupnost je prava, ker so pravi njeni člani.</p>
+        <div class="join-field" id="f-area">
+          <label class="join-label">Področje delovanja</label>
+          <select class="join-select" id="jArea">
+            <option value="">Izberi področje …</option>
+            <option>SaaS / Tehnologija</option>
+            <option>E-commerce</option>
+            <option>Marketing / Agencija</option>
+            <option>Gostinstvo / F&amp;B</option>
+            <option>Coaching / Svetovanje</option>
+            <option>Kreativne storitve</option>
+            <option>Razvoj / Freelance</option>
+            <option>Finance / Računovodstvo</option>
+            <option>Zdravje / Wellness</option>
+            <option>Drugo</option>
+          </select>
+          <p class="join-err-msg">Izberite področje delovanja.</p>
+        </div>
+        <div class="join-field" id="f-bio">
+          <label class="join-label">Kratka predstavitev</label>
+          <textarea class="join-textarea" id="jBio" placeholder="Sem podjetnik z 2 leti izkušenj v e-commercu. Iščem mentorja za skaliranje in stike z drugimi podjetniki." rows="3"></textarea>
+          <p class="join-err-msg">Prosimo dodajte kratko predstavitev.</p>
+        </div>
+        <div class="join-field">
+          <label class="join-label">LinkedIn profil <span class="opt">(neobvezno)</span></label>
+          <input type="url" class="join-input" id="jLinkedin" placeholder="linkedin.com/in/ime-priimek">
+        </div>
+        <button class="join-btn" id="joinSubmit">Pridruži se skupnosti →</button>
+      </div>
+
+      <!-- Login -->
+      <div class="join-step hidden" id="joinLogin">
+        <div class="join-progress" style="margin-bottom:1.5rem;">
+          <span class="join-prog-label" style="margin-left:0">Prijava v račun</span>
+        </div>
+        <h3 class="join-step-title">Dobrodošli nazaj.</h3>
+        <p class="join-step-sub">Vpišite se v vaš GradimSe račun.</p>
+        <div class="join-field" id="f-lemail">
+          <label class="join-label">Email naslov</label>
+          <input type="email" class="join-input" id="jLEmail" placeholder="jana@podjetje.si" autocomplete="email">
+          <p class="join-err-msg">Prosimo vnesite email naslov.</p>
+        </div>
+        <div class="join-field" id="f-lpass">
+          <label class="join-label">Geslo</label>
+          <input type="password" class="join-input" id="jLPass" placeholder="••••••••" autocomplete="current-password">
+          <p class="join-err-msg">Prosimo vnesite geslo.</p>
+        </div>
+        <button class="join-btn" id="loginSubmit">Prijavi se →</button>
+        <p class="join-toggle">Nimate računa? <a href="#" id="showRegister">Registracija</a></p>
+      </div>
+
+      <!-- Success -->
+      <div class="join-step hidden" id="joinSuccess">
+        <div class="join-success-wrap">
+          <div class="join-success-ring">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#22A87E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6.5 6.5 11.5-13"/></svg>
+          </div>
+          <h3 class="join-success-title">Dobrodošel/a!</h3>
+          <p class="join-success-sub">Tvoja prijava je bila uspešna.<br>Potrditveni email smo poslali na <strong id="successEmail"></strong>.</p>
+          <button class="join-btn" id="joinDone">Pojdi v skupnost →</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- MAIN + SIDEBAR -->
-<div class="page">
-  <div class="main-col">
-
-    <!-- STATS -->
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-n">48</div><div class="stat-l">blogov firm</div></div>
-      <div class="stat-item"><div class="stat-n">240+</div><div class="stat-l">bralcev</div></div>
-      <div class="stat-item"><div class="stat-n">32</div><div class="stat-l">podcast ep.</div></div>
-      <div class="stat-item"><div class="stat-n">18</div><div class="stat-l">live seij</div></div>
-    </div>
-
-    <!-- BLOG FEED -->
-    <div class="s-head">
-      <span class="s-title">Zadnje objave firm</span>
-      <a href="#" class="s-lnk">Vsi blogi <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
-    </div>
-
-    <a href="#" class="blog-item">
-      <div class="bi-top">
-        <span class="bi-firm"><span class="bi-firm-dot" style="background:#085041"></span>Kovač Consulting</span>
-        <span class="bi-cat c-m">Marketing</span>
-      </div>
-      <div class="bi-title">5 napak ki sem jih naredil v prvem letu posla — in kako jih ti ne boš</div>
-      <div class="bi-excerpt">Preden sem razumel, kdo je sploh moja stranka, sem zapravil 3 mesece in 1.800 € na oglasih. Tukaj je vodič za tiste, ki šele začenjajo.</div>
-      <div class="bi-meta">
-        <div class="av" style="background:#085041">MK</div>
-        <span>Marko Kovač</span><span class="dot">·</span><span>5 min branja</span><span class="dot">·</span><span>danes</span>
-      </div>
-    </a>
-
-    <a href="#" class="blog-item">
-      <div class="bi-top">
-        <span class="bi-firm"><span class="bi-firm-dot" style="background:#534AB7"></span>Novak Finance d.o.o.</span>
-        <span class="bi-cat c-f">Finance</span>
-      </div>
-      <div class="bi-title">Kako urediti računovodstvo za s.p. brez računovodje — kompletni vodič</div>
-      <div class="bi-excerpt">Razlaga za podjetnike ki nimajo časa za davčni žargon. Korak za korakom, brez nepotrebnih tehničnih podrobnosti.</div>
-      <div class="bi-meta">
-        <div class="av" style="background:#534AB7">AN</div>
-        <span>Ana Novak</span><span class="dot">·</span><span>8 min branja</span><span class="dot">·</span><span>včeraj</span>
-      </div>
-    </a>
-
-    <a href="#" class="blog-item">
-      <div class="bi-top">
-        <span class="bi-firm"><span class="bi-firm-dot" style="background:#BA7517"></span>MindGrowth</span>
-        <span class="bi-cat c-ms">Mindset</span>
-      </div>
-      <div class="bi-title">Strah pred neuspehom me je zaustavil 2 leti — tukaj je kaj mi je pomagalo</div>
-      <div class="bi-excerpt">Burnout, dvom vase, in strah pred sodbo okolice. Zakaj je o tem treba govoriti odkrito — in kako naprej.</div>
-      <div class="bi-meta">
-        <div class="av" style="background:#BA7517">TH</div>
-        <span>Tim Horvat</span><span class="dot">·</span><span>4 min branja</span><span class="dot">·</span><span>12. maj</span>
-      </div>
-    </a>
-
-    <a href="#" class="blog-item">
-      <div class="bi-top">
-        <span class="bi-firm"><span class="bi-firm-dot" style="background:#1D9E75"></span>RusMedia</span>
-        <span class="bi-cat c-s">Prodaja</span>
-      </div>
-      <div class="bi-title">Kako sem dobila prvih 10 strank — brez omrežja, brez oglasov, brez zvez</div>
-      <div class="bi-excerpt">Praktičen vodič za vsakogar ki gradi od nič. Brez mitov o "instant uspehu".</div>
-      <div class="bi-meta">
-        <div class="av" style="background:#1D9E75">KR</div>
-        <span>Katja Rus</span><span class="dot">·</span><span>6 min branja</span><span class="dot">·</span><span>10. maj</span>
-      </div>
-    </a>
-
-    <a href="#" class="blog-item">
-      <div class="bi-top">
-        <span class="bi-firm"><span class="bi-firm-dot" style="background:#0C447C"></span>Digital Jeglič</span>
-        <span class="bi-cat c-m">Marketing</span>
-      </div>
-      <div class="bi-title">LinkedIn strategija za freelancerje — kaj resnično deluje v Sloveniji v 2025</div>
-      <div class="bi-excerpt">Testiral sem 6 različnih pristopov na lastnem profilu. Tukaj so rezultati in kar priporočam naprej.</div>
-      <div class="bi-meta">
-        <div class="av" style="background:#0C447C">LJ</div>
-        <span>Luka Jeglič</span><span class="dot">·</span><span>7 min branja</span><span class="dot">·</span><span>8. maj</span>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- SIDEBAR -->
-  <div class="side-col">
-
-    <div class="side-block">
-      <div class="write-card">
-        <h4>Objavi za svojo firmo</h4>
-        <p>Vsak blog nosi ime in kontakt vaše firme. Bralci postanejo stranke.</p>
-        <div class="write-steps">
-          <div class="write-step"><span class="ws-num">1</span>Registriraj firmo brezplačno</div>
-          <div class="write-step"><span class="ws-num">2</span>Napiši blog iz prakse</div>
-          <div class="write-step"><span class="ws-num">3</span>Skupnost te prebere in kontaktira</div>
-        </div>
-        <a href="#" class="btn-write">Začni pisati →</a>
-      </div>
-    </div>
-
-    <div class="side-block">
-      <div class="s-head">
-        <span class="s-title">Naslednja live seja</span>
-        <a href="#" class="s-lnk">Vse <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
-      </div>
-      <div class="live-card">
-        <div class="live-tag"><span class="ldot"></span> Sreda, 21. maja · 19:00</div>
-        <h4>Kako pridobiti prve stranke brez oglaševanja</h4>
-        <div class="live-who">Marko Kos &amp; Ana Novak · 48 prijavljenih</div>
-        <a href="#" class="btn-live-sm">Postavi vprašanje — 1 €</a>
-        <div class="live-free">Ogled je brezplačen za vse</div>
-      </div>
-    </div>
-
-    <div class="side-block">
-      <div class="s-head">
-        <span class="s-title">Podcast</span>
-        <a href="#" class="s-lnk">Vse <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></a>
-      </div>
-      <a href="#" class="pod-item">
-        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
-        <div style="flex:1;min-width:0">
-          <div class="pi-ep">Ep. 32 · Intervju</div>
-          <div class="pi-title">Od 0 do 200k v 18 mesecih</div>
-        </div>
-        <div class="pi-dur">48 min</div>
+<!-- ── MEMBER VIZITKA OVERLAY ── -->
+<div class="member-overlay" id="memberOverlay"></div>
+<div class="member-vizitka" id="memberVizitka">
+  <button class="viz-close" id="vizClose" aria-label="Zapri">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#161917" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+  </button>
+  <div class="viz-photo"><img src="" alt="" id="vizImg"></div>
+  <div class="viz-body">
+    <div class="viz-tags" id="vizTags"></div>
+    <h3 class="viz-name" id="vizName"></h3>
+    <p class="viz-role" id="vizRole"></p>
+    <p class="viz-bio" id="vizBio"></p>
+    <div class="viz-contacts">
+      <a href="#" class="viz-contact" id="vizPhone">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M4.5 1H2C1.45 1 1 1.45 1 2 1 7.8 5.2 12 11 12c.55 0 1-.45 1-1V8.5L9.5 7.7 8.8 9.2C7.6 8.7 4.3 5.4 3.8 4.2L5.3 3.5 4.5 1z"/></svg>
+        <span id="vizPhoneText"></span>
       </a>
-      <a href="#" class="pod-item">
-        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
-        <div style="flex:1;min-width:0">
-          <div class="pi-ep">Ep. 31 · Okrogla miza</div>
-          <div class="pi-title">Kako nastaviti cene storitev</div>
-        </div>
-        <div class="pi-dur">62 min</div>
-      </a>
-      <a href="#" class="pod-item">
-        <div class="pi-play"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M1 1l7 4-7 4V1z"/></svg></div>
-        <div style="flex:1;min-width:0">
-          <div class="pi-ep">Ep. 30 · Intervju</div>
-          <div class="pi-title">Prodaja brez pritiska</div>
-        </div>
-        <div class="pi-dur">41 min</div>
+      <a href="#" class="viz-contact" id="vizEmail">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="3" width="11" height="7" rx="1.2"/><path d="M1 3l5.5 4.5L12 3"/></svg>
+        <span id="vizEmailText"></span>
       </a>
     </div>
-
+    <p class="viz-quote" id="vizQuote"></p>
+    <a href="skupnost.html" class="viz-lnk">Preberi več v skupnosti →</a>
   </div>
 </div>
 
-<!-- JOIN BAND -->
-<div style="border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
-<div class="join-band">
-  <div>
-    <h2>Tvoja firma<br/><em>sodi sem.</em></h2>
-    <p>GradimSe je kraj kjer slovenske firme gradijo ugled z znanjem — ne z oglasi. Pridruži se skupnosti ki bere, deli in raste skupaj.</p>
+
+
+<!-- ── ACCOUNT OVERLAY ── -->
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <!-- Not logged in -->
+  <div id="acctLoggedOut">
+    <!-- Default: register/login buttons -->
+    <div class="acct-loggedout" id="acctLoButtons">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Pridruži se 240+ slovenskim podjetnikom.<br>Brezplačno, brez kreditne kartice.</p>
+      <div class="acct-lo-btns">
+        <button class="acct-lo-btn primary" id="acctOpenRegister">Registracija</button>
+        <button class="acct-lo-btn ghost" id="acctOpenLogin">Prijava</button>
+      </div>
+    </div>
+    <!-- Inline login form -->
+    <div class="acct-login-wrap" id="acctLoginForm" style="display:none;">
+      <button class="acct-login-back" id="acctLoginBack">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7.5 1L2.5 5.5l5 4.5"/></svg>
+        Nazaj
+      </button>
+      <h3 class="acct-login-title">Prijava</h3>
+      <p class="acct-login-sub">Dobrodošli nazaj v skupnost.</p>
+      <div class="acct-field">
+        <label class="acct-label">E-pošta</label>
+        <input type="email" class="acct-inp" id="loginEmail" placeholder="vas@email.com" autocomplete="email">
+      </div>
+      <div class="acct-field">
+        <label class="acct-label">Geslo</label>
+        <input type="password" class="acct-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="acct-login-err" id="loginErr"></div>
+      <button class="acct-publish-btn" id="loginSubmitBtn" style="width:100%;justify-content:center;">Prijavi se</button>
+    </div>
   </div>
-  <div class="join-box">
-    <div class="join-box-title">Kako se pridružiš?</div>
-    <div class="join-box-sub">Izberi kar ustreza tebi.</div>
-    <div class="join-options">
-      <a href="#" class="join-opt">
-        <div class="jo-icon" style="background:#eaf5ef">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><path d="M3 14l3-3 3 3 3-5 3 5"/></svg>
-        </div>
+  <!-- Logged in dashboard -->
+  <div id="acctDashboard" style="display:none;flex-direction:column;height:100%;">
+    <div class="acct-dash-header">
+      <div class="acct-user-info">
+        <div class="acct-avatar" id="acctAvatarInitials">MK</div>
         <div>
-          <div class="jo-name">Objavi blog za firmo</div>
-          <div class="jo-desc">Brezplačno · vidnost · stranke</div>
+          <div class="acct-uname" id="acctDisplayName">Marko Kovač</div>
+          <div class="acct-urole" id="acctDisplayRole">SaaS · Startup</div>
         </div>
-        <div class="jo-arr"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></div>
-      </a>
-      <a href="#" class="join-opt">
-        <div class="jo-icon" style="background:#eaf5ef">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#085041" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="6" r="3"/><path d="M2 16v-1a6 6 0 016-6v0a6 6 0 016 6v1"/></svg>
-        </div>
-        <div>
-          <div class="jo-name">Pridruži se kot posameznik</div>
-          <div class="jo-desc">Brezplačno · beri · povprašaj</div>
-        </div>
-        <div class="jo-arr"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></div>
-      </a>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <button class="acct-logout-btn" id="acctLogoutBtn">Odjava</button>
+        <button class="acct-x" id="acctClose" aria-label="Zapri">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="join-note">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6l2.5 2.5 5.5-5"/></svg>
-      Oba načina sta popolnoma brezplačna
+    <div class="acct-tabs">
+      <div class="acct-tab active" data-tab="blog">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 3h9M2 6.5h6M2 10h4"/></svg>
+        Piši blog
+      </div>
+      <div class="acct-tab" data-tab="podcast">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M4.5 5l4 3-4 3V5z" fill="currentColor" stroke="none"/></svg>
+        Naloži podcast
+      </div>
+      <div class="acct-tab" data-tab="posts">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1.5" y="2" width="10" height="9" rx="1.5"/><path d="M4 5.5h5M4 8h3"/></svg>
+        Moje objave
+      </div>
+    </div>
+    <!-- Admin button — viden samo adminu -->
+    <a href="admin.html" class="acct-admin-open" id="adminOpenBtn" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1L1.5 4v3.5C1.5 10.8 4 13 7 14c3-1 5.5-3.2 5.5-6.5V4L7 1z"/><path d="M4.5 7.5l2 2 3-3"/></svg>
+      Admin Dashboard
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" style="margin-left:auto"><path d="M3 2l5 3.5L3 9"/></svg>
+    </a>
+    <div class="acct-body">
+      <!-- Piši blog -->
+      <div class="acct-pane active" id="pane-blog">
+        <div class="acct-field">
+          <label class="acct-label">Naslov bloga</label>
+          <input type="text" class="acct-inp" id="blogTitle" placeholder="Kaj ste se naučili…">
+        </div>
+        <div class="acct-field">
+          <label class="acct-label">Kategorija</label>
+          <select class="acct-sel" id="blogCat">
+            <option value="">Izberi kategorijo…</option>
+            <option>Finance</option><option>Mindset</option><option>Prodaja</option>
+            <option>Marketing</option><option>Rast</option><option>Zgodbe</option>
+          </select>
+        </div>
+        <div class="acct-field">
+          <label class="acct-label">Vsebina</label>
+          <textarea class="acct-ta" id="blogBody" placeholder="Začnite pisati svojo zgodbo…"></textarea>
+        </div>
+        <button class="acct-publish-btn" id="publishBlogBtn">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v10M1 6l5-5 5 5"/></svg>
+          Objavi takoj
+        </button>
+        <div class="acct-success-note" id="blogSuccess">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5 6.5-7"/></svg>
+          Blog je bil objavljen in je zdaj viden vsem!
+        </div>
+      </div>
+      <!-- Naloži podcast -->
+      <div class="acct-pane" id="pane-podcast">
+        <div class="acct-upload-zone" id="uploadZone" onclick="document.getElementById('podFile').click()">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M16 22V10M10 16l6-6 6 6"/><path d="M6 26h20"/></svg>
+          <p class="acct-upload-label">Klikni ali povleci audio datoteko</p>
+          <p class="acct-upload-sub">MP3 · WAV · M4A · do 500 MB</p>
+          <input type="file" id="podFile" accept="audio/*" style="display:none">
+        </div>
+        <div class="acct-field" style="margin-top:.85rem;">
+          <label class="acct-label">Naslov epizode</label>
+          <input type="text" class="acct-inp" id="podTitle" placeholder="Ep. 33 — vaš naslov…">
+        </div>
+        <div class="acct-field">
+          <label class="acct-label">Opis</label>
+          <textarea class="acct-ta" id="podDesc" placeholder="Kratek opis epizode…" style="min-height:80px;"></textarea>
+        </div>
+        <button class="acct-publish-btn" id="uploadPodBtn">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 1v8M3 6l3 3 3-3"/><path d="M1 11h10"/></svg>
+          Pošlji v pregled
+        </button>
+        <div class="acct-success-note" id="podSuccess">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5 6.5-7"/></svg>
+          Poslano! Podcast bo objavljen po odobritvi administratorja.
+        </div>
+        <div class="acct-note">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#c8922a" stroke-width="1.5" stroke-linecap="round" flex-shrink="0" style="flex-shrink:0"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v3M7 9.5v.5"/></svg>
+          Podcastov ne objavljamo samodejno — vsako epizodo pregledam in odobrim osebno, da ohranimo kakovost skupnosti. Povratna informacija v 48 urah.
+        </div>
+      </div>
+      <!-- Moje objave -->
+      <div class="acct-pane" id="pane-posts">
+        <div class="acct-post-list">
+          <div class="acct-post-item">
+            <div class="acct-post-num">01</div>
+            <div class="acct-post-info">
+              <div class="acct-post-title">5 napak ki sem jih naredil v prvem letu posla</div>
+              <div class="acct-post-meta">Objavljeno · 14. jan 2026 · Zgodbe</div>
+            </div>
+            <div class="acct-post-stats">
+              <span class="acct-post-stat">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.5 11S1.5 7.5 1.5 4.5a3 3 0 015-2.2 3 3 0 015 2.2c0 3-5 6.5-5 6.5z"/></svg>48
+              </span>
+              <span class="acct-post-stat">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 2.5h10v6.5H8L6.5 11 5 9H1.5V2.5z"/></svg>12
+              </span>
+            </div>
+          </div>
+          <div class="acct-post-item">
+            <div class="acct-post-num">02</div>
+            <div class="acct-post-info">
+              <div class="acct-post-title">Zakaj sem zavrnil investitorja</div>
+              <div class="acct-post-meta">Objavljeno · 3. mar 2026 · Rast</div>
+            </div>
+            <div class="acct-post-stats">
+              <span class="acct-post-stat">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.5 11S1.5 7.5 1.5 4.5a3 3 0 015-2.2 3 3 0 015 2.2c0 3-5 6.5-5 6.5z"/></svg>31
+              </span>
+              <span class="acct-post-stat">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 2.5h10v6.5H8L6.5 11 5 9H1.5V2.5z"/></svg>7
+              </span>
+            </div>
+          </div>
+          <div class="acct-post-item" style="opacity:.55;">
+            <div class="acct-post-num" style="background:#fff3cd;color:#8a6f1a;">⏳</div>
+            <div class="acct-post-info">
+              <div class="acct-post-title">Ep. 33 — Kako sem poiskal prve stranke</div>
+              <div class="acct-post-meta">Podcast · čaka odobritev administratorja</div>
+            </div>
+            <div class="acct-post-stats">
+              <span style="font-size:.7rem;color:#8a6f1a;background:#fffbf0;border:1px solid rgba(200,146,42,.2);padding:.2rem .55rem;border-radius:100px;">V pregledu</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Admin: Člani -->
     </div>
   </div>
 </div>
-</div>
+</div><!-- /acct-overlay -->
 
-<!-- FOOTER -->
-<div class="footer-wrap">
-  <footer>
-    <div>
-      <div class="f-logo">Gradim<span>Se</span></div>
-      <div class="f-sub">Slovenska platforma za podjetniške bloge, učenje in skupnost.</div>
+<!-- admin panel moved to admin.html -->
+<div class="adm-overlay" id="admOverlay" style="display:none!important">
+  <div class="adm-dash">
+
+    <!-- Sidebar -->
+    <div class="adm-sidebar">
+      <div class="adm-sb-head">
+        <div class="adm-sb-logo">Gradim<span>Se</span></div>
+        <div class="adm-sb-role">Admin panel</div>
+      </div>
+      <nav class="adm-nav">
+        <button class="adm-nav-item active" data-section="overview">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.5"/></svg>
+          Pregled
+        </button>
+        <button class="adm-nav-item" data-section="members">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="6" cy="5" r="3"/><path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M11 5.5c1 .5 2 1.5 2 3M13 12c-.2-2-1.5-3.5-2.5-4"/></svg>
+          Člani
+          <span style="margin-left:auto;font-size:.62rem;background:rgba(90,216,170,.18);color:#5ad8aa;padding:.1rem .5rem;border-radius:100px;">247</span>
+        </button>
+        <button class="adm-nav-item" data-section="payments">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="3.5" width="13" height="8" rx="2"/><path d="M1 7h13"/><path d="M4.5 10h3"/></svg>
+          Plačila
+        </button>
+        <button class="adm-nav-item" data-section="sponsors">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M7.5 1.5l1.6 3.2 3.5.5-2.5 2.5.6 3.5-3.2-1.7-3.2 1.7.6-3.5L2.4 5.2l3.5-.5z"/></svg>
+          Sponzorji
+          <span style="margin-left:auto;font-size:.62rem;background:rgba(255,243,205,.25);color:#f5c842;padding:.1rem .5rem;border-radius:100px;">3</span>
+        </button>
+      </nav>
+      <div class="adm-sb-foot">
+        <button class="adm-close-btn" id="admClose">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l11 11M12 1L1 12"/></svg>
+          Zapri dashboard
+        </button>
+      </div>
     </div>
-    <div class="fc">
-      <h4>Vsebina</h4>
-      <a href="#">Blogi firm</a>
-      <a href="#">Podcast</a>
-      <a href="#">Live seije</a>
-      <a href="#">Tečaj</a>
+
+    <!-- Main content -->
+    <div class="adm-main">
+
+      <!-- Pregled -->
+      <div class="adm-content active" id="adm-overview">
+        <div class="adm-content-head">
+          <div class="adm-content-title">Pregled platforme</div>
+          <div class="adm-content-sub">Maj 2026 · zadnja posodobitev danes</div>
+        </div>
+        <div class="adm-kpi-grid">
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="5" r="3.5"/><path d="M1 15c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+            </div>
+            <div class="adm-kpi-val">247</div>
+            <div class="adm-kpi-lbl">Skupaj članov</div>
+            <div class="adm-kpi-delta up">↑ +12 ta teden</div>
+          </div>
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6z"/></svg>
+            </div>
+            <div class="adm-kpi-val">189</div>
+            <div class="adm-kpi-lbl">Pro članov</div>
+            <div class="adm-kpi-delta up">↑ +5 ta mesec</div>
+          </div>
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="13" height="9" rx="2"/><path d="M1.5 7.5h13"/><path d="M5 11h3"/></svg>
+            </div>
+            <div class="adm-kpi-val">€2.187</div>
+            <div class="adm-kpi-lbl">Prihodki ta mesec</div>
+            <div class="adm-kpi-delta up">↑ +€342 vs. prejšnji</div>
+          </div>
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#22A87E" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5l1.6 3.2 3.5.5-2.5 2.5.6 3.5-3.2-1.7-3.2 1.7.6-3.5L2.9 5.2l3.5-.5z"/></svg>
+            </div>
+            <div class="adm-kpi-val">3</div>
+            <div class="adm-kpi-lbl">Aktivni sponzorji</div>
+            <div class="adm-kpi-delta warn">⚠ 1 poteče kmalu</div>
+          </div>
+        </div>
+        <div class="adm-section-label" style="margin-bottom:.85rem;">Zadnja aktivnost</div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>Dejanje</th><th>Kdo</th><th>Kdaj</th></tr></thead>
+            <tbody>
+              <tr><td>Nova registracija</td><td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td><td>danes, 09:14</td></tr>
+              <tr><td>Plačilo Pro €9</td><td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td><td>danes, 08:32</td></tr>
+              <tr><td>Nova objava v forumu</td><td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td><td>včeraj, 21:05</td></tr>
+              <tr><td>Blog oddan v pregled</td><td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td><td>včeraj, 18:40</td></tr>
+              <tr><td>Plačilo Tečaj €49</td><td><div class="adm-user"><div class="adm-av" style="background:#FCE7F3;color:#9D174D;">KN</div>Katja Novak</div></td><td>23. maj, 11:20</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Člani -->
+      <div class="adm-content" id="adm-members">
+        <div class="adm-content-head">
+          <div class="adm-content-title">Registrirani člani</div>
+          <div class="adm-content-sub">247 skupaj · 189 Pro · 58 Free</div>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>Ime</th><th>E-pošta</th><th>Plan</th><th>Včlanjen</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td><td style="color:#64748B;font-size:.78rem;">marko@example.com</td><td>Pro</td><td>Jan 2026</td><td><span class="adm-badge green">Aktiven</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#DBEAFE;color:#1D4ED8;">AP</div>Ana Pirnat</div></td><td style="color:#64748B;font-size:.78rem;">ana@example.com</td><td>Free</td><td>Feb 2026</td><td><span class="adm-badge green">Aktiven</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td><td style="color:#64748B;font-size:.78rem;">tomaz@example.com</td><td>Pro</td><td>Mar 2026</td><td><span class="adm-badge green">Aktiven</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#FCE7F3;color:#9D174D;">KN</div>Katja Novak</div></td><td style="color:#64748B;font-size:.78rem;">katja@example.com</td><td>Free</td><td>Mar 2026</td><td><span class="adm-badge muted">Neaktiven</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td><td style="color:#64748B;font-size:.78rem;">luka@example.com</td><td>Pro</td><td>Apr 2026</td><td><span class="adm-badge green">Aktiven</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td><td style="color:#64748B;font-size:.78rem;">sara@example.com</td><td>Pro</td><td>Maj 2026</td><td><span class="adm-badge green">Aktiven</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="adm-footer-note">Prikazuje 6 od 247 članov · <a href="#" class="adm-link">Izvozi CSV</a></div>
+      </div>
+
+      <!-- Plačila -->
+      <div class="adm-content" id="adm-payments">
+        <div class="adm-content-head">
+          <div class="adm-content-title">Plačila</div>
+          <div class="adm-content-sub">Maj 2026 · skupaj €2.187</div>
+        </div>
+        <div class="adm-pay-stats">
+          <div class="adm-pay-stat">
+            <div class="adm-pay-stat-val">€2.187</div>
+            <div class="adm-pay-stat-lbl">Skupaj ta mesec</div>
+          </div>
+          <div class="adm-pay-stat">
+            <div class="adm-pay-stat-val">189</div>
+            <div class="adm-pay-stat-lbl">Pro naročnin</div>
+          </div>
+          <div class="adm-pay-stat">
+            <div class="adm-pay-stat-val">+12</div>
+            <div class="adm-pay-stat-lbl">Novih ta teden</div>
+          </div>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>Član</th><th>Znesek</th><th>Plan</th><th>Datum</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#DCFCE7;color:#15803D;">MK</div>Marko Kovač</div></td><td class="adm-amount">€9</td><td>Pro</td><td>22. maj 2026</td><td><span class="adm-badge green">Potrjeno</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#E0E7FF;color:#3730A3;">LJ</div>Luka Jerič</div></td><td class="adm-amount">€9</td><td>Pro</td><td>20. maj 2026</td><td><span class="adm-badge green">Potrjeno</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#F3E8FF;color:#6B21A8;">SP</div>Sara Petrovič</div></td><td class="adm-amount">€49</td><td>Tečaj</td><td>18. maj 2026</td><td><span class="adm-badge green">Potrjeno</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#FEF3C7;color:#92400E;">TP</div>Tomaž Potočnik</div></td><td class="adm-amount">€9</td><td>Pro</td><td>15. maj 2026</td><td><span class="adm-badge green">Potrjeno</span></td></tr>
+              <tr><td><div class="adm-user"><div class="adm-av" style="background:#CCFBF1;color:#0F766E;">NK</div>Nina Kos</div></td><td class="adm-amount">€150</td><td>Mentorstvo</td><td>10. maj 2026</td><td><span class="adm-badge green">Potrjeno</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="adm-footer-note">Prikazuje 5 od 127 plačil · <a href="#" class="adm-link">Izvozi CSV</a></div>
+      </div>
+
+      <!-- Sponzorji -->
+      <div class="adm-content" id="adm-sponsors">
+        <div class="adm-content-head">
+          <div class="adm-content-title">Sponzorji</div>
+          <div class="adm-content-sub">3 aktivni · 1 poteče kmalu</div>
+        </div>
+        <div class="adm-sp-grid">
+          <div class="adm-sp-card">
+            <div class="adm-sp-logo" style="background:linear-gradient(135deg,#0A5C4A,#22A87E);">Fi</div>
+            <div class="adm-sp-info">
+              <div class="adm-sp-name">FinancePro</div>
+              <div class="adm-sp-meta">Platinum · poteče 31. avg 2026</div>
+            </div>
+            <div class="adm-sp-actions">
+              <span class="adm-badge green">Aktiven</span>
+              <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+            </div>
+          </div>
+          <div class="adm-sp-card">
+            <div class="adm-sp-logo" style="background:linear-gradient(135deg,#7a5f18,#c8922a);">Zn</div>
+            <div class="adm-sp-info">
+              <div class="adm-sp-name">ZnamkaStudio</div>
+              <div class="adm-sp-meta">Gold · poteče 15. jul 2026</div>
+            </div>
+            <div class="adm-sp-actions">
+              <span class="adm-badge green">Aktiven</span>
+              <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+            </div>
+          </div>
+          <div class="adm-sp-card">
+            <div class="adm-sp-logo" style="background:linear-gradient(135deg,#2c4f6a,#4a90c4);">Pr</div>
+            <div class="adm-sp-info">
+              <div class="adm-sp-name">ProNajemnik</div>
+              <div class="adm-sp-meta">Silver · poteče 1. jun 2026</div>
+            </div>
+            <div class="adm-sp-actions">
+              <span class="adm-badge yellow">Poteče kmalu</span>
+              <a href="sponzorji.html" class="adm-sp-edit">Uredi</a>
+            </div>
+          </div>
+        </div>
+        <button class="adm-add-btn">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="7.5" y1="2" x2="7.5" y2="13"/><line x1="2" y1="7.5" x2="13" y2="7.5"/></svg>
+          Dodaj novega sponzorja
+        </button>
+      </div>
+
+    </div><!-- /adm-main -->
+  </div><!-- /adm-dash -->
+</div><!-- /adm-overlay -->
+
+
+
+
+
+
+<!-- ── ENTRY OVERLAY ── -->
+<style>
+  #entryOverlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(6,20,14,.62);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  #entryOverlay.active { opacity: 1; pointer-events: all; }
+  #entryOverlay .ec {
+    background: #fff; border-radius: 24px; padding: 2.25rem 2.5rem 2rem;
+    max-width: 460px; width: 100%; position: relative;
+    box-shadow: 0 32px 80px rgba(0,0,0,.26);
+    transform: translateY(24px) scale(.97);
+    transition: transform .42s cubic-bezier(.34,1.36,.64,1);
+  }
+  #entryOverlay.active .ec { transform: translateY(0) scale(1); }
+  .ec-x {
+    position: absolute; top: 1.1rem; right: 1.1rem;
+    width: 30px; height: 30px; border-radius: 50%;
+    border: none; background: rgba(0,0,0,.07);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .ec-x:hover { background: rgba(0,0,0,.13); }
+  .ec-brand {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.2rem; font-weight: 700; color: #161917;
+    margin-bottom: 1.3rem; display: block;
+  }
+  .ec-brand span { color: #22A87E; }
+  .ec h3 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.5rem; font-weight: 400; line-height: 1.22;
+    color: #161917; margin: 0 0 .5rem;
+  }
+  .ec h3 em { color: #22A87E; font-style: italic; }
+  .ec-desc { font-size: .87rem; color: #606968; line-height: 1.72; margin-bottom: 1.4rem; }
+  .ec-fields { display: flex; flex-direction: column; gap: .75rem; }
+  .ec-fields textarea, .ec-fields input[type="email"] {
+    width: 100%; border: 1.5px solid rgba(14,90,66,.15); border-radius: 12px;
+    padding: .75rem 1rem; font-family: "DM Sans", system-ui, sans-serif;
+    font-size: .875rem; color: #161917; outline: none; background: #F5F0E8;
+    transition: border-color .15s; box-sizing: border-box;
+  }
+  .ec-fields textarea { resize: none; }
+  .ec-fields textarea:focus, .ec-fields input[type="email"]:focus { border-color: rgba(34,168,126,.45); }
+  .ec-btn {
+    width: 100%; padding: .8rem; border-radius: 100px; border: none;
+    background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: .9rem; font-weight: 500; cursor: pointer; transition: opacity .2s;
+  }
+  .ec-btn:hover { opacity: .88; }
+  .ec-skip {
+    display: block; text-align: center; font-size: .76rem; color: #9aadaa;
+    cursor: pointer; margin-top: .3rem; background: none; border: none; width: 100%;
+    transition: color .15s; font-family: "DM Sans", system-ui, sans-serif;
+  }
+  .ec-skip:hover { color: #606968; }
+  #ecSuccess {
+    display: none; text-align: center; padding: .5rem 0;
+  }
+  .ec-ok-ico {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg,#0A5C4A,#22A87E);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto .85rem;
+  }
+  #entryFloatBtn {
+    position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 1000;
+    background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff;
+    border: none; border-radius: 100px; padding: .65rem 1.2rem;
+    font-family: "DM Sans", system-ui, sans-serif; font-size: .8rem; font-weight: 500;
+    cursor: pointer; box-shadow: 0 8px 24px rgba(10,92,74,.35);
+    transition: transform .2s, box-shadow .2s;
+    display: flex; align-items: center; gap: .45rem; letter-spacing: .01em;
+  }
+  #entryFloatBtn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(10,92,74,.45); }
+</style>
+
+<div id="entryOverlay">
+  <div class="ec">
+    <button class="ec-x" id="ecClose" aria-label="Zapri">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#2E3830" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+    </button>
+    <span class="ec-brand">Gradim<span>Se</span></span>
+    <div id="ecForm">
+      <h3>Iščeš pravega <em>strokovnjaka?</em></h3>
+      <p class="ec-desc">Opiši kar potrebuješ — računovodja, developer, marketingaš, mentor. Povežemo te z najboljšim posameznikom iz naše skupnosti.</p>
+      <div class="ec-fields">
+        <textarea id="ecTxt" rows="3" placeholder="Npr: iščem računovodje za s.p., mentorstvo za marketing, web developer…"></textarea>
+        <input type="email" id="ecMail" placeholder="tvoj@gmail.com">
+        <button class="ec-btn" id="ecSubmit">Pošlji povpraševanje →</button>
+        <button class="ec-skip" id="ecSkip">Raje si ogledam stran →</button>
+      </div>
     </div>
-    <div class="fc">
-      <h4>Skupnost</h4>
-      <a href="#">Mentorstvo</a>
-      <a href="#">Člani</a>
-      <a href="#">Mapa firm</a>
-      <a href="#">Partnerski program</a>
-    </div>
-    <div class="fc">
-      <h4>Info</h4>
-      <a href="#">O projektu</a>
-      <a href="#">Kontakt</a>
-      <a href="#">Pogoji</a>
-      <a href="#">GDPR</a>
-    </div>
-  </footer>
-  <div class="footer-bot">
-    <span>© 2025 GradimSe</span>
-    <div>
-      <a href="#">Zasebnost</a>
-      <a href="#">Pogoji</a>
-      <a href="#">GDPR</a>
+    <div id="ecSuccess">
+      <div class="ec-ok-ico">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l5.5 5.5 10.5-11"/></svg>
+      </div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:1.2rem;color:#161917;margin-bottom:.4rem;">Prejeto!</div>
+      <p style="font-size:.84rem;color:#606968;line-height:1.6;margin-bottom:1rem;">Javimo se v 48 urah z ustreznimi kontakti iz naše skupnosti.</p>
+      <button class="ec-skip" id="ecSuccessClose" style="color:#606968;">Pojdi na spletno stran →</button>
     </div>
   </div>
 </div>
 
+<button id="entryFloatBtn">
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="11" height="7" rx="1.2"/><path d="M1 3l5.5 4.5L12 3"/></svg>
+  Pošlji povpraševanje
+</button>
+
+<script>
+(function(){
+  var ov = document.getElementById('entryOverlay');
+  var floatBtn = document.getElementById('entryFloatBtn');
+  function openEntry(){
+    document.getElementById('ecForm').style.display = 'block';
+    document.getElementById('ecSuccess').style.display = 'none';
+    ov.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeEntry(){
+    ov.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  setTimeout(openEntry, 350);
+  document.getElementById('ecClose').addEventListener('click', closeEntry);
+  document.getElementById('ecSkip').addEventListener('click', closeEntry);
+  document.getElementById('ecSuccessClose').addEventListener('click', closeEntry);
+  floatBtn.addEventListener('click', openEntry);
+  ov.addEventListener('click', function(e){ if(e.target===ov) closeEntry(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeEntry(); });
+  document.getElementById('ecSubmit').addEventListener('click', function(){
+    var txt = document.getElementById('ecTxt').value.trim();
+    var mail = document.getElementById('ecMail').value.trim();
+    var txtEl = document.getElementById('ecTxt');
+    var mailEl = document.getElementById('ecMail');
+    if(!txt){ txtEl.style.borderColor='#e05a5a'; txtEl.focus(); return; }
+    if(!mail||!mail.includes('@')){ mailEl.style.borderColor='#e05a5a'; mailEl.focus(); return; }
+    var btn = document.getElementById('ecSubmit');
+    btn.disabled = true; btn.textContent = 'Pošiljam…';
+    fetch('https://formsubmit.co/ajax/domenavbelj01@gmail.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({_subject:'Novo povpraševanje — GradimSe',povprasevanje:txt,email_kontakt:mail,_template:'table'})
+    }).catch(function(){}).finally(function(){
+      document.getElementById('ecForm').style.display = 'none';
+      document.getElementById('ecSuccess').style.display = 'block';
+    });
+  });
+})();
+</script>
+
+  <script src="main.js" defer></script>
+<script>
+(function(){
+  var btn = document.getElementById('podCsBtn');
+  var inp = document.getElementById('podCsEmail');
+  var ok  = document.getElementById('podCsSuccess');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    if (!inp.value.trim() || !inp.value.includes('@')) { inp.focus(); return; }
+    btn.style.display = 'none';
+    inp.style.display = 'none';
+    ok.classList.add('vis');
+  });
+  inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') btn.click(); });
+})();
+</script>
 </body>
 </html>

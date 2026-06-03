@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog — GradimSe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#22A87E; --green-dark:#0A5C4A; --green-mid:#0f8264;
+      --green-light:#DDF2E8; --green-faint:#F0FAF5;
+      --ink:#161917; --ink2:#2E3830; --muted:#6E7870;
+      --border:rgba(14,90,66,0.11); --cream:#F5F0E8; --surface:#FAF7F2;
+      --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: #f8f7f3; color: var(--ink); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(248,247,243,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .logo { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .875rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { font-weight: 500; color: var(--green-dark); border-bottom: 1px solid var(--green-dark); padding-bottom: 1px; }
+    .nav-account-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(14,90,66,.2); background: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); flex-shrink: 0; transition: border-color .15s, background .15s; }
+    .nav-account-btn:hover { border-color: var(--green-dark); background: #fff; }
+    .acct-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(22,25,23,.42); backdrop-filter: blur(7px); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .acct-overlay.active { opacity: 1; pointer-events: auto; }
+    .acct-panel { position: fixed; top: 68px; right: 2rem; z-index: 401; background: #fff; border-radius: 22px; width: calc(100vw - 4rem); max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,.22); padding: 2rem; text-align: center; transform: translateY(-10px) scale(.97); transition: transform .28s cubic-bezier(.22,.68,0,1.12); opacity: 0; pointer-events: none; }
+    .acct-overlay.active .acct-panel { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-panel.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .acct-lo-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 1.1rem; display: block; }
+    .acct-lo-logo span { color: var(--green); }
+    .acct-lo-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; }
+    .acct-lo-sub { font-size: .84rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-lo-btns { display: flex; gap: .7rem; justify-content: center; }
+    .acct-lo-btn { padding: .65rem 1.5rem; border-radius: 100px; font-size: .85rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all .15s; text-decoration: none; display: inline-block; }
+    .acct-lo-btn.primary { background: linear-gradient(135deg, #0A5C4A, #22A87E); color: #fff; border: none; }
+    .acct-lo-btn.ghost { background: none; color: var(--green-dark); border: 1.5px solid rgba(10,92,74,.22); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+    .article-topbar { border-bottom: 1px solid var(--border); padding: 2.5rem 2rem 0; background: linear-gradient(148deg, #8cc4a8 0%, #c6dece 35%, #e6dfca 65%, #f8f7f3 100%); position: relative; overflow: hidden; }
+    .article-topbar::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to bottom, transparent, #f8f7f3); pointer-events: none; }
+    .article-topbar-inner { max-width: 720px; margin: 0 auto; padding-bottom: 2.5rem; position: relative; z-index: 1; animation: fadeUp .4s ease both; }
+    .art-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--green-dark); text-decoration: none; margin-bottom: 1.5rem; transition: gap .2s; }
+    .art-back:hover { gap: .65rem; }
+    .art-cat-badge { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--green-dark); background: var(--green-light); padding: .25rem .7rem; border-radius: 3px; display: inline-block; margin-bottom: 1rem; }
+    .art-title { font-family: var(--serif); font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 400; letter-spacing: -.8px; line-height: 1.18; color: var(--ink); margin-bottom: 1.5rem; }
+    .art-meta { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+    .art-av { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 500; flex-shrink: 0; }
+    .art-author-name { font-size: .88rem; font-weight: 500; color: var(--ink); }
+    .art-sep { color: var(--border); }
+    .art-date-time { font-size: .78rem; color: var(--muted); }
+
+    .article-wrap { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+    .art-body { font-size: .97rem; line-height: 1.85; color: var(--ink2); }
+    .art-body p { margin-bottom: 1.5rem; }
+    .art-body h2 { font-family: var(--serif); font-size: 1.35rem; font-weight: 400; color: var(--ink); letter-spacing: -.3px; margin-top: 2.5rem; margin-bottom: .9rem; }
+    .art-body ul, .art-body ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+    .art-body li { margin-bottom: .5rem; }
+    .art-body strong { font-weight: 500; color: var(--ink); }
+    .art-body em { font-style: italic; }
+    .art-body blockquote { border-left: 3px solid var(--green-light); padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: var(--muted); line-height: 1.75; }
+
+    .art-divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    .art-author-card { margin-top: 3.5rem; padding: 1.75rem; border-radius: 18px; background: var(--green-faint); border: 1px solid var(--green-light); display: flex; align-items: flex-start; gap: 1.25rem; }
+    .art-author-av { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 500; flex-shrink: 0; }
+    .art-author-name2 { font-size: .95rem; font-weight: 500; color: var(--ink); margin-bottom: .2rem; }
+    .art-author-role { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+    .art-author-bio2 { font-size: .82rem; color: var(--ink2); line-height: 1.65; }
+
+    .art-bottom-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .art-bottom-back { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; color: var(--green-dark); text-decoration: none; border-bottom: 1px solid rgba(10,92,74,.3); padding-bottom: 1px; transition: border-color .2s; }
+    .art-bottom-back:hover { border-color: var(--green-dark); }
+    .art-share-label { font-size: .75rem; color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 3rem; }
+    .footer-brand {}
+    .footer-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -.3px; }
+    .footer-logo span { color: var(--green); }
+    .footer-tagline { font-size: .84rem; color: var(--muted); margin-top: .65rem; line-height: 1.65; max-width: 240px; }
+    .footer-socials { display: flex; gap: .6rem; margin-top: 1.4rem; }
+    .footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .footer-social:hover { border-color: var(--green); color: var(--green); background: var(--green-faint); }
+    .footer-col { display: flex; flex-direction: column; }
+    .footer-col-title { font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--ink); margin-bottom: .9rem; }
+    .footer-col a { font-size: .84rem; color: var(--muted); text-decoration: none; padding: .22rem 0; transition: color .15s; line-height: 1.5; }
+    .footer-col a:hover { color: var(--green-dark); }
+    .footer-bottom { border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+    .footer-bottom p { font-size: .76rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: .76rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .footer-bottom-links a:hover { color: var(--ink); }
+    @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } .footer-tagline { max-width: 100%; } }
+
+    #artNotFound { text-align: center; padding: 6rem 2rem; }
+    #artNotFound h2 { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin-bottom: 1rem; }
+    #artNotFound a { color: var(--green-dark); }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .art-title { font-size: 1.6rem; }
+    }
+
+    .acct-login-wrap { padding: 1.75rem 2rem 2rem; }
+    .acct-login-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: .3rem; letter-spacing: -.3px; }
+    .acct-login-sub { font-size: .83rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+    .acct-login-back { background: none; border: none; color: var(--muted); font-size: .8rem; cursor: pointer; padding: 0; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .35rem; font-family: var(--sans); transition: color .15s; }
+    .acct-login-back:hover { color: var(--green); }
+    .acct-login-err { font-size: .79rem; color: #c0392b; margin: -.1rem 0 .8rem; min-height: 1.1rem; }
+    .acct-loggedin-inner { padding: 1.75rem 2rem 2rem; }
+    .acct-logout-btn { background: none; border: 1px solid rgba(14,90,66,.18); color: var(--muted); font-size: .78rem; padding: .4rem 1rem; border-radius: 100px; cursor: pointer; font-family: var(--sans); transition: all .15s; margin-top: .75rem; width: 100%; }
+    .acct-logout-btn:hover { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+    .acct-admin-badge { font-size: .68rem; background: linear-gradient(135deg,#0A5C4A,#22A87E); color: #fff; padding: .18rem .55rem; border-radius: 100px; letter-spacing: .03em; font-weight: 500; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Gradim<span>Se</span></a>
+  <ul class="nav-links">
+    <li><a href="blogi.html" class="active">Blogi</a></li>
+    <li><a href="delavnice.html">Delavnice</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="skupnost.html">Skupnost</a></li>
+    <li><a href="podjetnik-meseca.html">Podjetnik meseca</a></li>
+    <li><a href="sponzorji.html">Sponzorji</a></li>
+    <li><a href="oglasi.html">Oglasi</a></li>
+    <li><a href="forum.html">Forum</a></li>
+  </ul>
+  <button class="nav-account-btn" id="accountBtn" aria-label="Moj račun">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="5.5" r="3.5"/><path d="M1.5 16c0-3.87 3.13-7 7-7s7 3.13 7 7"/></svg>
+  </button>
+</nav>
+
+<div id="artNotFound" style="display:none">
+  <h2>Blog ni bil najden.</h2>
+  <p><a href="blogi.html">← Nazaj na vse bloge</a></p>
+</div>
+
+<div id="artTopbar" class="article-topbar" style="display:none">
+  <div class="article-topbar-inner">
+    <a href="blogi.html" class="art-back">← Nazaj na bloge</a>
+    <div class="art-cat-badge" id="artCat"></div>
+    <h1 class="art-title" id="artTitle"></h1>
+    <div class="art-meta">
+      <span class="art-av" id="artAv"></span>
+      <span class="art-author-name" id="artAuthorName"></span>
+      <span class="art-sep">·</span>
+      <span class="art-date-time" id="artDate"></span>
+      <span class="art-sep">·</span>
+      <span class="art-date-time" id="artReadTime"></span>
+    </div>
+  </div>
+</div>
+
+<div id="artContent" class="article-wrap" style="display:none">
+  <div class="art-body" id="artBody"></div>
+  <hr class="art-divider">
+  <div class="art-author-card">
+    <div class="art-author-av" id="artAuthorAv2"></div>
+    <div>
+      <div class="art-author-name2" id="artAuthorName2"></div>
+      <div class="art-author-role" id="artAuthorRole"></div>
+      <div class="art-author-bio2" id="artAuthorBio"></div>
+    </div>
+  </div>
+  <div class="art-bottom-nav">
+    <a href="blogi.html" class="art-bottom-back">← Vsi blogi</a>
+    <span class="art-share-label">GradimSe · Skupnost slovenskih podjetnikov</span>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">Gradim<span>Se</span></a>
+      <p class="footer-tagline">Slovenska podjetniška skupnost za graditelje, podjetnike in vizionarje.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@gradimse" class="footer-social" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l3.5 2-3.5 2V5.5z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gradimse" class="footer-social" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="3" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="3.5" r=".7" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/gradimse" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 2H6C4.9 2 4 2.9 4 4v1H3v2h1v5h2V7h1.5l.5-2H6V4c0-.28.22-.5.5-.5H8V2z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Skupnost</span>
+      <a href="skupnost.html">Člani skupnosti</a>
+      <a href="blogi.html">Blogi</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="delavnice.html">Delavnice</a>
+      <a href="podjetnik-meseca.html">Podjetnik meseca</a>
+      <a href="sponzorji.html">Sponzorji</a>
+      <a href="oglasi.html">Oglasi</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-title">Pravno &amp; kontakt</span>
+      <a href="pogoji.html">Pogoji uporabe</a>
+      <a href="zasebnost.html">Politika zasebnosti</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GradimSe · Vsa pravica pridržana</p>
+    <div class="footer-bottom-links">
+      <a href="pogoji.html">Pogoji</a>
+      <a href="zasebnost.html">Zasebnost</a>
+      <a href="gdpr.html">GDPR</a>
+      <a href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const blogData = {
+  '5-napak': {
+    title: '5 napak ki sem jih naredil v prvem letu posla — in kako jih ti ne boš',
+    cat: 'Zgodbe', catStyle: 'color:#085041;background:#e1f5ee;',
+    author: 'Marko Kovač', initials: 'MK', avStyle: 'background:#e1f5ee;color:#085041;',
+    role: 'Ustanovitelj GradimSe',
+    authorBio: 'Od razvijalca do ustanovitelja — Marko je v 3 letih zgradil SaaS produkt z 12k MRR brez vlagateljev. V skupnosti GradimSe deli izkušnje iz prve roke.',
+    date: '5. maj 2026', readTime: '5 min branja',
+    body: `<p>Ko sem pred tremi leti prvič odprl s.p., sem mislil, da vem dovolj. Imel sem produkt, entuzijazem in vizijo. Kar nisem imel — je bila izkušnja. In zanjo sem plačal drago.</p><p>Teh pet napak me je skupaj stalo tri mesece časa in več tisoč evrov. Opisujem jih, da vam prihranim del te cene.</p><h2>1. Nisem vedel, kdo je moja stranka</h2><p>Moj "idealni kupec" je bil povprečen 30-letni podjetnik — abstrakten, izmišljen, neuporaben. Ko sem pogledal podatke — kdo je dejansko plačal — je bila slika povsem drugačna. Ko sem prilagodil sporočilo dejanskim kupcem, se je konverzija podvojila brez kakršnekoli druge spremembe.</p><h2>2. Najprej gradil, potem prodajal</h2><p>Pol leta sem gradil produkt, preden sem komurkoli povedal, kaj delam. Ko sem ga končno pokazal, me je feedback zatresel. Dobra polovica ni bila to, kar so stranke hotele. Danes bi najprej povedal idejo — ali celo prodal — potem pa zgradil. Produkt se gradi lažje, ko veš točno, komu in za kaj.</p><h2>3. Cene prenizke iz strahu</h2><p>Bál sem se, da bodo stranke rekle "predrago". Ko sem cene dvignil za 60%, se je število strank rahlo zmanjšalo — prihodki pa so poskočili. In stranke so bile boljše. Cena ni samo število. Je signal kakovosti.</p><h2>4. Izogibal sem se neprijetnim pogovorom</h2><p>Vsak pogovor, ki sem ga odložil — z neplačniki, z neučinkovitimi partnerji, z nesrečnimi strankami — je problem samo povečal. Najtežje lekcije v poslu izhajajo iz zamud pri soočenjih. Soočite se takoj.</p><h2>5. Nisem prosil za feedback</h2><p>Mislil sem, da bodo zadovoljne stranke kar same povedal, kaj jim je všeč. Niso. Nezadovoljne stranke so odšle brez besede. Ko sem uvedel sistematičen feedback po vsakem zaključenem poslu, sem začel dobivati informacije, ki so dejansko spremenile produkt.</p><p>Skupni imenovalec vseh petih napak je strah. Ko sem se naučil delati <em>kljub</em> strahu — se je začelo obračati. Upam, da vam vsaj ena od teh lekcij prihrani del te cene.</p>`
+  },
+  'racunovodstvo-sp': {
+    title: 'Kako urediti računovodstvo za s.p. brez računovodje',
+    cat: 'Finance', catStyle: 'color:#085041;background:#e1f5ee;',
+    author: 'Ana Novak', initials: 'AN', avStyle: 'background:#eeedfe;color:#3c3489;',
+    role: 'Davčna svetovalka & avtorica',
+    authorBio: 'Ana je davčna svetovalka z 12 leti izkušenj. Pomaga malim podjetjem urediti finance brez nepotrebne kompleksnosti.',
+    date: '14. april 2026', readTime: '8 min branja',
+    body: `<p>Najpogostejše vprašanje novih s.p.-jevcev: "Ali moram imeti računovodje?" Odgovor je: odvisno. Za enostavne primere vsaj na začetku ne. Tukaj je vodič, ki vam pomaga urediti stvari sami.</p><h2>Razumite, kakšen s.p. imate</h2><p><strong>Normiran s.p.</strong> je najpreprostejši model: plačate dohodnino na 20% prihodkov — preostalih 80% prizna država kot stroške brez računov. Primeren za storitve z malo dejanskih stroškov: svetovanje, razvoj, kreativne storitve. Pogoj: prihodki pod 50.000 € letno.</p><p>Če imate višje prihodke ali veliko dejanskih stroškov, vam morda bolj ustreza <strong>dejanski odhodki</strong> — ampak tam se začne kompleksnost.</p><h2>Katera orodja izbrati</h2><p>Za vodenje prihodkov in izdajanje računov priporočam: <strong>Minimax</strong> za tiste, ki izdajate e-račune (podpira eDavek, DDV evidence, slovensko); <strong>Bilance.si</strong> za brezplačen začetek; ali preprosto Google Sheets za res enostavne primere. Ključno: izberite sistem, ki ga boste dejansko upoabljali.</p><h2>DDV — kdaj in zakaj</h2><p>Pod 50.000 € prihodka niste dolžni biti DDV zavezanec. Moj nasvet: ne pristopite prezgodaj. Poveča administracijo in dvigne cene za B2C stranke. Ko preseže 50k ali ko večinoma prodajate B2B — potem postane smiselno.</p><h2>Vodite evidenco vsak mesec</h2><p>Najpogostejša napaka: zbiranje vsega decembra in panika. Naredite navado: enkrat mesečno 20 minut. Preverite prihodke, preverite stroške, arhivirajte račune. Ko bo čas za davčno napoved, boste mirni.</p><h2>Kdaj poiskati računovodje</h2><p>Računovodje poiščite, ko: imate zaposlene, delate z EU/tujino, razmišljate o d.o.o., ali ko situacija presega vaše razumevanje. En sestanek letno pri dobri davčni svetovalki stane 100–150 € in se večkrat povrne.</p>`
+  },
+  'strah-neuspeh': {
+    title: 'Strah pred neuspehom me je zaustavil 2 leti',
+    cat: 'Mindset', catStyle: 'color:#854f0b;background:#faeeda;',
+    author: 'Tim Horvat', initials: 'TH', avStyle: 'background:#faeeda;color:#854f0b;',
+    role: 'Podjetnik & pisec',
+    authorBio: 'Tim je podjetnik in pisec, ki se ukvarja s psihologijo podjetniških odločitev. Danes predava na GradimSe live sejah o mindsetu.',
+    date: '2. april 2026', readTime: '4 min branja',
+    body: `<p>Dve leti. Dve leti sem imel idejo. Vedel sem, kaj hočem narediti, imel sem znanje, imel sem čas. Pa nisem naredil ničesar. Zakaj? Ker me je bilo strah, da ne bo delovalo.</p><p>In potem sem si nekoč iskreno priznal: strah ne bo odšel. Vprašanje je, ali bom delal kljub njemu ali ne.</p><h2>Anatomija strahu pred neuspehom</h2><p>Strah pred neuspehom ni strah pred neuspehom samim — je strah pred tem, kaj si bodo rekli drugi. "Pa saj si vedno govoril, da boš podjetnik..." V mojem primeru je bila ta imaginarna sodba — nikoli izrečena, samo izmišljena — tista, ki me je blokirala. Ko sem to razumel, je postalo jasno: bojim se mnenja ljudi, ki jim v resnici ni mar.</p><h2>Prelomnica</h2><p>Mentor me je pri 31 postavil pred eno vprašanje: "Katera je večja bolečina — da poskusiš in ne uspe, ali da čez 10 let gledaš nekoga drugega, ki dela to, kar si ti hotel?" Odgovor je bil takojšen. In ne v prid statusa quo.</p><h2>Kar mi je dejansko pomagalo</h2><p><strong>Časovni okvir.</strong> Namesto "nekoč" sem si rekel: do konca tega meseca naredim prvi korak. Samo prvega. To je bilo obvladljivo.</p><p><strong>Najslabši scenarij na papirju.</strong> Napišite, kaj se dejansko zgodi, če ne uspe. V večini primerov ugotovite, da je najslabši scenarij obvladljiv. Izgubite čas, morda denar — ne pa vsega.</p><p><strong>Majhni dokazi.</strong> Vsaka majhna zmaga gradi samozaupanje. Ne čakajte na idealne pogoje. Naredite en korak in zabeležite, da ste ga naredili.</p><h2>Dve leti pozneje</h2><p>Danes imam podjetje. Ni brez napak, ni idealno. Ampak je. Strah pred neuspehom ni razlog za ne. Je samo občutek, ki ga moraš prebroditi — ne odpraviti. Odpraviti ga ne moreš. Prebroditi pa ja.</p>`
+  },
+  'prvih-10-strank': {
+    title: 'Kako sem dobila prvih 10 strank brez omrežja in oglasov',
+    cat: 'Prodaja', catStyle: 'color:#0f6e56;background:#e1f5ee;',
+    author: 'Katja Rus', initials: 'KR', avStyle: 'background:#e1f5ee;color:#0f6e56;',
+    role: 'Freelancerka & prodajni trener',
+    authorBio: 'Katja je prešla iz korporativne prodaje v freelancing in danes pomaga podjetnicam in podjetnikom pridobiti prve stranke brez oglasnega proračuna.',
+    date: '22. marca 2026', readTime: '6 min branja',
+    body: `<p>Ko sem začela kot freelancerka, me je čakala ena sama skrb: kdo bo plačal prvi račun? Nisem imela omrežja, nisem imela sledilcev, nisem imela proračuna za oglas. V prvem mesecu sem dobila 3 stranke. V šestih mesecih 10+. Tukaj je, kako.</p><h2>Korak 1: Toplo omrežje — najprej</h2><p>Preden grete kamorkoli drugam, napišite seznam 20 ljudi, ki vas poznajo in bi vašo storitev morda potrebovali. Napišite vsaki osebi osebno sporočilo — ne oglas, ampak iskreno: "Začela sem delati X. Ali meniš, da bi to komu koristilo?" Pričakujte 2–3 napotitve. To so vaše prve stranke.</p><h2>Korak 2: LinkedIn direktni pristop</h2><p>Identificirajte 30 potencialnih strank na LinkedInu. Napišite jim kratko sporočilo: "Vidim, da delate na X. Jaz pomagam podjetjem s Y. Ali bi bilo smiselno kratko poklepetati?" Pričakujte 10–15% odziv. Ni napaka — je normalno.</p><h2>Korak 3: Brezplačna vrednost kot vstopnica</h2><p>Namesto da takoj prodajate — ponudite brezplačen kratek posvet. Brez obveznosti. To zniža vstopni prag, vam da priložnost pokazati vrednost, stranki pa možnost, da vas spozna. Iz 10 takšnih pogovorov bosta 2–3 postala plačujoči stranki.</p><h2>Korak 4: Prosite za napotitve</h2><p>Po vsaki uspešni stranki vprašajte: "Ali poznate koga, ki bi morda potreboval podobno pomoč?" Večina ne vpraša. Večina, ki vpraša, dobi odgovor. To je eden najučinkovitejših kanalov — brezplačen in z visoko konverzijo.</p><h2>Kaj pa oglasi?</h2><p>Oglaševanje ni napaka — je drago za pridobivanje prvih strank, ki vas ne poznajo in vam ne zaupajo. Ko imate 10 zadovoljnih strank in referenc — potem oglasi postanejo smiselni.</p>`
+  },
+  'linkedin-strategija': {
+    title: 'LinkedIn strategija za freelancerje — kaj deluje v 2025',
+    cat: 'Marketing', catStyle: 'color:#185fa5;background:#e6f1fb;',
+    author: 'Luka Jeglič', initials: 'LJ', avStyle: 'background:#e6f1fb;color:#185fa5;',
+    role: 'LinkedIn strateg & podjetnik',
+    authorBio: 'Luka je šel od 0 do 8.000 sledilcev na LinkedInu v šestih mesecih brez oglasov. Danes pomaga slovenskim podjetnikom postati vidni organsko.',
+    date: '10. marca 2026', readTime: '7 min branja',
+    body: `<p>V šestih mesecih sem šel od 0 do 8.000 sledilcev na LinkedInu. Brez oglasov, brez kupljenih sledilcev, brez dnevnega objavljanja. Tukaj je 6 strategij, ki so dejansko delovale.</p><h2>1. Določite eno temo in se je držite</h2><p>Profili, ki rastejo, so "lastniki teme" — ko nekdo pomisli na X, pomisli na vas. Moja tema: LinkedIn strategija za slovenske podjetnike. Ena tema, doslednost, prepoznavnost. Splošni profili ne rastejo. Specifični ja.</p><h2>2. Objavljajte 3–4-krat na teden</h2><p>Vsak dan je preveč za kakovostno vsebino. 3–4-krat z vsebino, ki pomaga ali navdihuje — to je boljše kot 7-krat z zapolnjevanjem prostora. Algoritem nagrajuje interakcijo, ne pogostost.</p><h2>3. Komentarji so podcenjena valuta</h2><p>Vsak dan 15 minut premišljenih komentarjev na objave v vaši niši. Ne "Odlično!" — ampak dejanski prispevek k pogovoru. To poveča vašo vidnost pri sledilcih tistega, ki ga komentirate.</p><h2>4. Osebne zgodbe presegajo nasvete</h2><p>Post "5 nasvetov za X" deluje. Post "Naredil sem napako pri X in se naučil Y" deluje dvakrat bolje. Ranljivost, ki je poučna — to je format, ki ga LinkedIn organsko širi.</p><h2>5. Profil je vaša pristajalna stran</h2><p>Naslov: ne "Marketing specialist" — ampak "Pomagam [komu] doseči [kaj] z [čim]". Naslovna slika: jasno sporočilo. O meni: kdo ste, komu pomagate, zakaj. To vidi vsak, ki obišče vaš profil.</p><h2>6. Pet DM sporočil na teden</h2><p>Vsak teden 5 osebnih sporočil ljudem, ki so komentirali vaše objave. Ne prodajno — samo: "Opazil sem vaš komentar. Zanima me vaše mnenje o..." Konverzija v pogovore je presenetljivo visoka.</p><p>Algoritem je spremenljiv. Stranke, ki pridejo prek LinkedIna, ostanejo. Investirajte v dolgoročno vidnost.</p>`
+  },
+  '50k-prihodek': {
+    title: 'Od 0 do prvih 50.000 € prihodka — kaj sem se naučil',
+    cat: 'Rast', catStyle: 'color:#3c3489;background:#eeedfe;',
+    author: 'Tomaž Bregar', initials: 'TB', avStyle: 'background:#eeedfe;color:#3c3489;',
+    role: 'Bootstrapped SaaS ustanovitelj',
+    authorBio: 'Tomaž je zgradil B2B SaaS z 50k letnega prihodka brez vlagateljev. Specialnost: produktizacija storitev in B2B prodaja za introvertne razvijalce.',
+    date: '28. februarja 2026', readTime: '9 min branja',
+    body: `<p>Tri leta nazaj sem imel hobi projekt in polno redno zaposlitev. Danes imam bootstrapped B2B SaaS z 50.000 € letnega prihodka — in nič vlagateljev. To so ključne točke te poti.</p><h2>Mesec 1–6: Iskanje pravega problema</h2><p>Prva različica je bila napaka. Naredil sem orodje, ki sem ga sam hotel imeti. Problem: nihče drug ni bil pripravljen plačati zanj. Rešitev: opravil sem 20 pogovorov s potencialnimi strankami, preden sem napisal vrstico kode za v2. Potem sem gradil. Razlika je bila astronomska.</p><h2>Mesec 7–12: Prvo plačilo je magično</h2><p>Prvo plačilo — 29 € na mesec — me ni rešilo finančno. Je pa dokazalo, da nekdo vidi vrednost. Od te točke naprej so vse odločitve postale lažje: feedback je postal konkreten, prioritete so bile jasne, smer razvoja definirana.</p><h2>Leto 2: Produktizacija</h2><p>Vsako storitev, ki sem jo ročno izvajal za stranke, sem poskušal pretvoriti v funkcijo produkta. Vsak podporni e-mail mi je povedal, kaj v vmesniku ni jasno. Pravilo: ali ta problem reši produkt sam — ali pa to pomeni, da stranka morda ni prava stranka?</p><h2>Leto 3: Cene in fokus</h2><p>Največ sem zaslužil takrat, ko sem nehal loviti vsako stranko. Ko sem določil jasen profil idealne stranke in dvignil cene, se je število strank zmanjšalo — prihodek pa je šel gor. Manj, a boljše stranke pomeni: manj podpore, manj odhodov, boljše reference.</p><h2>Kaj se nisem naučil prej</h2><p>Bootstrapping zahteva potrpežljivost. Rast je počasnejša kot pri financiranem startupu. A vsaka nova stranka je vaša. Vsaka odločitev je vaša. Vsak prihodek je vaš. Za tiste, ki to cenijo — ni boljše poti.</p>`
+  },
+  'davcna-optimizacija': {
+    title: 'Davčna optimizacija za s.p. — 4 legalne poti',
+    cat: 'Finance', catStyle: 'color:#085041;background:#e1f5ee;',
+    author: 'Ana Potočnik', initials: 'AP', avStyle: 'background:#e1f5ee;color:#085041;',
+    role: 'E-commerce ustanoviteljica',
+    authorBio: 'Ana je začela pri 38 brez investitorja in danes ima 200k letnega prometa. Kar večina podjetnikov ne ve o davkih, je naučila na lastni koži.',
+    date: '15. februarja 2026', readTime: '6 min branja',
+    body: `<p>Ko sem plačala prvo letno davčno napoved, me je znesek presenetil. Nisem vedela, da obstajajo legalne poti za zmanjšanje davčne obremenitve. Po pogovoru z davčno svetovalko sem spoznala štiri, ki jih večina s.p.-jevcev ne izkorišča.</p><h2>Pot 1: Normiran s.p.</h2><p>Najenostavnejša pot: izberite normiran s.p. in plačajte dohodnino samo na 20% prihodkov. Preostalih 80% vam prizna država kot normiranje stroške — brez računov, brez evidence. Pogoj: prihodki pod 50.000 € letno. Za freelancerje, svetovalce in storitve je to praviloma optimalno.</p><h2>Pot 2: Olajšave za investicije</h2><p>Če imate dejanski s.p. (ne normiran), imate pravico do 40% olajšave za investicije v osnovna sredstva. Kupili ste prenosnik za 1.500 €? Od davčne osnove odštejete 600 €. Velja za opremo, programsko opremo, vozila za poslovno rabo.</p><h2>Pot 3: Pokojninsko varčevanje</h2><p>Prispevki v prostovoljno pokojninsko varčevanje (PDPZ) znižujejo davčno osnovo — do 5.844 € letno (2026). Hkrati varčujete za starost. To je win-win, ki ga 80% s.p.-jevcev ne izkorišča preprosto zato, ker ga ne pozna.</p><h2>Pot 4: Prehod na d.o.o.</h2><p>Ko preseže 80–100k € letnih prihodkov, postane d.o.o. davčno ugodnejši. Davek na dohodek je 19%, dividende so obdavčene z 22% — skupaj manj kot dohodninska lestvica pri višjih prihodkih. Prehod zahteva malo administracije, a se kmalu povrne.</p><h2>Kdaj poiskati nasvet</h2><p>En sestanek z davčno svetovalko enkrat letno, cena 100–150 €. V prvem letu mi je prihranila štirikrat več, kot je stala. Poiščite jo preden oddate napoved — ne po.</p>`
+  },
+  'zavrnil-investitorja': {
+    title: 'Zakaj sem zavrnil investitorja — in ne obžalujem',
+    cat: 'Rast', catStyle: 'color:#3c3489;background:#eeedfe;',
+    author: 'Jure Novak', initials: 'JN', avStyle: 'background:#faeeda;color:#854f0b;',
+    role: 'Lastnik 3 restavracij',
+    authorBio: 'Jure je v petih letih zgradil tri uspešne restavracije brez posojil in investitorjev. Specialnost: rast z lastnim denarnim tokom.',
+    date: '1. februarja 2026', readTime: '5 min branja',
+    body: `<p>Pred dvema letoma mi je eden večjih zasebnih investitorjev v slovenskem gostinstvu ponudil 200.000 €. V zameno je hotel 35% podjetja in mesto v upravnem odboru. Zavrnil sem ga. Tukaj je zakaj — in kaj se je zgodilo po tem.</p><h2>Zakaj je ponudba bila mamljiva</h2><p>200.000 € bi mi omogočilo: odpreti četrti lokal, kupiti opremo, ki sem jo ves čas najemalo, in zaposliti vodjo operacij. Na papirju je bil to logičen naslednji korak.</p><h2>Zakaj sem vendarle rekel ne</h2><p>Tri stvari so me ustavile. <strong>Prvič:</strong> investitor je imel v portfelju tri restavracije, ki so sledile standardiziranemu modelu verige. Moj koncept je bil natančno nasproten: lokalen, specifičen, neponovljiv. <strong>Drugič:</strong> 35% je preveč. To je realna možnost izgube nadzora. <strong>Tretjič:</strong> v enem pogovoru je omenil, da je naš chef "komercialno neučinkovit." To mi je povedalo dovolj o tem, kaj bi kupoval.</p><h2>Kaj se je zgodilo potem</h2><p>V dveh letih sem odprl tretji lokal — počasneje, z lastnim denarnim tokom. Sem kjer bi bil z investicijo? Verjetno ne. Se pa vsak dan odločam sam. In moje podjetje je takšno, kot sem si zamislil — ne kot si ga je zamislil nekdo z drugimi interesi.</p><h2>Kdaj bi investitorja sprejel</h2><p>Ne trdim, da je zavrnitev vsakega investitorja pametna. Investicija ima smisel, ko: nimate modela za organsko rast, ko trg zahteva hitrost, ki je sami ne morete zagotoviti, ali ko investitor prinese mrežo in znanje — ne samo denar. Pri meni nobeden od teh pogojev ni bil izpolnjen.</p><p>Denar ni vedno odgovor. Včasih je vprašanje napačno postavljeno.</p>`
+  }
+};
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+const post = blogData[id];
+
+if (!post) {
+  document.getElementById('artNotFound').style.display = '';
+} else {
+  document.title = post.title + ' — GradimSe';
+  document.getElementById('artTopbar').style.display = '';
+  document.getElementById('artContent').style.display = '';
+
+  const catEl = document.getElementById('artCat');
+  catEl.textContent = post.cat;
+  catEl.style.cssText = post.catStyle;
+
+  document.getElementById('artTitle').textContent = post.title;
+
+  const avEl = document.getElementById('artAv');
+  avEl.textContent = post.initials;
+  avEl.style.cssText = post.avStyle;
+
+  document.getElementById('artAuthorName').textContent = post.author;
+  document.getElementById('artDate').textContent = post.date;
+  document.getElementById('artReadTime').textContent = post.readTime;
+  document.getElementById('artBody').innerHTML = post.body;
+
+  const av2 = document.getElementById('artAuthorAv2');
+  av2.textContent = post.initials;
+  av2.style.cssText = post.avStyle;
+  av2.style.width = '52px';
+  av2.style.height = '52px';
+  av2.style.borderRadius = '50%';
+  av2.style.display = 'flex';
+  av2.style.alignItems = 'center';
+  av2.style.justifyContent = 'center';
+  av2.style.fontSize = '1rem';
+  av2.style.fontWeight = '500';
+  av2.style.flexShrink = '0';
+
+  document.getElementById('artAuthorName2').textContent = post.author;
+  document.getElementById('artAuthorRole').textContent = post.role;
+  document.getElementById('artAuthorBio').textContent = post.authorBio;
+}
+</script>
+
+<div class="acct-overlay" id="acctOverlay">
+<div class="acct-panel" id="acctPanel">
+  <div class="acct-loggedout" id="acctLoButtons">
+    <div class="acct-loggedout">
+      <span class="acct-lo-logo">Gradim<span>Se</span></span>
+      <h3 class="acct-lo-title">Moj račun</h3>
+      <p class="acct-lo-sub">Pridruži se 240+ slovenskim podjetnikom.<br>Brezplačno, brez kreditne kartice.</p>
+      <div class="acct-lo-btns">
+        <a href="index.html" class="acct-lo-btn primary">Registracija</a>
+        <button class="acct-lo-btn ghost" id="acctOpenLogin">Prijava</button>
+      </div>
+    </div>
+  </div>
+  <div class="acct-login-wrap" id="acctLoginForm" style="display:none;">
+    <button class="acct-login-back" id="acctLoginBack">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7.5 1L2.5 5.5l5 4.5"/></svg>
+      Nazaj
+    </button>
+    <h3 class="acct-login-title">Prijava</h3>
+    <p class="acct-login-sub">Dobrodošli nazaj v skupnost.</p>
+    <div class="acct-field">
+      <label class="acct-label">E-pošta</label>
+      <input type="email" class="acct-inp" id="loginEmail" placeholder="vas@email.com" autocomplete="email">
+    </div>
+    <div class="acct-field">
+      <label class="acct-label">Geslo</label>
+      <input type="password" class="acct-inp" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="acct-login-err" id="loginErr"></div>
+    <button class="acct-publish-btn" id="loginSubmitBtn" style="width:100%;justify-content:center;">Prijavi se</button>
+  </div>
+  <div id="acctLoggedIn" style="display:none;">
+    <div class="acct-loggedin-inner">
+      <div class="acct-user-info">
+        <div class="acct-avatar" id="acctAvatarInitials">GS</div>
+        <div>
+          <div class="acct-uname" id="acctDisplayName"></div>
+          <div class="acct-urole" id="acctDisplayRole">Član skupnosti</div>
+        </div>
+      </div>
+      <a href="index.html" class="acct-lo-btn primary" style="display:block;text-align:center;margin-top:1.25rem;text-decoration:none;">Odpri dashboard</a>
+      <button class="acct-logout-btn" id="acctLogoutBtn">Odjava</button>
+    </div>
+  </div>
+</div>
+</div><!-- /acct-overlay -->
+<script>
+(function(){
+  const overlay=document.getElementById('acctOverlay');
+  const btn=document.getElementById('accountBtn');
+  let loggedIn=false,currentUser={};
+  try{const s=localStorage.getItem('gs_user');if(s){currentUser=JSON.parse(s);loggedIn=true;}}catch(e){}
+  if(loggedIn)btn.classList.add('open');
+  function showState(){
+    if(loggedIn){
+      document.getElementById('acctLoButtons').style.display='none';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='';
+      const initials=(currentUser.name||'GS').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('acctAvatarInitials').textContent=initials;
+      document.getElementById('acctDisplayName').textContent=currentUser.name||'';
+      document.getElementById('acctDisplayRole').innerHTML=currentUser.isAdmin?'<span class="acct-admin-badge">Admin</span>':(currentUser.area||'Član skupnosti');
+    }else{
+      document.getElementById('acctLoButtons').style.display='';
+      document.getElementById('acctLoginForm').style.display='none';
+      document.getElementById('acctLoggedIn').style.display='none';
+    }
+  }
+  btn.addEventListener('click',()=>{showState();overlay.classList.add('active');btn.classList.add('open');document.body.style.overflow='hidden';});
+  function close(){overlay.classList.remove('active');if(!loggedIn)btn.classList.remove('open');document.body.style.overflow='';}
+  overlay.addEventListener('click',e=>{if(e.target===overlay||!document.getElementById('acctPanel').contains(e.target))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  document.getElementById('acctOpenLogin').addEventListener('click',()=>{
+    document.getElementById('acctLoButtons').style.display='none';
+    document.getElementById('acctLoginForm').style.display='';
+    document.getElementById('loginEmail').focus();
+  });
+  document.getElementById('acctLoginBack').addEventListener('click',()=>{
+    document.getElementById('acctLoginForm').style.display='none';
+    document.getElementById('acctLoButtons').style.display='';
+  });
+  function doLogin(){
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPass').value;
+    const errEl=document.getElementById('loginErr');
+    if(!email){errEl.textContent='Vnesite e-poštni naslov.';return;}
+    if(!pass){errEl.textContent='Vnesite geslo.';return;}
+    errEl.textContent='';
+    const isAdmin=email.toLowerCase()==='domenavbelj01@gmail.com';
+    const name=isAdmin?'Domena Vbelj':email.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    currentUser={name,email,area:isAdmin?'Admin · GradimSe':'Član skupnosti',isAdmin};
+    loggedIn=true;
+    try{localStorage.setItem('gs_user',JSON.stringify(currentUser));}catch(e){}
+    showState();btn.classList.add('open');
+  }
+  document.getElementById('loginSubmitBtn').addEventListener('click',doLogin);
+  document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('acctLogoutBtn').addEventListener('click',()=>{
+    loggedIn=false;currentUser={};
+    try{localStorage.removeItem('gs_user');}catch(e){}
+    btn.classList.remove('open');close();
+  });
+})();
+</script>
+</body>
+</html>
